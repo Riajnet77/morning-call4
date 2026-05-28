@@ -1,54 +1,366 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Morning Call - 28/05/2026</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0d0d0d;--card:#141414;--text:#fff;--text2:#a0a0a0;--muted:#666;--green:#00e676;--red:#ff1744;--yellow:#ffc400;--blue:#2979ff;--orange:#ff6d00;--border:#222}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;line-height:1.6;max-width:420px;margin:0 auto;padding:12px}
-.header{background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:16px;padding:16px;margin-bottom:12px;text-align:center}
-.logo{font-family:monospace;font-size:18px;font-weight:800;letter-spacing:3px}
-.logo span{color:var(--green)}
-.date{font-family:monospace;font-size:12px;color:var(--text2)}
-.section{margin-bottom:12px}
-.title{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;margin-bottom:8px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
-.breaking{background:rgba(255,23,68,.12);color:var(--red);border:1px solid rgba(255,23,68,.2)}
-.high{background:rgba(255,109,0,.12);color:var(--orange);border:1px solid rgba(255,109,0,.2)}
-.medium{background:rgba(255,196,0,.12);color:var(--yellow);border:1px solid rgba(255,196,0,.2)}
-.low{background:rgba(0,230,118,.12);color:var(--green);border:1px solid rgba(0,230,118,.2)}
-.card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:8px;border:1px solid var(--border);position:relative;overflow:hidden}
-.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:14px 0 0 14px}
-.card.breaking::before{background:var(--red)}
-.card.high::before{background:var(--orange)}
-.card.medium::before{background:var(--yellow)}
-.card.low::before{background:var(--green)}
-.news-title{font-size:15px;font-weight:700;line-height:1.4;margin-bottom:6px}
-.news-summary{font-size:13px;color:var(--text2);line-height:1.5;margin-bottom:8px}
-.tags{display:flex;flex-wrap:wrap;gap:4px}
-.tag{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,.06);color:var(--muted)}
-.tag-win{background:rgba(0,230,118,.15);color:var(--green)}
-.tag-wdo{background:rgba(41,121,255,.15);color:var(--blue)}
-.tag-brent{background:rgba(255,109,0,.15);color:var(--orange)}
-.footer{text-align:center;padding:16px;font-size:10px;color:var(--muted);background:var(--card);border-radius:12px;border:1px solid var(--border)}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Morning Call + TradingView</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0d0d0d;
+            --bg-card: #141414;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --text-muted: #666666;
+            --accent-green: #00e676;
+            --accent-red: #ff1744;
+            --accent-yellow: #ffc400;
+            --accent-blue: #2979ff;
+            --accent-orange: #ff6d00;
+            --border: #222222;
+            --font-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            max-width: 420px;
+            margin: 0 auto;
+            padding: 12px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .header-logo {
+            font-family: var(--font-mono);
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .header-logo span {
+            color: var(--accent-green);
+        }
+
+        .header-date {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* News Sections */
+        .section {
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section-breaking {
+            background: rgba(255, 23, 68, 0.12);
+            color: var(--accent-red);
+            border: 1px solid rgba(255, 23, 68, 0.2);
+        }
+
+        .section-high {
+            background: rgba(255, 109, 0, 0.12);
+            color: var(--accent-orange);
+            border: 1px solid rgba(255, 109, 0, 0.2);
+        }
+
+        .section-medium {
+            background: rgba(255, 196, 0, 0.12);
+            color: var(--accent-yellow);
+            border: 1px solid rgba(255, 196, 0, 0.2);
+        }
+
+        .section-low {
+            background: rgba(0, 230, 118, 0.12);
+            color: var(--accent-green);
+            border: 1px solid rgba(0, 230, 118, 0.2);
+        }
+
+        .news-card {
+            background: var(--bg-card);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .news-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            border-radius: 14px 0 0 14px;
+        }
+
+        .news-card.breaking::before { background: var(--accent-red); }
+        .news-card.high::before { background: var(--accent-orange); }
+        .news-card.medium::before { background: var(--accent-yellow); }
+        .news-card.low::before { background: var(--accent-green); }
+
+        .news-title {
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+
+        .news-summary {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .news-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .tag {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.06);
+            color: var(--text-muted);
+        }
+
+        .tag-win { background: rgba(0, 230, 118, 0.15); color: var(--accent-green); }
+        .tag-wdo { background: rgba(41, 121, 255, 0.15); color: var(--accent-blue); }
+        .tag-brent { background: rgba(255, 109, 0, 0.15); color: var(--accent-orange); }
+        .tag-brasil { background: rgba(224, 64, 251, 0.15); color: #e040fb; }
+
+        /* Widget Section */
+        .widget-section {
+            background: var(--bg-card);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .widget-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(41, 121, 255, 0.12);
+            color: var(--accent-blue);
+            border: 1px solid rgba(41, 121, 255, 0.2);
+        }
+
+        .widget-container {
+            width: 100%;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        .tradingview-widget-container {
+            width: 100% !important;
+        }
+
+        .tradingview-widget-container iframe {
+            width: 100% !important;
+            border-radius: 8px !important;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 16px;
+            font-size: 10px;
+            color: var(--text-muted);
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--accent-blue);
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+<base target="_blank">
 </head>
 <body>
-<div class="header">
-<div class="logo">MORNING<span>CALL</span></div>
-<div class="date">28/05/2026 - 15:54 BRT</div>
-</div>
-<div class="section">
-<div class="title medium">🟡 Médio Impacto</div>
-<div class="card medium">
-<div class="news-title">Siga Juniorwuttke no TradingView para análises exclusivas de gráficos, indicadores personalizados e </div>
-</div>
-</div>
-<div class="footer">
-<div style="font-weight:700;color:var(--text2);margin-bottom:4px">Fonte</div>
-<div>TradingView - Juniorwuttke/ActivTrades</div>
-<div style="margin-top:8px;font-size:9px;color:var(--muted)">morningcall.github.io - 28/05/2026</div>
-</div>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-logo">MORNING<span>CALL</span></div>
+        <div class="header-date">28/05/2026 — 15:54 BRT</div>
+    </div>
+
+    <!-- Breaking News -->
+    <div class="section">
+        <div class="section-title section-breaking">
+            <span>🔴</span>
+            <span>Breaking News</span>
+        </div>
+        <div class="news-card breaking">
+            <div class="news-title">Irã ataca base aérea dos EUA durante a madrugada</div>
+            <div class="news-summary">Teerã responde a bombardeios americanos próximos ao Estreito de Ormuz. Trump rejeita acordo iminente.</div>
+            <div class="news-tags">
+                <span class="tag tag-brent">Brent</span>
+                <span class="tag tag-wdo">WDO</span>
+            </div>
+        </div>
+        <div class="news-card breaking">
+            <div class="news-title">BC Brasil alerta: crédito deteriorando, inadimplência avança</div>
+            <div class="news-summary">Comef exige postura conservadora dos bancos. Endividamento corporativo preocupa. ITUB, BBDC, NU sob pressão.</div>
+            <div class="news-tags">
+                <span class="tag tag-brasil">Brasil</span>
+                <span class="tag tag-win">WIN</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alto Impacto -->
+    <div class="section">
+        <div class="section-title section-high">
+            <span>🟠</span>
+            <span>Alto Impacto</span>
+        </div>
+        <div class="news-card high">
+            <div class="news-title">PCE (Inflação Fed) em linha com expectativas</div>
+            <div class="news-summary">Índice de despesas pessoal mantém projeções de juros estáveis. Kevin Warsh monitora.</div>
+            <div class="news-tags">
+                <span class="tag tag-wdo">WDO</span>
+                <span class="tag">Fed</span>
+            </div>
+        </div>
+        <div class="news-card high">
+            <div class="news-title">Brent +1% com tensão no Oriente Médio</div>
+            <div class="news-summary">Petróleo reage a escalada EUA-Irã. Ormuz fechado. Kuwait intercepta mísseis.</div>
+            <div class="news-tags">
+                <span class="tag tag-brent">Brent</span>
+                <span class="tag">PBR</span>
+            </div>
+        </div>
+        <div class="news-card high">
+            <div class="news-title">Futuros NY recuam após 9 semanas de ganhos</div>
+            <div class="news-summary">S&P, Nasdaq, Dow em queda pré-market. Tensão geopolítica reduz apetite por risco.</div>
+            <div class="news-tags">
+                <span class="tag tag-win">WIN</span>
+                <span class="tag">EWZ</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Widget TradingView -->
+    <div class="widget-section">
+        <div class="widget-title">
+            <span>📰</span>
+            <span>Top Stories — TradingView</span>
+        </div>
+        <div class="widget-container">
+            <div class="loading">Carregando notícias do TradingView</div>
+
+            <!-- TradingView Widget BEGIN -->
+            <div class="tradingview-widget-container">
+                <div class="tradingview-widget-container__widget"></div>
+                <div class="tradingview-widget-copyright">
+                    <a href="https://www.tradingview.com/news/top-providers/tradingview/" rel="noopener nofollow" target="_blank">
+                        <span class="blue-text">Top stories</span>
+                    </a>
+                    <span class="trademark"> by TradingView</span>
+                </div>
+                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
+                {
+                    "displayMode": "regular",
+                    "feedMode": "all_symbols",
+                    "colorTheme": "dark",
+                    "isTransparent": true,
+                    "locale": "br",
+                    "width": "100%",
+                    "height": 550
+                }
+                </script>
+            </div>
+            <!-- TradingView Widget END -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div style="font-weight: 700; color: var(--text-secondary); margin-bottom: 4px;">Fontes</div>
+        <div>TradingView — Juniorwuttke/ActivTrades + Widget Oficial</div>
+        <div style="margin-top: 8px; font-size: 9px; color: var(--text-muted);">
+            morningcall.github.io • 28/05/2026
+        </div>
+    </div>
+
+    <script>
+        // Remove loading message when widget loads
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                var loading = document.querySelector('.loading');
+                if (loading) {
+                    loading.style.display = 'none';
+                }
+            }, 3000);
+        });
+    </script>
 </body>
 </html>
