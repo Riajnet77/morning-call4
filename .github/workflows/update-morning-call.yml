@@ -1,0 +1,54 @@
+name: Update Morning Call
+
+on:
+  schedule:
+    - cron: "0 11,12,13,14 * * *"
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+    - name: Install dependencies
+      run: |
+        pip install requests beautifulsoup4
+
+    - name: Fetch TradingView content
+      run: |
+        python scripts/fetch_tradingview.py
+
+    - name: Check if updated
+      id: check
+      run: |
+        if git diff --quiet; then
+          echo "changed=false" >> $GITHUB_OUTPUT
+          echo "Nenhuma mudanca"
+        else
+          echo "changed=true" >> $GITHUB_OUTPUT
+          echo "Novo conteudo!"
+        fi
+
+    - name: Commit and push
+      if: steps.check.outputs.changed == 'true'
+      run: |
+        git config user.name "GitHub Action"
+        git config user.email "action@github.com"
+        git add index.html
+        git add .last_post_id
+        git commit -m "Auto-update: Morning Call $(date +%d/%m/%Y %H:%M)"
+        git push
+
+    - name: Verify
+      if: steps.check.outputs.changed == 'true'
+      run: |
+        echo "Atualizado!"
+        echo "https://riajnet77.github.io/morning-call4/"
