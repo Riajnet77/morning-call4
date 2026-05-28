@@ -101,170 +101,98 @@ def generate_html(idea):
         else:
             low.append(line)
 
-    # Gera HTML usando aspas SIMPLES no Python
-    html = '<!DOCTYPE html>
-'
-    html += '<html lang="pt-BR">
-'
-    html += '<head>
-'
-    html += '<meta charset="UTF-8">
-'
-    html += '<meta name="viewport" content="width=device-width, initial-scale=1.0">
-'
-    html += '<title>Morning Call - ' + date_str.split(" - ")[0] + '</title>
-'
-    html += '<style>
-'
-    html += '*{margin:0;padding:0;box-sizing:border-box}
-'
-    html += ':root{--bg:#0d0d0d;--card:#141414;--text:#fff;--text2:#a0a0a0;--muted:#666;--green:#00e676;--red:#ff1744;--yellow:#ffc400;--blue:#2979ff;--orange:#ff6d00;--border:#222}
-'
-    html += 'body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;line-height:1.6;max-width:420px;margin:0 auto;padding:12px}
-'
-    html += '.header{background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:16px;padding:16px;margin-bottom:12px;text-align:center}
-'
-    html += '.logo{font-family:monospace;font-size:18px;font-weight:800;letter-spacing:3px}
-'
-    html += '.logo span{color:var(--green)}
-'
-    html += '.date{font-family:monospace;font-size:12px;color:var(--text2)}
-'
-    html += '.section{margin-bottom:12px}
-'
-    html += '.title{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;margin-bottom:8px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
-'
-    html += '.breaking{background:rgba(255,23,68,.12);color:var(--red);border:1px solid rgba(255,23,68,.2)}
-'
-    html += '.high{background:rgba(255,109,0,.12);color:var(--orange);border:1px solid rgba(255,109,0,.2)}
-'
-    html += '.medium{background:rgba(255,196,0,.12);color:var(--yellow);border:1px solid rgba(255,196,0,.2)}
-'
-    html += '.low{background:rgba(0,230,118,.12);color:var(--green);border:1px solid rgba(0,230,118,.2)}
-'
-    html += '.card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:8px;border:1px solid var(--border);position:relative;overflow:hidden}
-'
-    html += '.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:14px 0 0 14px}
-'
-    html += '.card.breaking::before{background:var(--red)}
-'
-    html += '.card.high::before{background:var(--orange)}
-'
-    html += '.card.medium::before{background:var(--yellow)}
-'
-    html += '.card.low::before{background:var(--green)}
-'
-    html += '.news-title{font-size:15px;font-weight:700;line-height:1.4;margin-bottom:6px}
-'
-    html += '.news-summary{font-size:13px;color:var(--text2);line-height:1.5;margin-bottom:8px}
-'
-    html += '.tags{display:flex;flex-wrap:wrap;gap:4px}
-'
-    html += '.tag{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,.06);color:var(--muted)}
-'
-    html += '.tag-win{background:rgba(0,230,118,.15);color:var(--green)}
-'
-    html += '.tag-wdo{background:rgba(41,121,255,.15);color:var(--blue)}
-'
-    html += '.tag-brent{background:rgba(255,109,0,.15);color:var(--orange)}
-'
-    html += '.footer{text-align:center;padding:16px;font-size:10px;color:var(--muted);background:var(--card);border-radius:12px;border:1px solid var(--border)}
-'
-    html += '</style>
-'
-    html += '</head>
-'
-    html += '<body>
-'
-    html += '<div class="header">
-'
-    html += '<div class="logo">MORNING<span>CALL</span></div>
-'
-    html += '<div class="date">' + date_str + '</div>
-'
-    html += '</div>
-'
+    # Usa lista para evitar problemas de string
+    parts = []
+    parts.append("<!DOCTYPE html>")
+    parts.append('<html lang="pt-BR">')
+    parts.append("<head>")
+    parts.append('<meta charset="UTF-8">')
+    parts.append('<meta name="viewport" content="width=device-width, initial-scale=1.0">')
+    parts.append("<title>Morning Call - " + date_str.split(" - ")[0] + "</title>")
+    parts.append("<style>")
+    parts.append("*{margin:0;padding:0;box-sizing:border-box}")
+    parts.append(":root{--bg:#0d0d0d;--card:#141414;--text:#fff;--text2:#a0a0a0;--muted:#666;--green:#00e676;--red:#ff1744;--yellow:#ffc400;--blue:#2979ff;--orange:#ff6d00;--border:#222}")
+    parts.append("body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;line-height:1.6;max-width:420px;margin:0 auto;padding:12px}")
+    parts.append(".header{background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:16px;padding:16px;margin-bottom:12px;text-align:center}")
+    parts.append(".logo{font-family:monospace;font-size:18px;font-weight:800;letter-spacing:3px}")
+    parts.append(".logo span{color:var(--green)}")
+    parts.append(".date{font-family:monospace;font-size:12px;color:var(--text2)}")
+    parts.append(".section{margin-bottom:12px}")
+    parts.append(".title{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;margin-bottom:8px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px}")
+    parts.append(".breaking{background:rgba(255,23,68,.12);color:var(--red);border:1px solid rgba(255,23,68,.2)}")
+    parts.append(".high{background:rgba(255,109,0,.12);color:var(--orange);border:1px solid rgba(255,109,0,.2)}")
+    parts.append(".medium{background:rgba(255,196,0,.12);color:var(--yellow);border:1px solid rgba(255,196,0,.2)}")
+    parts.append(".low{background:rgba(0,230,118,.12);color:var(--green);border:1px solid rgba(0,230,118,.2)}")
+    parts.append(".card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:8px;border:1px solid var(--border);position:relative;overflow:hidden}")
+    parts.append('.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:14px 0 0 14px}')
+    parts.append(".card.breaking::before{background:var(--red)}")
+    parts.append(".card.high::before{background:var(--orange)}")
+    parts.append(".card.medium::before{background:var(--yellow)}")
+    parts.append(".card.low::before{background:var(--green)}")
+    parts.append(".news-title{font-size:15px;font-weight:700;line-height:1.4;margin-bottom:6px}")
+    parts.append(".news-summary{font-size:13px;color:var(--text2);line-height:1.5;margin-bottom:8px}")
+    parts.append(".tags{display:flex;flex-wrap:wrap;gap:4px}")
+    parts.append(".tag{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,.06);color:var(--muted)}")
+    parts.append(".tag-win{background:rgba(0,230,118,.15);color:var(--green)}")
+    parts.append(".tag-wdo{background:rgba(41,121,255,.15);color:var(--blue)}")
+    parts.append(".tag-brent{background:rgba(255,109,0,.15);color:var(--orange)}")
+    parts.append(".footer{text-align:center;padding:16px;font-size:10px;color:var(--muted);background:var(--card);border-radius:12px;border:1px solid var(--border)}")
+    parts.append("</style>")
+    parts.append("</head>")
+    parts.append("<body>")
+    parts.append('<div class="header">')
+    parts.append('<div class="logo">MORNING<span>CALL</span></div>')
+    parts.append('<div class="date">' + date_str + '</div>')
+    parts.append("</div>")
 
     if breaking:
-        html += '<div class="section">
-'
-        html += '<div class="title breaking">🔴 Breaking News</div>
-'
+        parts.append('<div class="section">')
+        parts.append('<div class="title breaking">🔴 Breaking News</div>')
         for item in breaking[:3]:
-            html += '<div class="card breaking">
-'
-            html += '<div class="news-title">' + item[:100] + '</div>
-'
-            html += '<div class="tags"><span class="tag tag-brent">Brent</span><span class="tag tag-wdo">WDO</span></div>
-'
-            html += '</div>
-'
-        html += '</div>
-'
+            parts.append('<div class="card breaking">')
+            parts.append('<div class="news-title">' + item[:100] + '</div>')
+            parts.append('<div class="tags"><span class="tag tag-brent">Brent</span><span class="tag tag-wdo">WDO</span></div>')
+            parts.append("</div>")
+        parts.append("</div>")
 
     if high:
-        html += '<div class="section">
-'
-        html += '<div class="title high">🟠 Alto Impacto</div>
-'
+        parts.append('<div class="section">')
+        parts.append('<div class="title high">🟠 Alto Impacto</div>')
         for item in high[:5]:
-            html += '<div class="card high">
-'
-            html += '<div class="news-title">' + item[:100] + '</div>
-'
-            html += '<div class="tags"><span class="tag tag-win">WIN</span><span class="tag tag-wdo">WDO</span></div>
-'
-            html += '</div>
-'
-        html += '</div>
-'
+            parts.append('<div class="card high">')
+            parts.append('<div class="news-title">' + item[:100] + '</div>')
+            parts.append('<div class="tags"><span class="tag tag-win">WIN</span><span class="tag tag-wdo">WDO</span></div>')
+            parts.append("</div>")
+        parts.append("</div>")
 
     if medium:
-        html += '<div class="section">
-'
-        html += '<div class="title medium">🟡 Médio Impacto</div>
-'
+        parts.append('<div class="section">')
+        parts.append('<div class="title medium">🟡 Médio Impacto</div>')
         for item in medium[:5]:
-            html += '<div class="card medium">
-'
-            html += '<div class="news-title">' + item[:100] + '</div>
-'
-            html += '</div>
-'
-        html += '</div>
-'
+            parts.append('<div class="card medium">')
+            parts.append('<div class="news-title">' + item[:100] + '</div>')
+            parts.append("</div>")
+        parts.append("</div>")
 
     remaining = low[:10]
     if remaining:
-        html += '<div class="section">
-'
-        html += '<div class="title low">🟢 Contexto</div>
-'
+        parts.append('<div class="section">')
+        parts.append('<div class="title low">🟢 Contexto</div>')
         for item in remaining:
-            html += '<div class="card low">
-'
-            html += '<div class="news-summary">' + item[:120] + '</div>
-'
-            html += '</div>
-'
-        html += '</div>
-'
+            parts.append('<div class="card low">')
+            parts.append('<div class="news-summary">' + item[:120] + '</div>')
+            parts.append("</div>")
+        parts.append("</div>")
 
-    html += '<div class="footer">
-'
-    html += '<div style="font-weight:700;color:var(--text2);margin-bottom:4px">Fonte</div>
-'
-    html += '<div>TradingView - Juniorwuttke/ActivTrades</div>
-'
-    html += '<div style="margin-top:8px;font-size:9px;color:var(--muted)">morningcall.github.io - ' + date_str.split(" - ")[0] + '</div>
-'
-    html += '</div>
-'
-    html += '</body>
-'
-    html += '</html>'
+    parts.append('<div class="footer">')
+    parts.append('<div style="font-weight:700;color:var(--text2);margin-bottom:4px">Fonte</div>')
+    parts.append("<div>TradingView - Juniorwuttke/ActivTrades</div>")
+    parts.append('<div style="margin-top:8px;font-size:9px;color:var(--muted)">morningcall.github.io - ' + date_str.split(" - ")[0] + '</div>')
+    parts.append("</div>")
+    parts.append("</body>")
+    parts.append("</html>")
 
-    return html
+    return "\n".join(parts)
 
 def save_last_post(idea):
     post_id = idea.get("id", datetime.now().strftime("%Y%m%d_%H%M%S"))
