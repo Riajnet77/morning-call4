@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>Morning Call + TradingView</title>
+    <title>Morning Call Completo — 28/05/2026</title>
     <style>
         * {
             margin: 0;
@@ -14,6 +14,7 @@
         :root {
             --bg-dark: #0d0d0d;
             --bg-card: #141414;
+            --bg-hover: #1a1a1a;
             --text-primary: #ffffff;
             --text-secondary: #a0a0a0;
             --text-muted: #666666;
@@ -22,6 +23,7 @@
             --accent-yellow: #ffc400;
             --accent-blue: #2979ff;
             --accent-orange: #ff6d00;
+            --accent-purple: #e040fb;
             --border: #222222;
             --font-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
             --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
@@ -66,7 +68,59 @@
             color: var(--text-secondary);
         }
 
-        /* News Sections */
+        .header-badge {
+            display: inline-block;
+            margin-top: 8px;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 12px;
+            background: rgba(0, 230, 118, 0.15);
+            color: var(--accent-green);
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Quick Stats */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .stat-box {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .stat-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        .stat-value {
+            font-family: var(--font-mono);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .stat-negative { color: var(--accent-red); }
+        .stat-positive { color: var(--accent-green); }
+        .stat-neutral { color: var(--accent-yellow); }
+
+        /* Sections */
         .section {
             margin-bottom: 12px;
         }
@@ -108,6 +162,19 @@
             border: 1px solid rgba(0, 230, 118, 0.2);
         }
 
+        .section-widget {
+            background: rgba(41, 121, 255, 0.12);
+            color: var(--accent-blue);
+            border: 1px solid rgba(41, 121, 255, 0.2);
+        }
+
+        .section-setup {
+            background: rgba(224, 64, 251, 0.12);
+            color: var(--accent-purple);
+            border: 1px solid rgba(224, 64, 251, 0.2);
+        }
+
+        /* News Cards */
         .news-card {
             background: var(--bg-card);
             border-radius: 14px;
@@ -132,6 +199,30 @@
         .news-card.high::before { background: var(--accent-orange); }
         .news-card.medium::before { background: var(--accent-yellow); }
         .news-card.low::before { background: var(--accent-green); }
+
+        .news-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .news-time {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--text-muted);
+            background: rgba(255,255,255,0.05);
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+
+        .news-source {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
 
         .news-title {
             font-size: 15px;
@@ -166,33 +257,66 @@
         .tag-win { background: rgba(0, 230, 118, 0.15); color: var(--accent-green); }
         .tag-wdo { background: rgba(41, 121, 255, 0.15); color: var(--accent-blue); }
         .tag-brent { background: rgba(255, 109, 0, 0.15); color: var(--accent-orange); }
-        .tag-brasil { background: rgba(224, 64, 251, 0.15); color: #e040fb; }
+        .tag-brasil { background: rgba(224, 64, 251, 0.15); color: var(--accent-purple); }
 
-        /* Widget Section */
-        .widget-section {
-            background: var(--bg-card);
-            border-radius: 14px;
-            padding: 14px;
-            margin-bottom: 12px;
+        /* Setup Box */
+        .setup-box {
+            background: var(--bg-dark);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            line-height: 2;
             border: 1px solid var(--border);
         }
 
-        .widget-title {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 12px;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            font-size: 13px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            background: rgba(41, 121, 255, 0.12);
-            color: var(--accent-blue);
-            border: 1px solid rgba(41, 121, 255, 0.2);
+        .setup-line {
+            padding-left: 12px;
+            border-left: 2px solid var(--border);
+            margin-bottom: 8px;
         }
 
+        .setup-line:last-child { margin-bottom: 0; }
+
+        .setup-label {
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        .setup-negative { border-left-color: var(--accent-red); color: var(--accent-red); }
+        .setup-neutral { border-left-color: var(--accent-yellow); color: var(--accent-yellow); }
+        .setup-positive { border-left-color: var(--accent-green); color: var(--accent-green); }
+
+        /* Alerts */
+        .alert {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 12px;
+            background: var(--bg-dark);
+            border-radius: 8px;
+            margin-bottom: 6px;
+            border-left: 3px solid var(--accent-red);
+        }
+
+        .alert-time {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent-red);
+            min-width: 40px;
+        }
+
+        .alert-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .alert-text strong {
+            color: var(--text-primary);
+        }
+
+        /* Widget */
         .widget-container {
             width: 100%;
             overflow: hidden;
@@ -249,7 +373,27 @@
     <!-- Header -->
     <div class="header">
         <div class="header-logo">MORNING<span>CALL</span></div>
-        <div class="header-date">28/05/2026 — 15:54 BRT</div>
+        <div class="header-date">28/05/2026 — 10:48 BRT</div>
+        <div class="header-badge">Pré-Mercado B3</div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="stats-bar">
+        <div class="stat-box">
+            <div class="stat-icon">📉</div>
+            <div class="stat-label">Gap WIN</div>
+            <div class="stat-value stat-negative">-0.5%</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-icon">💵</div>
+            <div class="stat-label">WDO</div>
+            <div class="stat-value stat-neutral">VOL</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-icon">🛢️</div>
+            <div class="stat-label">Brent</div>
+            <div class="stat-value stat-positive">+1.0%</div>
+        </div>
     </div>
 
     <!-- Breaking News -->
@@ -259,6 +403,10 @@
             <span>Breaking News</span>
         </div>
         <div class="news-card breaking">
+            <div class="news-header">
+                <span class="news-time">10:30 BRT</span>
+                <span class="news-source">Reuters</span>
+            </div>
             <div class="news-title">Irã ataca base aérea dos EUA durante a madrugada</div>
             <div class="news-summary">Teerã responde a bombardeios americanos próximos ao Estreito de Ormuz. Trump rejeita acordo iminente.</div>
             <div class="news-tags">
@@ -267,6 +415,10 @@
             </div>
         </div>
         <div class="news-card breaking">
+            <div class="news-header">
+                <span class="news-time">09:45 BRT</span>
+                <span class="news-source">BCB</span>
+            </div>
             <div class="news-title">BC Brasil alerta: crédito deteriorando, inadimplência avança</div>
             <div class="news-summary">Comef exige postura conservadora dos bancos. Endividamento corporativo preocupa. ITUB, BBDC, NU sob pressão.</div>
             <div class="news-tags">
@@ -283,6 +435,10 @@
             <span>Alto Impacto</span>
         </div>
         <div class="news-card high">
+            <div class="news-header">
+                <span class="news-time">09:30 BRT</span>
+                <span class="news-source">Forex Factory</span>
+            </div>
             <div class="news-title">PCE (Inflação Fed) em linha com expectativas</div>
             <div class="news-summary">Índice de despesas pessoal mantém projeções de juros estáveis. Kevin Warsh monitora.</div>
             <div class="news-tags">
@@ -291,6 +447,10 @@
             </div>
         </div>
         <div class="news-card high">
+            <div class="news-header">
+                <span class="news-time">09:15 BRT</span>
+                <span class="news-source">Investing.com</span>
+            </div>
             <div class="news-title">Brent +1% com tensão no Oriente Médio</div>
             <div class="news-summary">Petróleo reage a escalada EUA-Irã. Ormuz fechado. Kuwait intercepta mísseis.</div>
             <div class="news-tags">
@@ -299,6 +459,10 @@
             </div>
         </div>
         <div class="news-card high">
+            <div class="news-header">
+                <span class="news-time">08:00 BRT</span>
+                <span class="news-source">Forexlive</span>
+            </div>
             <div class="news-title">Futuros NY recuam após 9 semanas de ganhos</div>
             <div class="news-summary">S&P, Nasdaq, Dow em queda pré-market. Tensão geopolítica reduz apetite por risco.</div>
             <div class="news-tags">
@@ -308,9 +472,180 @@
         </div>
     </div>
 
+    <!-- Médio Impacto -->
+    <div class="section">
+        <div class="section-title section-medium">
+            <span>🟡</span>
+            <span>Médio Impacto</span>
+        </div>
+        <div class="news-card medium">
+            <div class="news-header">
+                <span class="news-time">09:30 BRT</span>
+                <span class="news-source">Forex Factory</span>
+            </div>
+            <div class="news-title">PIB 1º Tri (2ª prévia) + Renda Pessoal</div>
+            <div class="news-summary">Dados complementares ao PCE mostram trajetória de consumo americano.</div>
+            <div class="news-tags">
+                <span class="tag tag-wdo">WDO</span>
+            </div>
+        </div>
+        <div class="news-card medium">
+            <div class="news-header">
+                <span class="news-time">09:30 BRT</span>
+                <span class="news-source">Forex Factory</span>
+            </div>
+            <div class="news-title">Seguro-Desemprego semanal divulgado</div>
+            <div class="news-summary">Indicador de mercado de trabalho americano. Volatilidade moderada em WDO.</div>
+            <div class="news-tags">
+                <span class="tag tag-wdo">WDO</span>
+            </div>
+        </div>
+        <div class="news-card medium">
+            <div class="news-header">
+                <span class="news-time">09:00 BRT</span>
+                <span class="news-source">IBGE</span>
+            </div>
+            <div class="news-title">Taxa de desemprego no Brasil divulgada</div>
+            <div class="news-summary">Dados oficiais do mercado de trabalho brasileiro. Impacto WIN moderado.</div>
+            <div class="news-tags">
+                <span class="tag tag-win">WIN</span>
+                <span class="tag tag-brasil">Brasil</span>
+            </div>
+        </div>
+        <div class="news-card medium">
+            <div class="news-header">
+                <span class="news-time">08:30 BRT</span>
+                <span class="news-source">InfoMoney</span>
+            </div>
+            <div class="news-title">Ásia fecha em baixa, China na contramão</div>
+            <div class="news-summary">Taiwan -2.1%, Coreia -0.8%. China +0.1% a +0.8% com estímulos domésticos.</div>
+            <div class="news-tags">
+                <span class="tag tag-win">WIN</span>
+                <span class="tag">Commodities</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Baixo Impacto -->
+    <div class="section">
+        <div class="section-title section-low">
+            <span>🟢</span>
+            <span>Baixo Impacto</span>
+        </div>
+        <div class="news-card low">
+            <div class="news-header">
+                <span class="news-time">10:15 BRT</span>
+                <span class="news-source">Banco Pine</span>
+            </div>
+            <div class="news-title">Nilton Schneider (Bacen) no Pine Macro Day</div>
+            <div class="news-summary">Diretor de Política Monetária discute cenário macro.</div>
+            <div class="news-tags">
+                <span class="tag tag-brasil">Brasil</span>
+            </div>
+        </div>
+        <div class="news-card low">
+            <div class="news-header">
+                <span class="news-time">11:00 BRT</span>
+                <span class="news-source">Forex Factory</span>
+            </div>
+            <div class="news-title">Vendas de casas novas nos EUA divulgadas</div>
+            <div class="news-summary">Indicador imobiliário americano. Impacto indireto em WDO.</div>
+            <div class="news-tags">
+                <span class="tag tag-wdo">WDO</span>
+            </div>
+        </div>
+        <div class="news-card low">
+            <div class="news-header">
+                <span class="news-time">12:30 BRT</span>
+                <span class="news-source">Fed Atlanta</span>
+            </div>
+            <div class="news-title">GDPNow (PIB Agora) atualizado</div>
+            <div class="news-summary">Nowcast do crescimento americano. Dados em tempo real para estimativa do PIB.</div>
+            <div class="news-tags">
+                <span class="tag tag-wdo">WDO</span>
+            </div>
+        </div>
+        <div class="news-card low">
+            <div class="news-header">
+                <span class="news-time">14:30 BRT</span>
+                <span class="news-source">Caged</span>
+            </div>
+            <div class="news-title">Novos empregos formais (Caged)</div>
+            <div class="news-summary">Mercado de trabalho formal brasileiro. Impacto WIN moderado.</div>
+            <div class="news-tags">
+                <span class="tag tag-win">WIN</span>
+                <span class="tag tag-brasil">Brasil</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Setup Operacional -->
+    <div class="section">
+        <div class="section-title section-setup">
+            <span>🎯</span>
+            <span>Setup Operacional</span>
+        </div>
+        <div class="setup-box">
+            <div class="setup-line setup-negative">
+                <span class="setup-label">📉 WIN:</span><br>
+                Múltiplos fatores negativos convergindo:<br>
+                • EWZ -0.61% no pré-market (volume baixo)<br>
+                • BC Brasil hawkish no crédito → pressão bancos<br>
+                • Futuros NY recuam com tensão EUA-Irã<br>
+                • Ásia majoritariamente negativa<br>
+                <strong>Gap estimado: -0.5% a -1.0%</strong><br>
+                <strong>AGUARDAR IPCA-15 às 09h para direção definitiva</strong><br>
+                Suporte: região de fechamento ontem
+            </div>
+            <div class="setup-line setup-neutral">
+                <span class="setup-label">📊 WDO:</span><br>
+                Cenário misto:<br>
+                • Tensão EUA-Irã → flight to safety → dólar forte = WDO cai<br>
+                • BCE hawkish (2 altas) → euro forte = WDO sobe<br>
+                • PCE às 09:30 define direção<br>
+                <strong>VOLATILIDADE ESPERADA — reduzir exposição</strong>
+            </div>
+            <div class="setup-line setup-negative">
+                <span class="setup-label">⚠️ RISCOS:</span><br>
+                1. PCE acima do esperado → Fed agressivo → WDO em queda<br>
+                2. Escalada EUA-Irã → Brent dispara → inflação global<br>
+                3. BC Brasil restritivo no crédito → desaceleração WIN<br>
+                4. Volume EWZ baixo = mercado indeciso, gaps amplos possíveis
+            </div>
+        </div>
+    </div>
+
+    <!-- Agenda do Dia -->
+    <div class="section">
+        <div class="section-title section-setup">
+            <span>📅</span>
+            <span>Agenda do Dia</span>
+        </div>
+        <div class="setup-box">
+            <div class="alert">
+                <span class="alert-time">09:00</span>
+                <span class="alert-text">
+                    <strong>IPCA-15 (Maio)</strong> — Evento de maior impacto. Definirá direção do dia.
+                </span>
+            </div>
+            <div class="alert" style="border-left-color: var(--accent-yellow);">
+                <span class="alert-time" style="color: var(--accent-yellow);">09:15</span>
+                <span class="alert-text">
+                    <strong>ADP Empregos</strong> — Prévia do NFP. WDO reage imediatamente.
+                </span>
+            </div>
+            <div class="alert" style="border-left-color: var(--accent-green);">
+                <span class="alert-time" style="color: var(--accent-green);">15:00</span>
+                <span class="alert-text">
+                    <strong>Leilão T-Note</strong> — Menor impacto, mas monitorar fluxo para dólar.
+                </span>
+            </div>
+        </div>
+    </div>
+
     <!-- Widget TradingView -->
-    <div class="widget-section">
-        <div class="widget-title">
+    <div class="section">
+        <div class="section-title section-widget">
             <span>📰</span>
             <span>Top Stories — TradingView</span>
         </div>
@@ -345,14 +680,14 @@
     <!-- Footer -->
     <div class="footer">
         <div style="font-weight: 700; color: var(--text-secondary); margin-bottom: 4px;">Fontes</div>
-        <div>TradingView — Juniorwuttke/ActivTrades + Widget Oficial</div>
+        <div>Reuters • Forex Factory • Investing.com • Forexlive • InfoMoney • BCB • IBGE</div>
+        <div style="margin-top: 4px;">TradingView Widget — Juniorwuttke/ActivTrades</div>
         <div style="margin-top: 8px; font-size: 9px; color: var(--text-muted);">
             morningcall.github.io • 28/05/2026
         </div>
     </div>
 
     <script>
-        // Remove loading message when widget loads
         window.addEventListener('load', function() {
             setTimeout(function() {
                 var loading = document.querySelector('.loading');
