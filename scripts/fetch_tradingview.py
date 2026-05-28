@@ -26,7 +26,6 @@ def get_latest_idea():
         response.raise_for_status()
         soup = BeautifulSoup(response.content, "html.parser")
 
-        # Tenta extrair de JSON embeddado
         scripts = soup.find_all("script", type="application/json")
         for script in scripts:
             try:
@@ -38,7 +37,6 @@ def get_latest_idea():
             except:
                 continue
 
-        # Fallback: meta description
         meta = soup.find("meta", {"name": "description"})
         if meta:
             return {
@@ -103,84 +101,168 @@ def generate_html(idea):
         else:
             low.append(line)
 
-    # Gera HTML
-    html = """<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Morning Call - """ + date_str.split(" - ")[0] + """</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0d0d0d;--card:#141414;--text:#fff;--text2:#a0a0a0;--muted:#666;--green:#00e676;--red:#ff1744;--yellow:#ffc400;--blue:#2979ff;--orange:#ff6d00;--border:#222}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;line-height:1.6;max-width:420px;margin:0 auto;padding:12px}
-.header{background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:16px;padding:16px;margin-bottom:12px;text-align:center}
-.logo{font-family:monospace;font-size:18px;font-weight:800;letter-spacing:3px}
-.logo span{color:var(--green)}
-.date{font-family:monospace;font-size:12px;color:var(--text2)}
-.section{margin-bottom:12px}
-.title{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;margin-bottom:8px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
-.breaking{background:rgba(255,23,68,.12);color:var(--red);border:1px solid rgba(255,23,68,.2)}
-.high{background:rgba(255,109,0,.12);color:var(--orange);border:1px solid rgba(255,109,0,.2)}
-.medium{background:rgba(255,196,0,.12);color:var(--yellow);border:1px solid rgba(255,196,0,.2)}
-.low{background:rgba(0,230,118,.12);color:var(--green);border:1px solid rgba(0,230,118,.2)}
-.card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:8px;border:1px solid var(--border);position:relative;overflow:hidden}
-.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:14px 0 0 14px}
-.card.breaking::before{background:var(--red)}
-.card.high::before{background:var(--orange)}
-.card.medium::before{background:var(--yellow)}
-.card.low::before{background:var(--green)}
-.news-title{font-size:15px;font-weight:700;line-height:1.4;margin-bottom:6px}
-.news-summary{font-size:13px;color:var(--text2);line-height:1.5;margin-bottom:8px}
-.tags{display:flex;flex-wrap:wrap;gap:4px}
-.tag{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,.06);color:var(--muted)}
-.tag-win{background:rgba(0,230,118,.15);color:var(--green)}
-.tag-wdo{background:rgba(41,121,255,.15);color:var(--blue)}
-.tag-brent{background:rgba(255,109,0,.15);color:var(--orange)}
-.footer{text-align:center;padding:16px;font-size:10px;color:var(--muted);background:var(--card);border-radius:12px;border:1px solid var(--border)}
-</style>
-</head>
-<body>
-<div class="header">
-<div class="logo">MORNING<span>CALL</span></div>
-<div class="date">""" + date_str + """</div>
-</div>
-"""
+    # Gera HTML usando aspas SIMPLES no Python
+    html = '<!DOCTYPE html>
+'
+    html += '<html lang="pt-BR">
+'
+    html += '<head>
+'
+    html += '<meta charset="UTF-8">
+'
+    html += '<meta name="viewport" content="width=device-width, initial-scale=1.0">
+'
+    html += '<title>Morning Call - ' + date_str.split(" - ")[0] + '</title>
+'
+    html += '<style>
+'
+    html += '*{margin:0;padding:0;box-sizing:border-box}
+'
+    html += ':root{--bg:#0d0d0d;--card:#141414;--text:#fff;--text2:#a0a0a0;--muted:#666;--green:#00e676;--red:#ff1744;--yellow:#ffc400;--blue:#2979ff;--orange:#ff6d00;--border:#222}
+'
+    html += 'body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;line-height:1.6;max-width:420px;margin:0 auto;padding:12px}
+'
+    html += '.header{background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:16px;padding:16px;margin-bottom:12px;text-align:center}
+'
+    html += '.logo{font-family:monospace;font-size:18px;font-weight:800;letter-spacing:3px}
+'
+    html += '.logo span{color:var(--green)}
+'
+    html += '.date{font-family:monospace;font-size:12px;color:var(--text2)}
+'
+    html += '.section{margin-bottom:12px}
+'
+    html += '.title{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;margin-bottom:8px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+'
+    html += '.breaking{background:rgba(255,23,68,.12);color:var(--red);border:1px solid rgba(255,23,68,.2)}
+'
+    html += '.high{background:rgba(255,109,0,.12);color:var(--orange);border:1px solid rgba(255,109,0,.2)}
+'
+    html += '.medium{background:rgba(255,196,0,.12);color:var(--yellow);border:1px solid rgba(255,196,0,.2)}
+'
+    html += '.low{background:rgba(0,230,118,.12);color:var(--green);border:1px solid rgba(0,230,118,.2)}
+'
+    html += '.card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:8px;border:1px solid var(--border);position:relative;overflow:hidden}
+'
+    html += '.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:14px 0 0 14px}
+'
+    html += '.card.breaking::before{background:var(--red)}
+'
+    html += '.card.high::before{background:var(--orange)}
+'
+    html += '.card.medium::before{background:var(--yellow)}
+'
+    html += '.card.low::before{background:var(--green)}
+'
+    html += '.news-title{font-size:15px;font-weight:700;line-height:1.4;margin-bottom:6px}
+'
+    html += '.news-summary{font-size:13px;color:var(--text2);line-height:1.5;margin-bottom:8px}
+'
+    html += '.tags{display:flex;flex-wrap:wrap;gap:4px}
+'
+    html += '.tag{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,.06);color:var(--muted)}
+'
+    html += '.tag-win{background:rgba(0,230,118,.15);color:var(--green)}
+'
+    html += '.tag-wdo{background:rgba(41,121,255,.15);color:var(--blue)}
+'
+    html += '.tag-brent{background:rgba(255,109,0,.15);color:var(--orange)}
+'
+    html += '.footer{text-align:center;padding:16px;font-size:10px;color:var(--muted);background:var(--card);border-radius:12px;border:1px solid var(--border)}
+'
+    html += '</style>
+'
+    html += '</head>
+'
+    html += '<body>
+'
+    html += '<div class="header">
+'
+    html += '<div class="logo">MORNING<span>CALL</span></div>
+'
+    html += '<div class="date">' + date_str + '</div>
+'
+    html += '</div>
+'
 
     if breaking:
-        html += "<div class="section"><div class="title breaking">🔴 Breaking News</div>"
+        html += '<div class="section">
+'
+        html += '<div class="title breaking">🔴 Breaking News</div>
+'
         for item in breaking[:3]:
-            html += "<div class="card breaking"><div class="news-title">" + item[:100] + "</div>"
-            html += "<div class="tags"><span class="tag tag-brent">Brent</span><span class="tag tag-wdo">WDO</span></div></div>"
-        html += "</div>"
+            html += '<div class="card breaking">
+'
+            html += '<div class="news-title">' + item[:100] + '</div>
+'
+            html += '<div class="tags"><span class="tag tag-brent">Brent</span><span class="tag tag-wdo">WDO</span></div>
+'
+            html += '</div>
+'
+        html += '</div>
+'
 
     if high:
-        html += "<div class="section"><div class="title high">🟠 Alto Impacto</div>"
+        html += '<div class="section">
+'
+        html += '<div class="title high">🟠 Alto Impacto</div>
+'
         for item in high[:5]:
-            html += "<div class="card high"><div class="news-title">" + item[:100] + "</div>"
-            html += "<div class="tags"><span class="tag tag-win">WIN</span><span class="tag tag-wdo">WDO</span></div></div>"
-        html += "</div>"
+            html += '<div class="card high">
+'
+            html += '<div class="news-title">' + item[:100] + '</div>
+'
+            html += '<div class="tags"><span class="tag tag-win">WIN</span><span class="tag tag-wdo">WDO</span></div>
+'
+            html += '</div>
+'
+        html += '</div>
+'
 
     if medium:
-        html += "<div class="section"><div class="title medium">🟡 Médio Impacto</div>"
+        html += '<div class="section">
+'
+        html += '<div class="title medium">🟡 Médio Impacto</div>
+'
         for item in medium[:5]:
-            html += "<div class="card medium"><div class="news-title">" + item[:100] + "</div></div>"
-        html += "</div>"
+            html += '<div class="card medium">
+'
+            html += '<div class="news-title">' + item[:100] + '</div>
+'
+            html += '</div>
+'
+        html += '</div>
+'
 
     remaining = low[:10]
     if remaining:
-        html += "<div class="section"><div class="title low">🟢 Contexto</div>"
+        html += '<div class="section">
+'
+        html += '<div class="title low">🟢 Contexto</div>
+'
         for item in remaining:
-            html += "<div class="card low"><div class="news-summary">" + item[:120] + "</div></div>"
-        html += "</div>"
+            html += '<div class="card low">
+'
+            html += '<div class="news-summary">' + item[:120] + '</div>
+'
+            html += '</div>
+'
+        html += '</div>
+'
 
-    html += """<div class="footer">
-<div style="font-weight:700;color:var(--text2);margin-bottom:4px">Fonte</div>
-<div>TradingView - Juniorwuttke/ActivTrades</div>
-<div style="margin-top:8px;font-size:9px;color:var(--muted)">morningcall.github.io - """ + date_str.split(" - ")[0] + """</div>
-</div>
-</body>
-</html>"""
+    html += '<div class="footer">
+'
+    html += '<div style="font-weight:700;color:var(--text2);margin-bottom:4px">Fonte</div>
+'
+    html += '<div>TradingView - Juniorwuttke/ActivTrades</div>
+'
+    html += '<div style="margin-top:8px;font-size:9px;color:var(--muted)">morningcall.github.io - ' + date_str.split(" - ")[0] + '</div>
+'
+    html += '</div>
+'
+    html += '</body>
+'
+    html += '</html>'
 
     return html
 
@@ -190,12 +272,12 @@ def save_last_post(idea):
         f.write(post_id)
 
 def main():
-    print("🔍 Buscando ultima ideia do Juniorwuttke...")
+    print("Buscando ultima ideia do Juniorwuttke...")
 
     idea = get_latest_idea()
 
     if not idea:
-        print("❌ Nao foi possivel extrair conteudo")
+        print("Nao foi possivel extrair conteudo")
         idea = {
             "id": "fallback_" + datetime.now().strftime("%Y%m%d"),
             "title": "Morning Call - " + datetime.now().strftime("%d/%m/%Y"),
@@ -203,13 +285,13 @@ def main():
             "published": datetime.now().isoformat()
         }
 
-    print("📄 Post: " + idea.get("title", "Sem titulo")[:60])
+    print("Post: " + idea.get("title", "Sem titulo")[:60])
 
     if not has_new_post(idea):
-        print("⏭️ Post ja processado. Nenhuma acao.")
+        print("Post ja processado. Nenhuma acao.")
         return False
 
-    print("🆕 Novo post! Gerando HTML...")
+    print("Novo post! Gerando HTML...")
 
     html_content = generate_html(idea)
 
@@ -217,7 +299,7 @@ def main():
     with open(index_path, "w", encoding="utf-8") as f:
         f.write(html_content)
 
-    print("💾 HTML salvo: " + index_path)
+    print("HTML salvo: " + index_path)
 
     save_last_post(idea)
 
