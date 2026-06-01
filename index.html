@@ -1,54 +1,336 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Morning Call - 31/05/2026</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0d0d0d;--card:#141414;--text:#fff;--text2:#a0a0a0;--muted:#666;--green:#00e676;--red:#ff1744;--yellow:#ffc400;--blue:#2979ff;--orange:#ff6d00;--border:#222}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;line-height:1.6;max-width:420px;margin:0 auto;padding:12px}
-.header{background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:16px;padding:16px;margin-bottom:12px;text-align:center}
-.logo{font-family:monospace;font-size:18px;font-weight:800;letter-spacing:3px}
-.logo span{color:var(--green)}
-.date{font-family:monospace;font-size:12px;color:var(--text2)}
-.section{margin-bottom:12px}
-.title{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;margin-bottom:8px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
-.breaking{background:rgba(255,23,68,.12);color:var(--red);border:1px solid rgba(255,23,68,.2)}
-.high{background:rgba(255,109,0,.12);color:var(--orange);border:1px solid rgba(255,109,0,.2)}
-.medium{background:rgba(255,196,0,.12);color:var(--yellow);border:1px solid rgba(255,196,0,.2)}
-.low{background:rgba(0,230,118,.12);color:var(--green);border:1px solid rgba(0,230,118,.2)}
-.card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:8px;border:1px solid var(--border);position:relative;overflow:hidden}
-.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:14px 0 0 14px}
-.card.breaking::before{background:var(--red)}
-.card.high::before{background:var(--orange)}
-.card.medium::before{background:var(--yellow)}
-.card.low::before{background:var(--green)}
-.news-title{font-size:15px;font-weight:700;line-height:1.4;margin-bottom:6px}
-.news-summary{font-size:13px;color:var(--text2);line-height:1.5;margin-bottom:8px}
-.tags{display:flex;flex-wrap:wrap;gap:4px}
-.tag{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,.06);color:var(--muted)}
-.tag-win{background:rgba(0,230,118,.15);color:var(--green)}
-.tag-wdo{background:rgba(41,121,255,.15);color:var(--blue)}
-.tag-brent{background:rgba(255,109,0,.15);color:var(--orange)}
-.footer{text-align:center;padding:16px;font-size:10px;color:var(--muted);background:var(--card);border-radius:12px;border:1px solid var(--border)}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Morning Call · Juniorwuttke</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: radial-gradient(circle at 10% 20%, #0a0f1e, #03060c);
+      font-family: 'Inter', sans-serif;
+      color: #eef2ff;
+      padding: 1.5rem;
+      min-height: 100vh;
+    }
+
+    .dashboard {
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    /* glass header */
+    .top-bar {
+      background: rgba(15, 25, 45, 0.7);
+      backdrop-filter: blur(12px);
+      border-radius: 2rem;
+      padding: 1rem 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    .logo h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff, #3b82f6, #a855f7);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .logo p {
+      font-size: 0.75rem;
+      color: #94a3b8;
+    }
+
+    .live-badge {
+      background: #0f212e;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      border-left: 3px solid #10b981;
+    }
+    .live-badge i {
+      color: #10b981;
+      margin-right: 8px;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.4; }
+      100% { opacity: 1; }
+    }
+
+    .update-time {
+      font-size: 0.8rem;
+      background: #1e293b;
+      padding: 0.4rem 1rem;
+      border-radius: 2rem;
+    }
+
+    /* grid principal */
+    .grid-2cols {
+      display: grid;
+      grid-template-columns: 1fr 0.9fr;
+      gap: 1.8rem;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: rgba(12, 20, 30, 0.7);
+      backdrop-filter: blur(6px);
+      border-radius: 1.8rem;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(56, 189, 248, 0.5);
+    }
+
+    .card-header {
+      padding: 1.2rem 1.5rem;
+      background: rgba(0,0,0,0.3);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 1.1rem;
+    }
+    .card-header i {
+      color: #3b82f6;
+    }
+
+    .card-content {
+      padding: 1.5rem;
+    }
+
+    .chart-wrapper {
+      width: 100%;
+      height: 380px;
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    /* seção de notícias / insights */
+    .call-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      background: linear-gradient(120deg, #f0f9ff, #bae6fd);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .insight-list {
+      list-style: none;
+      margin: 1rem 0;
+    }
+    .insight-list li {
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 12px;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+    .insight-list li i {
+      color: #3b82f6;
+      margin-top: 0.2rem;
+    }
+
+    .tag-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 1rem 0;
+    }
+    .tag {
+      background: #1e2a3e;
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #b9e0ff;
+    }
+
+    .agenda-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .agenda-time {
+      font-weight: 600;
+      color: #38bdf8;
+    }
+
+    .highlight {
+      background: linear-gradient(90deg, #3b82f620, #a855f720);
+      border-left: 3px solid #f97316;
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      margin-top: 1rem;
+    }
+
+    /* cards inferiores */
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+    .metric {
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(4px);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      text-align: center;
+      border: 1px solid rgba(59,130,246,0.2);
+    }
+    .metric i {
+      font-size: 1.8rem;
+      color: #38bdf8;
+    }
+    .metric-value {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin: 8px 0;
+    }
+    .metric-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: #9ca3af;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 0.7rem;
+      color: #5f7f9e;
+      margin-top: 2rem;
+      border-top: 1px dashed #2d3a4e;
+      padding-top: 1.5rem;
+    }
+
+    @media (max-width: 800px) {
+      .grid-2cols { grid-template-columns: 1fr; }
+      .bottom-grid { grid-template-columns: 1fr; }
+      body { padding: 1rem; }
+    }
+  </style>
 </head>
 <body>
-<div class="header">
-<div class="logo">MORNING<span>CALL</span></div>
-<div class="date">31/05/2026 - 09:05 BRT</div>
+<div class="dashboard">
+  <div class="top-bar">
+    <div class="logo">
+      <h1><i class="fas fa-chart-line"></i> Morning<span style="font-weight:400"> Call</span></h1>
+      <p>Estratégias e visão de mercado · atualizado diariamente às 8h BRT</p>
+    </div>
+    <div style="display: flex; gap: 12px;">
+      <div class="live-badge"><i class="fas fa-circle"></i> Pré-mercado</div>
+      <div class="update-time" id="updateTime">--/-- --:--</div>
+    </div>
+  </div>
+
+  <div class="grid-2cols">
+    <!-- gráfico TradingView NVDA -->
+    <div class="card">
+      <div class="card-header"><i class="fas fa-chart-simple"></i> Análise Técnica · NVDA</div>
+      <div class="card-content">
+        <div class="chart-wrapper">
+          <iframe src="https://br.tradingview.com/chart/NVDA/1EviiEpc/?embed=1" allowtransparency="true" scrolling="no"></iframe>
+        </div>
+        <div style="font-size: 0.7rem; text-align: right; margin-top: 8px;">Fonte: TradingView · Juniorwuttke</div>
+      </div>
+    </div>
+
+    <!-- conteúdo dinâmico do Morning Call -->
+    <div class="card" id="morningCallCard">
+      <div class="card-header"><i class="fas fa-bullhorn"></i> Morning Call · <span id="dynamicDate">Carregando...</span></div>
+      <div class="card-content" id="dynamicContent">
+        <div style="text-align: center; padding: 2rem;">Carregando última análise...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- indicadores de sentimento -->
+  <div class="bottom-grid">
+    <div class="metric"><i class="fas fa-dragon"></i><div class="metric-value" id="fearIndex">--</div><div class="metric-label">Medo & Ganância</div></div>
+    <div class="metric"><i class="fas fa-dollar-sign"></i><div class="metric-value" id="dxy">---</div><div class="metric-label">DXY (Dólar Index)</div></div>
+    <div class="metric"><i class="fas fa-waveform"></i><div class="metric-value" id="vix">--</div><div class="metric-label">VIX (Volatilidade)</div></div>
+  </div>
+
+  <div class="footer">
+    <i class="fas fa-calendar-alt"></i> Dados extraídos automaticamente do perfil <strong>Juniorwuttke</strong> no TradingView.<br>
+    Última execução: <span id="lastFetch">--</span>
+  </div>
 </div>
-<div class="section">
-<div class="title medium">🟡 Médio Impacto</div>
-<div class="card medium">
-<div class="news-title">Siga Juniorwuttke no TradingView para análises exclusivas de gráficos, indicadores personalizados e </div>
-</div>
-</div>
-<div class="footer">
-<div style="font-weight:700;color:var(--text2);margin-bottom:4px">Fonte</div>
-<div>TradingView - Juniorwuttke/ActivTrades</div>
-<div style="margin-top:8px;font-size:9px;color:var(--muted)">morningcall.github.io - 31/05/2026</div>
-</div>
+
+<script>
+  // Carrega os dados do arquivo data.json (atualizado automaticamente às 8h)
+  async function loadMorningData() {
+    try {
+      const res = await fetch('data.json?v=' + Date.now());
+      if (!res.ok) throw new Error('Arquivo data.json não encontrado');
+      const data = await res.json();
+      
+      // Atualiza data/hora
+      document.getElementById('dynamicDate').innerText = data.date || new Date().toLocaleDateString('pt-BR');
+      document.getElementById('updateTime').innerText = data.lastUpdate || new Date().toLocaleString('pt-BR');
+      document.getElementById('lastFetch').innerText = data.lastFetch || '--';
+      
+      // Atualiza indicadores
+      if (data.indicators) {
+        document.getElementById('fearIndex').innerText = data.indicators.fearGreed || '--';
+        document.getElementById('dxy').innerText = data.indicators.dxy || '--';
+        document.getElementById('vix').innerText = data.indicators.vix || '--';
+      }
+      
+      // Conteúdo principal
+      const contentDiv = document.getElementById('dynamicContent');
+      contentDiv.innerHTML = `
+        <div class="call-title">${data.title || 'Visão do dia'}</div>
+        <div class="tag-group">
+          ${data.tags?.map(t => `<span class="tag">${t}</span>`).join('') || ''}
+        </div>
+        <ul class="insight-list">
+          ${data.insights?.map(i => `<li><i class="fas fa-chart-line"></i> ${i}</li>`).join('') || '<li>Nenhum insight carregado</li>'}
+        </ul>
+        <div class="highlight">
+          <i class="fas fa-calendar-week"></i> <strong>Agenda do dia (BRT)</strong>
+        </div>
+        ${data.agenda?.map(a => `<div class="agenda-item"><span class="agenda-time">${a.time}</span><span>${a.event}</span></div>`).join('') || '<div>Sem eventos programados</div>'}
+        <div class="highlight" style="margin-top: 1rem;">
+          <i class="fas fa-lightbulb"></i> <strong>Estratégia:</strong> ${data.strategy || 'Aguardar confirmação de abertura americana.'}
+        </div>
+      `;
+    } catch (err) {
+      console.error(err);
+      document.getElementById('dynamicContent').innerHTML = '<div style="padding:1rem; background:#ff000022; border-radius:1rem;">⚠️ Não foi possível carregar os dados. Verifique se o arquivo data.json existe e foi atualizado hoje.</div>';
+    }
+  }
+  
+  loadMorningData();
+  // recarregar a cada 5 minutos (opcional)
+  setInterval(loadMorningData, 300000);
+</script>
 </body>
 </html>
