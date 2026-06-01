@@ -1,54 +1,32 @@
-name: Update Morning Call
+name: Atualizar Morning Call
 
 on:
   schedule:
-    - cron: "0 11,12,13,14 * * *"
-  workflow_dispatch:
+    - cron: '0 11 * * *'   # 11:00 UTC = 8:00 BRT (sem horário de verão)
+  workflow_dispatch:        # permite rodar manualmente
 
 jobs:
   update:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v4
+      - name: Checkout do código
+        uses: actions/checkout@v4
 
-    - name: Setup Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.11"
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
 
-    - name: Install dependencies
-      run: |
-        pip install requests beautifulsoup4
+      - name: Instalar dependências
+        run: pip install requests beautifulsoup4
 
-    - name: Fetch TradingView content
-      run: |
-        python scripts/fetch_tradingview.py
+      - name: Executar scraping
+        run: python scrape.py
 
-    - name: Check if updated
-      id: check
-      run: |
-        if git diff --quiet; then
-          echo "changed=false" >> $GITHUB_OUTPUT
-          echo "Nenhuma mudanca"
-        else
-          echo "changed=true" >> $GITHUB_OUTPUT
-          echo "Novo conteudo!"
-        fi
-
-    - name: Commit and push
-      if: steps.check.outputs.changed == 'true'
-      run: |
-        git config user.name "GitHub Action"
-        git config user.email "action@github.com"
-        git add index.html
-        git add .last_post_id
-        git commit -m "Auto-update: Morning Call $(date +%d/%m/%Y %H:%M)"
-        git push
-
-    - name: Verify
-      if: steps.check.outputs.changed == 'true'
-      run: |
-        echo "Atualizado!"
-        echo "https://riajnet77.github.io/morning-call4/"
+      - name: Commit e push das alterações
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data.json
+          git diff --quiet && git diff --staged --quiet || git commit -m "Atualização automática do Morning Call - $(date +'%Y-%m-%d %H:%M')"
+          git push
