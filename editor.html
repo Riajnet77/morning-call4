@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor Mágico · Morning Call</title>
+    <style>
+        body{background:#0a0f1e;font-family:system-ui;padding:20px;color:#fff}
+        .container{max-width:1000px;margin:0 auto}
+        textarea{width:100%;height:400px;background:#1e293b;color:#fff;border:1px solid #38bdf8;border-radius:12px;padding:12px;font-family:monospace}
+        button{background:#38bdf8;border:none;padding:12px 24px;border-radius:40px;font-weight:bold;margin:12px 0;cursor:pointer}
+        .output{background:#0f172a;border-radius:12px;padding:16px;margin-top:20px;white-space:pre-wrap;font-family:monospace;font-size:12px}
+        h2{color:#38bdf8}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📋 Editor Mágico do Morning Call</h1>
+    <p>Cole abaixo o texto inteiro do post do TradingView (Ctrl+C / Ctrl+V). O sistema vai extrair automaticamente as seções e gerar o JSON pronto.</p>
+    <textarea id="inputText" placeholder="Cole aqui o texto do Morning Call..."></textarea>
+    <button onclick="gerarJSON()">✨ Gerar JSON</button>
+    <div id="output" class="output"></div>
+    <p>Depois de gerar, copie o JSON e vá no GitHub → edite o arquivo <strong>data.json</strong> → cole por cima → Commit.</p>
+</div>
+<script>
+function gerarJSON() {
+    const texto = document.getElementById('inputText').value;
+    if (!texto.trim()) return;
+    
+    // Função para extrair seção
+    function extrairSecao(titulo) {
+        const regex = new RegExp(`${titulo}[\\s\\S]*?(?=(Brasil|EUA|Europa|Ásia|Agenda|$))`, 'i');
+        const match = texto.match(regex);
+        if (match) {
+            let conteudo = match[0].replace(new RegExp(`^${titulo}`, 'i'), '').trim();
+            // remove possíveis quebras de linha excessivas
+            conteudo = conteudo.replace(/\n{3,}/g, '\n\n');
+            return conteudo;
+        }
+        return '';
+    }
+    
+    // Extrair agenda
+    const agendaRegex = /Agenda de Indicadores:([\s\S]*?)(?=\n\n|\n[A-Z]|$)/i;
+    const agendaMatch = texto.match(agendaRegex);
+    let agendaItens = [];
+    if (agendaMatch) {
+        const linhas = agendaMatch[1].split('\n');
+        for (let linha of linhas) {
+            const matchHora = linha.match(/(\d{1,2}:\d{2})\s*-\s*(.+)/);
+            if (matchHora) {
+                agendaItens.push({ time: matchHora[1], event: matchHora[2].trim() });
+            }
+        }
+    }
+    
+    // Extrair seções principais
+    const brasil = extrairSecao('Brasil');
+    const eua = extrairSecao('EUA');
+    const europa = extrairSecao('Europa');
+    const asia = extrairSecao('Ásia|Asia|Pacifico');
+    
+    // Data de hoje
+    const hoje = new Date().toLocaleDateString('pt-BR');
+    const agora = new Date().toLocaleString('pt-BR');
+    
+    const json = {
+        lastUpdate: agora,
+        agenda: agendaItens,
+        brasil: brasil,
+        eua: eua,
+        europa: europa,
+        asia: asia
+    };
+    
+    document.getElementById('output').innerText = JSON.stringify(json, null, 2);
+}
+</script>
+</body>
+</html>
