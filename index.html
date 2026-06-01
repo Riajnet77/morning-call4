@@ -1,154 +1,114 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Morning Call · Juniorwuttke</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<style>
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{background:radial-gradient(circle at 10% 20%,#0a0f1e,#03060c);font-family:'Inter',sans-serif;color:#eef2ff;padding:1.5rem;min-height:100vh}
-  .dashboard{max-width:1300px;margin:0 auto}
-  .top-bar{background:rgba(15,25,45,0.7);backdrop-filter:blur(12px);border-radius:2rem;padding:1rem 2rem;margin-bottom:2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;border:1px solid rgba(56,189,248,0.25)}
-  .logo h1{font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,#fff,#3b82f6,#a855f7);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .live-badge{background:#0f212e;padding:0.5rem 1.2rem;border-radius:40px;font-size:0.85rem;border-left:3px solid #10b981}
-  .grid-2cols{display:grid;grid-template-columns:1fr 0.9fr;gap:1.8rem;margin-bottom:2rem}
-  .card{background:rgba(12,20,30,0.7);backdrop-filter:blur(6px);border-radius:1.8rem;border:1px solid rgba(56,189,248,0.2);overflow:hidden}
-  .card-header{padding:1.2rem 1.5rem;background:rgba(0,0,0,0.3);border-bottom:1px solid rgba(255,255,255,0.05);font-weight:600;display:flex;align-items:center;gap:0.8rem}
-  .card-header i{color:#3b82f6}
-  .card-content{padding:1.5rem}
-  .chart-wrapper{width:100%;height:380px;border-radius:1rem;overflow:hidden}
-  iframe{width:100%;height:100%;border:0}
-  .call-title{font-size:1.3rem;font-weight:700;margin-bottom:1.2rem;background:linear-gradient(120deg,#f0f9ff,#bae6fd);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .insight-list{list-style:none;margin:1rem 0}
-  .insight-list li{margin-bottom:1rem;display:flex;gap:12px}
-  .insight-list li i{color:#3b82f6}
-  .tag-group{display:flex;flex-wrap:wrap;gap:10px;margin:1rem 0}
-  .tag{background:#1e2a3e;padding:0.3rem 1rem;border-radius:20px;font-size:0.75rem}
-  .agenda-item{display:flex;justify-content:space-between;padding:0.8rem 0;border-bottom:1px solid rgba(255,255,255,0.05)}
-  .agenda-time{font-weight:600;color:#38bdf8}
-  .highlight{background:linear-gradient(90deg,#3b82f620,#a855f720);border-left:3px solid #f97316;padding:0.8rem 1rem;border-radius:1rem;margin-top:1rem}
-  .bottom-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:1rem}
-  .metric{background:rgba(0,0,0,0.45);backdrop-filter:blur(4px);border-radius:1.5rem;padding:1rem;text-align:center}
-  .metric i{font-size:1.8rem;color:#38bdf8}
-  .metric-value{font-size:1.8rem;font-weight:800}
-  .footer{text-align:center;font-size:0.7rem;color:#5f7f9e;margin-top:2rem;padding-top:1.5rem;border-top:1px dashed #2d3a4e}
-  .admin-btn{position:fixed;bottom:20px;right:20px;background:#1e293b;border:none;color:#fff;padding:10px 15px;border-radius:30px;cursor:pointer;font-size:12px;z-index:1000}
-  .admin-panel{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.9);z-index:2000;padding:2rem;overflow:auto}
-  .admin-panel.active{display:flex;align-items:center;justify-content:center}
-  .admin-card{background:#0f172a;border-radius:2rem;padding:2rem;max-width:600px;width:100%}
-  .admin-card textarea{width:100%;height:200px;background:#1e293b;color:#fff;border:1px solid #3b82f6;border-radius:1rem;padding:1rem;margin:1rem 0}
-  .admin-card input{width:100%;padding:0.8rem;margin:0.5rem 0;border-radius:1rem;border:none}
-  .btn-save{background:#3b82f6;color:#fff;padding:0.8rem;border:none;border-radius:1rem;cursor:pointer}
-  @media (max-width:800px){.grid-2cols{grid-template-columns:1fr}.bottom-grid{grid-template-columns:1fr}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morning Call · Juniorwuttke</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: radial-gradient(circle at 10% 20%, #0a0f1e, #03060c);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            color: #eef2ff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #fff, #3b82f6, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .card {
+            background: rgba(15, 25, 45, 0.8);
+            backdrop-filter: blur(8px);
+            border-radius: 24px;
+            padding: 20px;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        .card h2 {
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            color: #38bdf8;
+        }
+        .grafico iframe {
+            width: 100%;
+            height: 400px;
+            border-radius: 16px;
+            border: none;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.8rem;
+            color: #6c86a3;
+        }
+        @media (max-width: 800px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="dashboard">
-  <div class="top-bar">
-    <div class="logo"><h1><i class="fas fa-chart-line"></i> Morning Call</h1><p>Estratégias e visão de mercado · atualizado diariamente</p></div>
-    <div class="live-badge"><i class="fas fa-circle"></i> Pré-mercado · <span id="dateHeader"></span></div>
-  </div>
-  <div class="grid-2cols">
-    <div class="card"><div class="card-header"><i class="fas fa-chart-simple"></i> Análise Técnica · NVDA</div><div class="card-content"><div class="chart-wrapper"><iframe src="https://br.tradingview.com/chart/NVDA/1EviiEpc/?embed=1"></iframe></div></div></div>
-    <div class="card"><div class="card-header"><i class="fas fa-bullhorn"></i> Morning Call · <span id="dynamicDate">Hoje</span></div><div class="card-content" id="dynamicContent">Carregando...</div></div>
-  </div>
-  <div class="bottom-grid">
-    <div class="metric"><i class="fas fa-dragon"></i><div class="metric-value" id="fearGreed">--</div><div class="metric-label">Medo & Ganância</div></div>
-    <div class="metric"><i class="fas fa-dollar-sign"></i><div class="metric-value" id="dxy">--</div><div class="metric-label">DXY</div></div>
-    <div class="metric"><i class="fas fa-waveform"></i><div class="metric-value" id="vix">--</div><div class="metric-label">VIX</div></div>
-  </div>
-  <div class="footer"><i class="fas fa-calendar-alt"></i> Conteúdo extraído do perfil <strong>Juniorwuttke</strong> no TradingView. Atualizado manualmente todos os dias.</div>
+<div class="container">
+    <div class="header">
+        <h1>📈 Morning Call · Juniorwuttke</h1>
+        <p>Feed automático do TradingView | Atualizado em tempo real</p>
+    </div>
+
+    <div class="grid">
+        <!-- Gráfico da NVDA (seu link) -->
+        <div class="card grafico">
+            <h2>📊 Análise Técnica · NVDA</h2>
+            <iframe src="https://br.tradingview.com/chart/NVDA/1EviiEpc/?embed=1" allowtransparency="true" scrolling="no"></iframe>
+        </div>
+
+        <!-- Widget oficial do TradingView que mostra as postagens do perfil Juniorwuttke -->
+        <div class="card">
+            <h2>📰 Últimas publicações</h2>
+            <!-- CÓDIGO DO WIDGET - mostra automaticamente os posts do perfil -->
+            <div class="tradingview-widget-container">
+                <div class="tradingview-widget-container__widget"></div>
+                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
+                {
+                  "feedMode": "user",
+                  "username": "Juniorwuttke",
+                  "colorTheme": "dark",
+                  "isTransparent": false,
+                  "showHeader": true,
+                  "showFeaturedReviews": false,
+                  "width": "100%",
+                  "height": 450,
+                  "locale": "br"
+                }
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Conteúdo gerado automaticamente a partir do perfil Juniorwuttke no TradingView.</p>
+        <p>⏱️ Atualização em tempo real conforme novas publicações.</p>
+    </div>
 </div>
-<button class="admin-btn" id="adminBtn"><i class="fas fa-edit"></i> Atualizar Morning Call</button>
-<div class="admin-panel" id="adminPanel">
-  <div class="admin-card">
-    <h3>Atualizar conteúdo do dia</h3>
-    <p>Cole aqui o texto do seu post no TradingView (ou preencha os campos abaixo)</p>
-    <textarea id="rawText" placeholder="Cole o texto completo do seu Morning Call..."></textarea>
-    <button class="btn-save" id="parseAndSave">Extrair e Salvar</button>
-    <div style="margin-top:1rem;"><button id="closeAdmin">Fechar</button></div>
-  </div>
-</div>
-<script>
-  // Carrega dados salvos no localStorage
-  function loadData(){
-    let data = localStorage.getItem('morningCall');
-    if(!data){
-      // Dados padrão (exemplo)
-      data = {
-        date: new Date().toLocaleDateString('pt-BR'),
-        title: "🔥 Análise do dia",
-        tags: ["Resistência $148", "Suporte $140"],
-        insights: ["Aguardando dados de emprego.", "NVDA em zona de decisão."],
-        agenda: [{time:"09:30", event:"Payroll (EUA)"}],
-        strategy: "Cautela até abertura americana.",
-        indicators: { fearGreed: 50, dxy: "104.2", vix: "15.3" }
-      };
-      localStorage.setItem('morningCall', JSON.stringify(data));
-    }
-    return JSON.parse(data);
-  }
-  
-  function renderDashboard(){
-    const data = loadData();
-    document.getElementById('dynamicDate').innerText = data.date;
-    document.getElementById('dateHeader').innerText = data.date;
-    if(data.indicators){
-      document.getElementById('fearGreed').innerText = data.indicators.fearGreed;
-      document.getElementById('dxy').innerText = data.indicators.dxy;
-      document.getElementById('vix').innerText = data.indicators.vix;
-    }
-    let agendaHtml = '';
-    if(data.agenda) data.agenda.forEach(a => agendaHtml += `<div class="agenda-item"><span class="agenda-time">${a.time}</span><span>${a.event}</span></div>`);
-    document.getElementById('dynamicContent').innerHTML = `
-      <div class="call-title">${data.title}</div>
-      <div class="tag-group">${(data.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
-      <ul class="insight-list">${(data.insights||[]).map(i=>`<li><i class="fas fa-chart-line"></i> ${i}</li>`).join('')}</ul>
-      <div class="highlight"><i class="fas fa-calendar-week"></i> Agenda do dia</div>
-      ${agendaHtml}
-      <div class="highlight"><i class="fas fa-lightbulb"></i> Estratégia: ${data.strategy}</div>
-    `;
-  }
-  
-  // Função simples para tentar extrair do texto colado
-  function extractFromText(text){
-    // Tentativa básica de parse - você pode ajustar
-    const lines = text.split('\n').filter(l=>l.trim().length>0);
-    const insights = lines.slice(0,4).map(l=>l.substring(0,100));
-    return {
-      title: insights[0] || "Morning Call",
-      insights: insights,
-      tags: ["Resistência", "Suporte"],
-      strategy: "Acompanhar abertura dos mercados."
-    };
-  }
-  
-  document.getElementById('adminBtn').onclick = ()=>{
-    document.getElementById('adminPanel').classList.add('active');
-  };
-  document.getElementById('closeAdmin').onclick = ()=>{
-    document.getElementById('adminPanel').classList.remove('active');
-  };
-  document.getElementById('parseAndSave').onclick = ()=>{
-    const raw = document.getElementById('rawText').value;
-    if(!raw.trim()) return alert('Cole o texto do seu post primeiro');
-    const extracted = extractFromText(raw);
-    const current = loadData();
-    current.title = extracted.title;
-    current.insights = extracted.insights;
-    current.tags = extracted.tags;
-    current.strategy = extracted.strategy;
-    current.date = new Date().toLocaleDateString('pt-BR');
-    // Aqui você pode adicionar edição de agenda e indicadores manualmente depois
-    localStorage.setItem('morningCall', JSON.stringify(current));
-    renderDashboard();
-    document.getElementById('adminPanel').classList.remove('active');
-    alert('Morning Call atualizado!');
-  };
-  
-  renderDashboard();
-</script>
 </body>
 </html>
