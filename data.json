@@ -1,0 +1,22 @@
+{
+  "date": "01/06/2026",
+  "lastUpdate": "01/06/2026 08:00:00",
+  "lastFetch": "01/06/2026 08:00:00",
+  "title": "🔥 Mercado comprador após payroll positivo",
+  "tags": ["Resistência $148,20", "Suporte $140,30", "Volume acima da média"],
+  "insights": [
+    "NVDA rompeu resistência de curto prazo com vela de acumulação.",
+    "Dólar fraco impulsiona commodities; minério de ferro em alta.",
+    "Atenção para falas de Powell às 11:30."
+  ],
+  "agenda": [
+    { "time": "09:30", "event": "Pedidos de seguro-desemprego (EUA)" },
+    { "time": "11:30", "event": "Discurso Powell – Fed" }
+  ],
+  "strategy": "Comprar em pullback até $141. Stop em $138,50.",
+  "indicators": {
+    "fearGreed": 52,
+    "dxy": "104.20",
+    "vix": "15.4"
+  }
+}
