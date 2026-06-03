@@ -69,7 +69,6 @@
             gap: 8px;
         }
 
-        /* Tabela Dinâmica e Grid */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -108,38 +107,7 @@
 
         .alta { color: var(--alta); background: rgba(74, 222, 128, 0.1); }
         .baixa { color: var(--baixa); background: rgba(248, 113, 113, 0.1); }
-        .neutro { color: var(--texto-mutado); background: rgba(148, 163, 184, 0.1); }
 
-        /* Widgets de Monitoramento Online */
-        .ticker-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .ticker-card {
-            background: var(--bg-principal);
-            border: 1px solid var(--borda);
-            padding: 15px;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .ticker-name {
-            font-size: 12px;
-            color: var(--texto-mutado);
-            text-transform: uppercase;
-        }
-
-        .ticker-value {
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        /* Estilo para embutir ferramentas externas */
         .widget-wrapper {
             border: 1px solid var(--borda);
             border-radius: 8px;
@@ -156,19 +124,17 @@
             <h1>Morning Call • Dashboard de Fluxo</h1>
             <div style="color: var(--texto-mutado); font-size: 13px; margin-top: 4px;">Foco Estratégico: Day Trading B3 & Mercado de Câmbio</div>
         </div>
-        <div class="timestamp" id="live-clock">Carregando dados das 08h...</div>
+        <div class="timestamp" id="live-clock">Carregando mercado...</div>
     </header>
 
-    <!-- 1. MONITOR DE MERCADO ONLINE (PREÇOS EM TEMPO REAL) -->
-    <h2>📊 Monitor de Ativos Globais (Pré-Abertura)</h2>
-    <div class="ticker-grid" id="ticker-container">
-        <div class="ticker-card"><span class="ticker-name">EWZ (Brasil em NY)</span><span class="ticker-value" id="val-ewz">--</span></div>
-        <div class="ticker-card"><span class="ticker-name">S&P 500 Futuro</span><span class="ticker-value" id="val-spx">--</span></div>
-        <div class="ticker-card"><span class="ticker-name">DXY (Índice Dólar)</span><span class="ticker-value" id="val-dxy">--</span></div>
-        <div class="ticker-card"><span class="ticker-name">EUR/USD</span><span class="ticker-value" id="val-eurusd">--</span></div>
+    <!-- 1. MONITOR DE ATIVOS ONLINE (REAL-TIME VIA TRADINGVIEW) -->
+    <h2>📊 Monitor de Ativos Globais (Tempo Real)</h2>
+    <div style="width: 100%; height: 80px; background: var(--bg-principal); border-radius: 8px; overflow: hidden; border: 1px solid var(--borda); margin-bottom: 25px;">
+        <iframe src="https://s.tradingview.com/embed-widget/ticker-tape/?locale=br#%7B%22symbols%22%3A%5B%7B%22proName%22%3A%22AMEX%3AEWZ%22%2C%22title%22%3A%22EWZ (Brasil)%22%7D%2C%7B%22proName%22%3A%22CME_MINI%3AES1!%22%2C%22title%22%3A%22S%26P 500 Fut%22%7D%2C%7B%22proName%22%3A%22FX_IDC%3ADXY%22%2C%22title%22%3A%22DXY (Dólar)%22%7D%2C%7B%22proName%22%3A%22FX%3AEURUSD%22%2C%22title%22%3A%22EUR%2FUSD%22%7D%5D%2C%22colorTheme%22%3A%22dark%22%2C%22isWidescreen%22%3Atrue%2C%22displayMode%22%3A%22regular%22%7D" 
+                width="100%" height="100%" frameborder="0" style="border: none; margin: 0; padding: 0;"></iframe>
     </div>
 
-    <!-- 2. GRADE DE DRIVERS ATUALIZADA E TRADUZIDA -->
+    <!-- 2. GRADE DE DRIVERS TRADUZIDA -->
     <h2>💡 Drivers do Dia & Impacto Direto nos Ativos</h2>
     <table>
         <thead>
@@ -207,17 +173,16 @@
         </tbody>
     </table>
 
-    <!-- 3. CALENDÁRIO ECONÔMICO DINÂMICO VIA TRADINGVIEW -->
+    <!-- 3. CALENDÁRIO ECONÔMICO DINÂMICO -->
     <h2>📅 Calendário Econômico do Dia (Evitar Notícias de Alto Impacto)</h2>
-    <div class="widget-wrapper" style="height: 400px;">
-        <!-- Widget Oficial Gratuito do TradingView para Calendário Econômico -->
+    <div class="widget-wrapper" style="height: 450px;">
         <iframe src="https://s.tradingview.com/embed-widget/events/?locale=br#%7B%22colorTheme%22%3A%22dark%22%2C%22isWidescreen%22%3Atrue%7D" 
                 width="100%" height="100%" frameborder="0" style="border: none;"></iframe>
     </div>
 </div>
 
 <script>
-    // 1. Atualização do Relógio de Brasília com foco nas 08:00
+    // Atualização em tempo real do relógio de Brasília focado na abertura
     function atualizarHorario() {
         const agora = new Date();
         const opcoes = { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', second: '2-digit' };
@@ -230,29 +195,6 @@
     }
     setInterval(atualizarHorario, 1000);
     atualizarHorario();
-
-    // 2. Busca Dinâmica de dados via API pública (Yahoo Finance / Open API alternativo)
-    // Coleta dados reais na abertura para garantir que as 8h os dados estejam prontos
-    async function obterCotacoesOnline() {
-        try {
-            // Nota: Para produção estável no GitHub Pages, você pode mapear os tickers desejados usando APIs de dados abertos
-            // Abaixo simulamos o retorno estruturado das cotações matinais de mercado futuro:
-            document.getElementById('val-ewz').innerText = "+1.12%"; 
-            document.getElementById('val-ewz').className = "ticker-value alta";
-            
-            document.getElementById('val-spx').innerText = "+0.32%";
-            document.getElementById('val-spx').className = "ticker-value alta";
-            
-            document.getElementById('val-dxy').innerText = "104.20 pts";
-            document.getElementById('val-dxy').className = "ticker-value neutro";
-            
-            document.getElementById('val-eurusd').innerText = "1.0845";
-            document.getElementById('val-eurusd').className = "ticker-value baixa";
-        } catch (error) {
-            console.log("Erro ao carregar cotações automáticas das 8h: ", error);
-        }
-    }
-    obterCotacoesOnline();
 </script>
 
 </body>
