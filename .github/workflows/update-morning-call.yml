@@ -2,7 +2,7 @@ name: Atualizar Morning Call
 
 on:
   schedule:
-    - cron: '0 11 * * *'   # 11:00 UTC = 8:00 BRT (sem horário de verão)
+    - cron: '0 11 * * *'    # 11:00 UTC = 8:00 BRT (sem horário de verão)
   workflow_dispatch:        # permite rodar manualmente
 
 jobs:
@@ -17,16 +17,24 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Instalar dependências
-        run: pip install requests beautifulsoup4
+      - name: Instalar dependências e navegadores
+        run: |
+          pip install playwright
+          playwright install --with-deps chromium
 
       - name: Executar scraping
+        env:
+          TRADERBI_EMAIL: ${{ secrets.TRADERBI_EMAIL }}
+          TRADERBI_PASSWORD: ${{ secrets.TRADERBI_PASSWORD }}
         run: python scrape.py
 
       - name: Commit e push das alterações
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data.json
+          
+          # Garante que as mudanças no HTML e no JSON sejam adicionadas ao commit
+          git add index.html data.json || true
+          
           git diff --quiet && git diff --staged --quiet || git commit -m "Atualização automática do Morning Call - $(date +'%Y-%m-%d %H:%M')"
           git push
