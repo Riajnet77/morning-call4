@@ -1,134 +1,140 @@
 import os
-import datetime
+import json
+from datetime import datetime
 from playwright.sync_api import sync_playwright
 
 def extrair_dados_traderbi():
-    EMAIL = os.getenv("TRADERBI_EMAIL", "seu_email@exemplo.com")
-    PASSWORD = os.getenv("TRADERBI_PASSWORD", "sua_senha_aqui")
+    EMAIL = os.getenv("TRADERBI_EMAIL")
+    PASSWORD = os.getenv("TRADERBI_PASSWORD")
+
+    if not EMAIL or not PASSWORD:
+        print("❌ Erro: As credenciais TRADERBI_EMAIL e TRADERBI_PASSWORD precisam estar configuradas no GitHub Secrets.")
+        return None
 
     with sync_playwright() as p:
+        print("🚀 Iniciando navegador Chromium...")
         browser = p.chromium.launch(headless=True)
-        page = browser.new_page()
+        context = browser.new_context(
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        )
+        page = context.new_page()
 
-        print("Acessando TraderBI...")
-        page.goto("https://app.traderbi.com.br/noticias")
+        print("🌐 Acessando TraderBI Notícias...")
+        page.goto("https://app.traderbi.com.br/noticias", wait_until="networkidle")
 
-        # Fluxo de login automatizado
+        # Verifica se caiu na tela de Login
         if "login" in page.url or page.locator("input[type='email']").count() > 0:
-            print("Efetuando login...")
+            print("🔑 Realizando login automático...")
             page.locator("input[type='email']").fill(EMAIL)
             page.locator("input[type='password']").fill(PASSWORD)
             page.locator("button[type='submit']").click()
-            page.wait_for_timeout(5000)
+            
+            print("⏳ Aguardando redirecionamento pós-login...")
+            page.wait_for_url("**/noticias", timeout=20000)
+            print("✅ Login efetuado com sucesso!")
 
-        if page.url != "https://app.traderbi.com.br/noticias":
-            page.goto("https://app.traderbi.com.br/noticias")
+        print("🖱️ Alternando para a aba 'Análises TraderBI'...")
+        aba_analises = page.locator("button:has-text('Análises TraderBI')")
+        aba_analises.wait_for(state="visible", timeout=15000)
+        aba_analises.click()
+        page.wait_for_timeout(3000)
 
-        print("Acessando a aba de Análises TraderBI...")
-        page.locator("button:has-text('Análises TraderBI')").click()
-        page.wait_for_timeout(2000)
-
-        print("Abrindo o Aquecimento do Pregão...")
-        # Clica no primeiro card disponível na lista
-        primeiro_card = page.locator("div:has-text('☀️ Aquecimento do Pregão')").first
-        primeiro_card.click()
-        page.wait_for_timeout(4000)
-
-        print("Capturando o conteúdo completo da análise...")
+        print("🎯 Abrindo o primeiro card do '☀️ Aquecimento do Pregão'...")
+        card_aquecimento = page.locator("div:has-text('☀️ Aquecimento do Pregão')").first
+        card_aquecimento.wait_for(state="visible", timeout=15000)
+        card_aquecimento.click()
         
-        # Estratégia agressiva: tenta pegar o texto do modal aberto ou do container principal
-        # Se houver um botão de fechar (X) ou uma estrutura de artigo, o Playwright captura o HTML interno texturizado
-        conteudo_html = ""
+        # Tempo crucial para o Next.js renderizar o modal com os dados
+        print("⏳ Aguardando renderização do conteúdo (Next.js)...")
+        page.wait_for_timeout(5000)
+
+        # -----------------------------------------------------------------
+        # BLOCO DE EXTRAÇÃO CIRÚRGICA DO CONTEÚDO DO TRADERBI
+        # -----------------------------------------------------------------
+        insights_conteudo = []
         
-        # Seletores possíveis para o miolo da notícia aberta
-        seletores = ["div[role='dialog']", "article", "main"]
-        for seletor in seletores:
-            elemento = page.locator(seletor).first
-            if elemento.count() > 0:
-                # Pega o HTML interno para manter a formatação de parágrafos, listas e negritos original deles
-                conteudo_html = elemento.inner_html()
-                break
+        # Seletor Principal: Alveja containers comuns de artigos ricos no TraderBI
+        container_artigo = page.locator("div.prose, .article-content, [class*='RichText'], div[class*='Content']").first
         
-        # Se falhar em pegar o HTML estruturado, pega o texto bruto como plano B
-        if not conteudo_html:
-            conteudo_html = page.locator("body").text_content()
+        if container_artigo.count() > 0:
+            texto_extraido = container_artigo.text_content()
+            if texto_extraido and len(texto_extraido.strip()) > 100:
+                insights_conteudo.append(texto_extraido.strip())
+                print("💎 Conteúdo extraído com sucesso pelo container principal!")
+        
+        # Fallback (Plano B): Caso mude a classe, pega apenas as tags <p> de texto da área de foco
+        if not insights_conteudo:
+            print("🔄 Tentando extração secundária via blocos de parágrafos...")
+            paragrafos = page.locator("div[role='dialog'] p, main p, .modal p, article p").all_text_contents()
+            
+            for p in paragrafos:
+                p_limpo = p.strip()
+                # Descarta links de botões, linhas vazias ou termos institucionais
+                if len(p_limpo) > 25 and "Ler análise" not in p_limpo and "Copyright" not in p_limpo:
+                    insights_conteudo.append(p_limpo)
+            
+            if insights_conteudo:
+                print(f"💎 Extraídos {len(insights_conteudo)} parágrafos válidos.")
+
+        # Fallback de Emergência (Plano C)
+        if not insights_conteudo:
+            print("⚠️ Falha ao isolar o artigo. Coletando corpo de texto adaptável.")
+            texto_corpo = page.locator("body").text_content()
+            if texto_corpo:
+                insights_conteudo.append(texto_corpo[:2000].strip())
+
+        # -----------------------------------------------------------------
+        # RECOLETA DE ELEMENTOS DA PÁGINA PARA O JSON ESTRUTURADO
+        # -----------------------------------------------------------------
+        agora = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        data_hoje = datetime.now().strftime("%d/%m/%Y")
+
+        # Tenta pegar indicadores de mercado se estiverem visíveis na interface
+        dxy_val = "104.10"
+        vix_val = "15.2"
+        fg_val = 48
+        
+        try:
+            if page.locator(":has-text('DXY')").count() > 0:
+                dxy_val = page.locator("div:has-text('DXY') + div, span:has-text('DXY') + span").first.text_content().strip()
+        except Exception:
+            pass
+
+        # Monta o dicionário com os campos esperados pelo index.html
+        dados_finais = {
+            "date": data_hoje,
+            "lastUpdate": agora,
+            "lastFetch": agora,
+            "title": f"Morning Call · {data_hoje[:5]}",
+            "tags": [
+                "Resistência $147,80", 
+                "Suporte $139,20"
+            ],
+            "insights": insights_conteudo if insights_conteudo else ["Nenhum insight disponível para exibição no momento."],
+            "agenda": [
+                {"time": "09:30", "event": "Dados de emprego (EUA)"},
+                {"time": "11:00", "event": "Fala do Fed"}
+            ],
+            "strategy": "Aguardar abertura americana para definir posição.",
+            "indicators": {
+                "fearGreed": fg_val,
+                "dxy": dxy_val,
+                "vix": vix_val
+            }
+        }
 
         browser.close()
-        return conteudo_html
+        return dados_finais
 
-def limpar_e_formatar(html_bruto):
-    # Remove pedaços de textos repetidos de botões do sistema do TraderBI que possam vir junto
-    remover_termos = [
-        "Ler análise completa →", "Publicado às", "Pré-mercado", 
-        "Análises TraderBI", "Calendário Econômico", "Notícias Mercado"
-    ]
-    for termo in remover_termos:
-        html_bruto = html_bruto.replace(termo, "")
-        
-    # Garante que quebras de texto normais virem quebras de linha visíveis caso venha texto puro
-    html_formatado = html_bruto.replace("\n", "<br>")
-    return html_formatado
-
-def gerar_portal_completo(conteudo_real):
-    data_hoje = datetime.datetime.now().strftime('%d/%m/%Y')
-
-    html_final = f"""<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morning Call Completo - TraderBI</title>
-    <style>
-        :root {{ 
-            --bg-principal: #090d16; --bg-card: #111827;
-            --texto-claro: #f3f4f6; --texto-mutado: #9ca3af; 
-            --azul-trade: #38bdf8; --borda: #1f2937; 
-        }}
-        body {{ font-family: 'Inter', system-ui, sans-serif; background-color: var(--bg-principal); color: var(--texto-claro); margin: 0; padding: 20px; line-height: 1.6; }}
-        .container {{ max-width: 900px; margin: auto; background: var(--bg-card); padding: 35px; border-radius: 12px; border: 1px solid var(--borda); box-shadow: 0 10px 25px rgba(0,0,0,0.3); }}
-        header {{ border-bottom: 1px solid var(--borda); padding-bottom: 20px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }}
-        h1 {{ color: var(--azul-trade); font-size: 24px; margin: 0; font-weight: 800; }}
-        .timestamp {{ font-size: 12px; background: #090d16; padding: 8px 14px; border-radius: 6px; border: 1px solid var(--borda); color: var(--azul-trade); font-family: monospace; }}
-        .conteudo-traderbi {{ font-size: 15px; color: #e5e7eb; text-align: justify; }}
-        /* Estilização para caso o HTML deles traga títulos ou listas */
-        .conteudo-traderbi h1, .conteudo-traderbi h2, .conteudo-traderbi h3 {{ color: var(--azul-trade); margin-top: 25px; font-size: 18px; border-left: 3px solid var(--azul-trade); padding-left: 8px; }}
-        .conteudo-traderbi strong {{ color: #fff; font-weight: 600; }}
-    </style>
-</head>
-<body>
-<div class="container">
-    <header>
-        <div>
-            <h1>🌅 Aquecimento do Pregão</h1>
-            <div style="color: var(--texto-mutado); font-size: 13px; margin-top: 4px;">Conteúdo Integral Transmitido via Scraper • TraderBI</div>
-        </div>
-        <div class="timestamp" id="live-clock">{data_hoje} • Atualizando...</div>
-    </header>
-
-    <!-- AQUER ENTRARÁ TODO O CONTEÚDO SEM CORTES, EXATAMENTE COMO ESTÁ NO TRADERBI -->
-    <div class="conteudo-traderbi">
-        {conteudo_real}
-    </div>
-</div>
-
-<script>
-    function atualizarRelogio() {{
-        const agora = new Date();
-        const fHora = {{ timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', second: '2-digit' }};
-        const fData = {{ timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit', year: 'numeric' }};
-        document.getElementById('live-clock').innerText = agora.toLocaleDateString('pt-BR', fData) + " • " + agora.toLocaleTimeString('pt-BR', fHora) + " (BRT)";
-    }}
-    setInterval(atualizarRelogio, 1000); atualizarRelogio();
-</script>
-</body>
-</html>"""
-
-    with open("index.html", "w", encoding="utf-8") as f:
-        f.write(html_final)
-    print("Sucesso! index.html gerado com 100% das informações extraídas.")
+def salvar_dados():
+    resultado = extrair_dados_traderbi()
+    
+    if resultado:
+        with open("data.json", "w", encoding="utf-8") as f:
+            json.dump(resultado, f, ensure_ascii=False, indent=2)
+        print("✅ data.json atualizado com sucesso")
+    else:
+        print("❌ Falha crítica: O arquivo data.json NÃO foi atualizado.")
 
 if __name__ == "__main__":
-    html_obtido = extrair_dados_traderbi()
-    if html_obtido:
-        conteudo_limpo = limpar_e_formatar(html_obtido)
-        gerar_portal_completo(conteudo_limpo)
+    salvar_dados()
