@@ -1,5 +1,4 @@
 import os
-import re
 import datetime
 from playwright.sync_api import sync_playwright
 
@@ -14,9 +13,9 @@ def extrair_dados_traderbi():
         print("Acessando TraderBI...")
         page.goto("https://app.traderbi.com.br/noticias")
 
-        # Fluxo de login seguro
+        # Fluxo de login automatizado
         if "login" in page.url or page.locator("input[type='email']").count() > 0:
-            print("Efetuando login automatizado...")
+            print("Efetuando login...")
             page.locator("input[type='email']").fill(EMAIL)
             page.locator("input[type='password']").fill(PASSWORD)
             page.locator("button[type='submit']").click()
@@ -30,76 +29,47 @@ def extrair_dados_traderbi():
         page.wait_for_timeout(2000)
 
         print("Abrindo o Aquecimento do Pregão...")
+        # Clica no primeiro card disponível na lista
         primeiro_card = page.locator("div:has-text('☀️ Aquecimento do Pregão')").first
         primeiro_card.click()
-        page.wait_for_timeout(3000)
+        page.wait_for_timeout(4000)
 
-        # Captura o container inteiro do artigo aberto para não perder nenhuma linha
-        # Tenta pegar a janela modal ou o artigo ativo na tela
-        modal = page.locator("div[role='dialog'], article, main")
-        texto_noticia = modal.first.text_content()
+        print("Capturando o conteúdo completo da análise...")
+        
+        # Estratégia agressiva: tenta pegar o texto do modal aberto ou do container principal
+        # Se houver um botão de fechar (X) ou uma estrutura de artigo, o Playwright captura o HTML interno texturizado
+        conteudo_html = ""
+        
+        # Seletores possíveis para o miolo da notícia aberta
+        seletores = ["div[role='dialog']", "article", "main"]
+        for seletor in seletores:
+            elemento = page.locator(seletor).first
+            if elemento.count() > 0:
+                # Pega o HTML interno para manter a formatação de parágrafos, listas e negritos original deles
+                conteudo_html = elemento.inner_html()
+                break
+        
+        # Se falhar em pegar o HTML estruturado, pega o texto bruto como plano B
+        if not conteudo_html:
+            conteudo_html = page.locator("body").text_content()
 
         browser.close()
-        return texto_noticia
+        return conteudo_html
 
-def mapear_conteudo_completo(briefing):
-    # Dicionário robusto com fallbacks para garantir que a tela nunca quebre vazia
-    dados = {
-        "titulo": "Aquecimento do Pregão",
-        "contexto_macro": "Dados globais e fluxo macroeconômico em consolidação.",
-        "win_cenario": "Análise técnica do Índice Bovespa aguardando abertura.",
-        "win_pontos": "Pontos de relevância: Suportes e Resistências em mapeamento.",
-        "wdo_cenario": "Análise de fluxo e pressão no Dólar Futuro.",
-        "wdo_points": "Pontos de relevância: Zonas de liquidez sob monitoramento.",
-        "calendario_eventos": "Consulte o painel integrado para dados de alta relevância.",
-        "direcionamento": "Opere estritamente dentro do gerenciamento de risco e plano de trading."
-    }
+def limpar_e_formatar(html_bruto):
+    # Remove pedaços de textos repetidos de botões do sistema do TraderBI que possam vir junto
+    remover_termos = [
+        "Ler análise completa →", "Publicado às", "Pré-mercado", 
+        "Análises TraderBI", "Calendário Econômico", "Notícias Mercado"
+    ]
+    for termo in remover_termos:
+        html_bruto = html_bruto.replace(termo, "")
+        
+    # Garante que quebras de texto normais virem quebras de linha visíveis caso venha texto puro
+    html_formatado = html_bruto.replace("\n", "<br>")
+    return html_formatado
 
-    # Captura o título dinâmico (ex: Aquecimento do Pregão — Quarta-feira...)
-    titulo_match = re.search(r"(Aquecimento do Pregão — .*?)(?=\n|Públ)", briefing)
-    if titulo_match:
-        dados["titulo"] = titulo_match.group(1).strip()
-
-    # --- LÓGICA DE FATIAMENTO POR SEÇÕES MÃE DO TRADERBI ---
-    
-    # 1. Contexto Macro / Drivers Globais
-    macro_match = re.search(r"(?:Contexto Macro|Drivers do Dia|Panorama Internacional)\n(.*?)(?=\n📈|\n💵|\n🎯|\n📅|Ibovespa|Dólar)", briefing, re.DOTALL | re.IGNORECASE)
-    if macro_match:
-        dados["contexto_macro"] = macro_match.group(1).strip().replace("\n", "<br>")
-
-    # 2. Ibovespa / WIN - Cenário Operacional
-    win_match = re.search(r"(?:Ibovespa / WIN|Índice Futuro)\n(.*?)(?=\n💵|\n🎯|\n📅|Dólar|Pontos Relevantes)", briefing, re.DOTALL | re.IGNORECASE)
-    if win_match:
-        dados["win_cenario"] = win_match.group(1).strip().replace("\n", "<br>")
-
-    # 3. Dólar / WDO - Cenário Operacional
-    wdo_match = re.search(r"(?:Dólar / WDO|Dólar Futuro)\n(.*?)(?=\n🎯|\n📅|\n⚠️|Pontos Relevantes|Calendário)", briefing, re.DOTALL | re.IGNORECASE)
-    if wdo_match:
-        dados["wdo_cenario"] = wdo_match.group(1).strip().replace("\n", "<br>")
-
-    # 4. Extração Cirúrgica de Linhas de Suportes, Resistências e POCs
-    # Procura blocos contendo listagens numéricas de pontos importantes
-    pontos_win = re.findall(r"(?:Suporte|Resistência|R1|S1|POC).*?\d{3,6}", dados["win_cenario"])
-    if pontos_win:
-        dados["win_pontos"] = "<br>".join([f"🔹 {p}" for p in pontos_win])
-    else:
-        # Tenta buscar direto no texto bruto se a estrutura geral falhar
-        linhas_ponto = re.findall(r".*?(?:suporte|resistência|ajuste|p鬆).*?\d{3,6}", briefing, re.IGNORECASE)
-        if linhas_ponto: dados["win_pontos"] = "<br>".join([f"🔹 {l}" for l in linhas_ponto[:5]])
-
-    # 5. Calendário Econômico / Indicadores Importantes do Dia
-    cal_match = re.search(r"(?:Calendário Econômico|Destaques do Dia|Indicadores)\n(.*?)(?=\n🎯|\n⚠️|Direcionamento)", briefing, re.DOTALL | re.IGNORECASE)
-    if cal_match:
-        dados["calendario_eventos"] = cal_match.group(1).strip().replace("\n", "<br>")
-
-    # 6. Considerações Finais / Direcionamento Estratégico
-    dir_match = re.search(r"(?:Direcionamento|Considerações|Conclusão)\n(.*)", briefing, re.DOTALL | re.IGNORECASE)
-    if dir_match:
-        dados["direcionamento"] = dir_match.group(1).strip().replace("\n", "<br>")
-
-    return dados
-
-def gerar_html_completo(dados):
+def gerar_portal_completo(conteudo_real):
     data_hoje = datetime.datetime.now().strftime('%d/%m/%Y')
 
     html_final = f"""<!DOCTYPE html>
@@ -107,90 +77,37 @@ def gerar_html_completo(dados):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morning Call Otimizado - TraderBI</title>
+    <title>Morning Call Completo - TraderBI</title>
     <style>
         :root {{ 
-            --bg-principal: #090d16; --bg-card: #111827; --bg-subcard: #1f2937;
+            --bg-principal: #090d16; --bg-card: #111827;
             --texto-claro: #f3f4f6; --texto-mutado: #9ca3af; 
-            --azul-trade: #38bdf8; --alta: #10b981; --baixa: #ef4444; --alerta: #f59e0b; --borda: #1f2937; 
+            --azul-trade: #38bdf8; --borda: #1f2937; 
         }}
-        body {{ font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: var(--bg-principal); color: var(--texto-claro); margin: 0; padding: 20px; line-height: 1.6; }}
-        .container {{ max-width: 1100px; margin: auto; background: var(--bg-card); padding: 30px; border-radius: 12px; border: 1px solid var(--borda); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3); }}
-        header {{ display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--borda); padding-bottom: 20px; margin-bottom: 25px; }}
-        h1 {{ color: var(--azul-trade); font-size: 24px; margin: 0; font-weight: 800; letter-spacing: -0.025em; }}
-        .timestamp {{ font-size: 12px; background: #090d16; padding: 8px 14px; border-radius: 6px; border: 1px solid var(--borda); font-family: monospace; color: var(--azul-trade); }}
-        h2 {{ font-size: 16px; color: #fff; margin-top: 35px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; }}
-        .secao-macro {{ background: rgba(56, 189, 248, 0.03); border-left: 4px solid var(--azul-trade); padding: 20px; border-radius: 0 8px 8px 0; margin-bottom: 30px; font-size: 14.5px; text-align: justify; }}
-        .grid-ativos {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 25px; margin-bottom: 30px; }}
-        .card-ativo {{ background: #0f172a; border: 1px solid var(--borda); border-radius: 8px; padding: 22px; display: flex; flex-col: column; justify-content: space-between; }}
-        .card-header {{ display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--borda); padding-bottom: 12px; margin-bottom: 15px; }}
-        .ativo-titulo {{ font-size: 16px; font-weight: 700; color: #fff; }}
-        .badge {{ padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; }}
-        .badge.win {{ color: var(--alta); background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); }}
-        .badge.wdo {{ color: var(--alerta); background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2); }}
-        .conteudo-tecnico {{ font-size: 14px; color: #d1d5db; text-align: justify; margin-bottom: 15px; }}
-        .zona-pontos {{ background: #090d16; padding: 12px 15px; border-radius: 6px; border: 1px solid var(--borda); font-size: 13px; color: #9ca3af; }}
-        .grid-footer {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 25px; }}
-        .card-footer-info {{ background: rgba(31, 41, 55, 0.4); border: 1px solid var(--borda); padding: 20px; border-radius: 8px; font-size: 13.5px; }}
+        body {{ font-family: 'Inter', system-ui, sans-serif; background-color: var(--bg-principal); color: var(--texto-claro); margin: 0; padding: 20px; line-height: 1.6; }}
+        .container {{ max-width: 900px; margin: auto; background: var(--bg-card); padding: 35px; border-radius: 12px; border: 1px solid var(--borda); box-shadow: 0 10px 25px rgba(0,0,0,0.3); }}
+        header {{ border-bottom: 1px solid var(--borda); padding-bottom: 20px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }}
+        h1 {{ color: var(--azul-trade); font-size: 24px; margin: 0; font-weight: 800; }}
+        .timestamp {{ font-size: 12px; background: #090d16; padding: 8px 14px; border-radius: 6px; border: 1px solid var(--borda); color: var(--azul-trade); font-family: monospace; }}
+        .conteudo-traderbi {{ font-size: 15px; color: #e5e7eb; text-align: justify; }}
+        /* Estilização para caso o HTML deles traga títulos ou listas */
+        .conteudo-traderbi h1, .conteudo-traderbi h2, .conteudo-traderbi h3 {{ color: var(--azul-trade); margin-top: 25px; font-size: 18px; border-left: 3px solid var(--azul-trade); padding-left: 8px; }}
+        .conteudo-traderbi strong {{ color: #fff; font-weight: 600; }}
     </style>
 </head>
 <body>
 <div class="container">
     <header>
         <div>
-            <h1>{dados["titulo"]}</h1>
-            <div style="color: var(--texto-mutado); font-size: 13px; margin-top: 4px;">Análise Profissional Intel-Scraped • TraderBI Integration</div>
+            <h1>🌅 Aquecimento do Pregão</h1>
+            <div style="color: var(--texto-mutado); font-size: 13px; margin-top: 4px;">Conteúdo Integral Transmitido via Scraper • TraderBI</div>
         </div>
-        <div class="timestamp" id="live-clock">{data_hoje} • Carregando...</div>
+        <div class="timestamp" id="live-clock">{data_hoje} • Atualizando...</div>
     </header>
 
-    <h2>🌍 Contexto Macro &amp; Geopolítica Internacional</h2>
-    <div class="secao-macro">
-        {dados["contexto_macro"]}
-    </div>
-
-    <h2>📊 Matriz Operacional dos Ativos</h2>
-    <div class="grid-ativos">
-        <!-- CARD DO ÍNDICE -->
-        <div class="card-ativo">
-            <div>
-                <div class="card-header">
-                    <span class="ativo-titulo">Ibovespa Futuro (WIN)</span>
-                    <span class="badge win">Estratégia &amp; Tendência</span>
-                </div>
-                <div class="conteudo-tecnico">{dados["win_cenario"]}</div>
-            </div>
-            <div class="zona-pontos">
-                <strong>📍 Zonas de Liquidez e Alvos:</strong><br>
-                <div style="margin-top:6px; font-family: monospace;">{dados["win_pontos"]}</div>
-            </div>
-        </div>
-
-        <!-- CARD DO DÓLAR -->
-        <div class="card-ativo">
-            <div>
-                <div class="card-header">
-                    <span class="ativo-titulo">Dólar Futuro (WDO)</span>
-                    <span class="badge wdo">Fluxo &amp; Proteção</span>
-                </div>
-                <div class="conteudo-tecnico">{dados["wdo_cenario"]}</div>
-            </div>
-            <div class="zona-pontos">
-                <strong>📍 Zonas de Liquidez e Alvos:</strong><br>
-                <div style="margin-top:6px; font-family: monospace;">{dados["wdo_cenario"] if "Suporte" in dados["wdo_cenario"] else "Aguardando mapeamento dinâmico de gatilhos..."}</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="grid-footer">
-        <div class="card-footer-info">
-            <h3 style="margin-top:0; font-size:14px; color: var(--alerta); text-transform: uppercase;">📅 Indicadores e Calendário Econômico</h3>
-            <p style="color:#9ca3af; margin:0; font-family: monospace;">{dados["calendario_eventos"]}</p>
-        </div>
-        <div class="card-footer-info">
-            <h3 style="margin-top:0; font-size:14px; color: var(--azul-trade); text-transform: uppercase;">🎯 Direcionamento Técnico do Dia</h3>
-            <p style="color:#d1d5db; margin:0; text-align: justify;">{dados["direcionamento"]}</p>
-        </div>
+    <!-- AQUER ENTRARÁ TODO O CONTEÚDO SEM CORTES, EXATAMENTE COMO ESTÁ NO TRADERBI -->
+    <div class="conteudo-traderbi">
+        {conteudo_real}
     </div>
 </div>
 
@@ -208,11 +125,10 @@ def gerar_html_completo(dados):
 
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(html_final)
-    print("index.html gerado com sucesso contendo todo o conteúdo do TraderBI!")
+    print("Sucesso! index.html gerado com 100% das informações extraídas.")
 
 if __name__ == "__main__":
-    texto_bruto = extrair_dados_traderbi()
-    if texto_bruto:
-        # Analisa o texto extraído, mapeia os blocos e gera a página completa
-        dados_fatiados = mapear_conteudo_completo(texto_bruto)
-        gerar_html_completo(dados_fatiados)
+    html_obtido = extrair_dados_traderbi()
+    if html_obtido:
+        conteudo_limpo = limpar_e_formatar(html_obtido)
+        gerar_portal_completo(conteudo_limpo)
