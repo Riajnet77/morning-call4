@@ -3,83 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morning Call - TraderBI</title>
+    <title>Morning Call Otimizado</title>
     <style>
         :root { 
-            --bg-principal: #090d16; --bg-card: #111827;
+            --bg-principal: #090d16; --bg-card: #111827; --bg-subcard: #1f2937;
             --texto-claro: #f3f4f6; --texto-mutado: #9ca3af; 
-            --azul-trade: #38bdf8; --borda: #1f2937; 
+            --azul-trade: #38bdf8; --alta: #10b981; --baixa: #ef4444; --alerta: #f59e0b; --borda: #1f2937; 
         }
-        body { font-family: 'Inter', system-ui, sans-serif; background-color: var(--bg-principal); color: var(--texto-claro); margin: 0; padding: 20px; line-height: 1.6; }
-        .container { max-width: 950px; margin: auto; background: var(--bg-card); padding: 35px; border-radius: 12px; border: 1px solid var(--borda); box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-        header { border-bottom: 1px solid var(--borda); padding-bottom: 20px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
-        h1 { color: var(--azul-trade); font-size: 24px; margin: 0; font-weight: 800; }
-        .timestamp { font-size: 12px; background: #090d16; padding: 8px 14px; border-radius: 6px; border: 1px solid var(--borda); color: var(--azul-trade); font-family: monospace; }
-        .conteudo-traderbi { font-size: 15px; color: #e5e7eb; white-space: pre-wrap; word-wrap: break-word; text-align: justify; }
-        .erro-mensagem { color: #ef4444; background: rgba(239, 68, 68, 0.1); padding: 15px; border-radius: 6px; border: 1px solid rgba(239, 68, 68, 0.2); }
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: var(--bg-principal); color: var(--texto-claro); margin: 0; padding: 20px; line-height: 1.6; }
+        .container { max-width: 1000px; margin: auto; background: var(--bg-card); padding: 30px; border-radius: 12px; border: 1px solid var(--borda); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3); }
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--borda); padding-bottom: 20px; margin-bottom: 25px; }
+        h1 { color: var(--azul-trade); font-size: 24px; margin: 0; font-weight: 800; letter-spacing: -0.025em; }
+        .timestamp { font-size: 12px; background: #090d16; padding: 8px 14px; border-radius: 6px; border: 1px solid var(--borda); font-family: monospace; color: var(--azul-trade); }
+        h2 { font-size: 15px; color: #fff; margin-top: 30px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; border-left: 3px solid var(--azul-trade); padding-left: 8px; }
+        
+        /* Grid de Indicadores */
+        .grid-indicadores { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .card-ind { background: #0f172a; border: 1px solid var(--borda); padding: 15px; border-radius: 8px; text-align: center; }
+        .ind-valor { font-size: 20px; font-weight: 700; color: #fff; margin-top: 5px; font-family: monospace; }
+
+        /* Badges de Suporte e Resistência */
+        .zone-container { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+        .badge-ponto { padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; font-family: monospace; }
+        .badge-ponto.resistencia { color: var(--baixa); background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); }
+        .badge-ponto.suporte { color: var(--alta); background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); }
+
+        /* Blocos de Texto */
+        .bloco-texto { background: rgba(255,255,255,0.01); border: 1px solid var(--borda); padding: 20px; border-radius: 8px; font-size: 14.5px; text-align: justify; color: #d1d5db; }
+        
+        /* Tabela de Agenda */
+        .tabela-agenda { width: 100%; border-collapse: collapse; margin-top: 10px; background: #0f172a; border-radius: 8px; overflow: hidden; border: 1px solid var(--borda); }
+        .tabela-agenda th, .tabela-agenda td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--borda); }
+        .tabela-agenda th { background: var(--bg-subcard); color: var(--azul-trade); font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .tabela-agenda td.hora { font-family: monospace; font-weight: 600; color: var(--alerta); width: 80px; }
     </style>
 </head>
 <body>
 <div class="container">
     <header>
         <div>
-            <h1>🌅 Aquecimento do Pregão</h1>
-            <div style="color: var(--texto-mutado); font-size: 13px; margin-top: 4px;">Painel de Análise Integrado • TraderBI</div>
+            <h1 id="txt-titulo">Morning Call</h1>
+            <div style="color: var(--texto-mutado); font-size: 13px; margin-top: 4px;">Data Ref: <span id="txt-data">--/--/----</span> • Mapeamento de Fluxo Operacional</div>
         </div>
-        <div class="timestamp" id="live-clock">Carregando Relógio...</div>
+        <div class="timestamp" id="live-clock">--:--:-- (BRT)</div>
     </header>
 
-    <!-- O JAVASCRIPT VAI INJETAR O CONTEÚDO INTEGRAL DO DATA.JSON AQUI DENTRO -->
-    <div id="conteudo-dinamico" class="conteudo-traderbi">
-        <p style="color: var(--texto-mutado);">Carregando dados atualizados do mercado...</p>
+    <h2>📍 Zonas de Liquidez Mapeadas (Tags)</h2>
+    <div class="zone-container" id="container-tags">
+        </div>
+
+    <div class="grid-indicadores">
+        <div class="card-ind">
+            <div style="font-size: 12px; color: var(--texto-mutado);">Fear &amp; Greed</div>
+            <div class="ind-valor" id="ind-fg">--</div>
+        </div>
+        <div class="card-ind">
+            <div style="font-size: 12px; color: var(--texto-mutado);">DXY (Dólar Global)</div>
+            <div class="ind-valor" id="ind-dxy">--</div>
+        </div>
+        <div class="card-ind">
+            <div style="font-size: 12px; color: var(--texto-mutado);">VIX (Índice do Medo)</div>
+            <div class="ind-valor" id="ind-vix">--</div>
+        </div>
     </div>
+
+    <h2>🎯 Direcionamento Estratégico</h2>
+    <div class="bloco-texto" id="txt-estrategia" style="border-left: 4px solid var(--alerta);">
+        </div>
+
+    <h2>📅 Agenda Econômica / Eventos do Dia</h2>
+    <table class="tabela-agenda">
+        <thead>
+            <tr>
+                <th>Horário</th>
+                <th>Evento / Indicador</th>
+            </tr>
+        </thead>
+        <tbody id="tabela-agenda-corpo">
+            </tbody>
+    </table>
+
+    <h2>💡 Insights e Contexto de Mercado</h2>
+    <div class="bloco-texto" id="txt-insights" style="white-space: pre-wrap;">
+        </div>
 </div>
 
 <script>
-    // 1. Relógio em tempo real (BRT)
     function atualizarRelogio() {
         const agora = new Date();
         const fHora = { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-        const fData = { timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit', year: 'numeric' };
-        document.getElementById('live-clock').innerText = agora.toLocaleDateString('pt-BR', fData) + " • " + agora.toLocaleTimeString('pt-BR', fHora) + " (BRT)";
+        document.getElementById('live-clock').innerText = agora.toLocaleTimeString('pt-BR', fHora) + " (BRT)";
     }
-    setInterval(atualizarRelogio, 1000); 
-    atualizarRelogio();
+    setInterval(atualizarRelogio, 1000); atualizarRelogio();
 
-    // 2. Consome o arquivo data.json gerado pelo seu scrape.py
+    function limparSujeiraRodape(texto) {
+        // Se encontrar o aviso padrão de direitos autorais do FactSet/TradingView, corta dali para frente
+        const padraoCorte = /(Copyright ©|Dados de mercado selecionados|Mais do que um produto|Sobre a empresa)/i;
+        const indiceCorte = texto.search(padraoCorte);
+        if (indiceCorte !== -1) {
+            return texto.substring(0, indiceCorte).trim();
+        }
+        return texto;
+    }
+
     async function carregarDados() {
-        const container = document.getElementById('conteudo-dinamico');
         try {
-            // Adiciona um timestamp na URL para evitar que o navegador use o cache antigo
             const resposta = await fetch('data.json?t=' + new Date().getTime());
-            if (!resposta.ok) throw new Error('Não foi possível carregar o arquivo data.json');
-            
+            if (!resposta.ok) throw new Error('Erro ao abrir o arquivo');
             const dados = await resposta.json();
-            
-            // Se o seu JSON estruturar o texto em uma chave específica (ex: dados.conteudo ou dados.texto), mude aqui.
-            // Caso ele seja um objeto com várias chaves, abaixo vamos varrer e exibir tudo de forma limpa.
-            if (typeof dados === 'object') {
-                let htmlGerado = "";
-                for (const [chave, valor] of Object.entries(dados)) {
-                    if (valor) {
-                        htmlGerado += `<div style="margin-bottom: 25px;">
-                            <h3 style="color: var(--azul-trade); text-transform: uppercase; font-size: 14px; margin-bottom: 8px; border-left: 3px solid var(--azul-trade); padding-left: 8px;">${chave.replace(/_/g, ' ')}</h3>
-                            <p style="margin: 0; color: #e5e7eb;">${valor}</p>
-                        </div>`;
-                    }
-                }
-                container.innerHTML = htmlGerated || "Nenhum dado legível encontrado dentro do JSON.";
-            } else {
-                container.innerHTML = dados;
+
+            // Preenche Textos Simples
+            document.getElementById('txt-titulo').innerText = dados.title || "Morning Call";
+            document.getElementById('txt-data').innerText = dados.date || "--/--/----";
+            document.getElementById('txt-estrategia').innerText = dados.strategy || "Nenhum direcionamento definido.";
+
+            // Preenche Indicadores
+            if (dados.indicators) {
+                document.getElementById('ind-fg').innerText = dados.indicators.fearGreed || "--";
+                document.getElementById('ind-dxy').innerText = dados.indicators.dxy || "--";
+                document.getElementById('ind-vix').innerText = dados.indicators.vix || "--";
             }
+
+            // Preenche Tags (Suportes e Resistências)
+            const containerTags = document.getElementById('container-tags');
+            containerTags.innerHTML = "";
+            if (dados.tags && dados.tags.length > 0) {
+                dados.tags.forEach(tag => {
+                    const classe = tag.toLowerCase().includes('resist') ? 'resistencia' : 'suporte';
+                    containerTags.innerHTML += `<span class="badge-ponto ${classe}">🔹 ${tag}</span>`;
+                });
+            } else {
+                containerTags.innerHTML = `<span style="color: var(--texto-mutado); font-size:13px;">Nenhum ponto fixado para hoje.</span>`;
+            }
+
+            // Preenche Agenda Econômica (Estrutura de Tabela)
+            const corpoAgenda = document.getElementById('tabela-agenda-corpo');
+            corpoAgenda.innerHTML = "";
+            if (dados.agenda && dados.agenda.length > 0) {
+                dados.agenda.forEach(item => {
+                    corpoAgenda.innerHTML += `<tr>
+                        <td class="hora">${item.time}</td>
+                        <td style="color: #fff; font-weight: 500;">${item.event}</td>
+                    </tr>`;
+                });
+            } else {
+                corpoAgenda.innerHTML = `<tr><td colspan="2" style="color: var(--texto-mutado); text-align:center;">Nenhum indicador relevante na agenda hoje.</td></tr>`;
+            }
+
+            // Preenche Insights limpando a poluição de links institucionais do script
+            const containerInsights = document.getElementById('txt-insights');
+            if (dados.insights && dados.insights.length > 0) {
+                // Junta a lista de parágrafos e aplica a limpeza de rodapé
+                let textoBruto = dados.insights.join("\n\n");
+                let textoLimpo = limparSujeiraRodape(textoBruto);
+                
+                containerInsights.innerText = textoLimpo || "Nenhum insight extraído.";
+            } else {
+                containerInsights.innerText = "Sem insights adicionais para exibir.";
+            }
+
         } catch (erro) {
             console.error(erro);
-            container.innerHTML = `<div class="erro-mensagem">
-                <strong>⚠️ Erro ao renderizar dados:</strong><br>
-                O arquivo 'data.json' ainda não foi gerado nesta sessão ou possui um formato inválido. Certifique-se de que o workflow de atualização rodou por completo.
-            </div>`;
+            document.getElementById('txt-estrategia').innerHTML = `<span style="color:var(--baixa)">⚠️ Erro crítico ao processar o formato do arquivo data.json.</span>`;
         }
     }
+
     carregarDados();
 </script>
 </body>
