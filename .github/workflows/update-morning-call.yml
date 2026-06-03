@@ -26,7 +26,7 @@ jobs:
         env:
           TRADERBI_EMAIL: ${{ secrets.TRADERBI_EMAIL }}
           TRADERBI_PASSWORD: ${{ secrets.TRADERBI_PASSWORD }}
-        run: python scrape.py
+        run: python teste_diagnostico.py
 
       - name: Commit e push das alterações
         run: |
