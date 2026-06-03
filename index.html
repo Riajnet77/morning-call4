@@ -6,14 +6,14 @@
     <title>Morning Call Pro - B3 & Forex</title>
     <style>
         :root {
-            --bg-principal: #0b0f19;
-            --bg-card: #151c2c;
+            --bg-principal: #0f172a;
+            --bg-card: #1e293b;
             --texto-claro: #f1f5f9;
-            --texto-mutado: #64748b;
+            --texto-mutado: #94a3b8;
             --azul-trade: #38bdf8;
-            --alta: #22c55e;
-            --baixa: #ef4444;
-            --borda: #1e293b;
+            --alta: #4ade80;
+            --baixa: #f87171;
+            --borda: #334155;
         }
 
         body {
@@ -52,7 +52,7 @@
         .timestamp {
             font-size: 13px;
             color: var(--texto-claro);
-            background: #0b0f19;
+            background: #0f172a;
             padding: 5px 10px;
             border-radius: 4px;
             border: 1px solid var(--borda);
@@ -67,27 +67,10 @@
             letter-spacing: 0.5px;
         }
 
-        /* Grid de Cotações Real-Time */
-        .grid-tickers {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .card-ticker {
-            background: #0b0f19;
-            border: 1px solid var(--borda);
-            border-radius: 6px;
-            padding: 12px;
-            position: relative;
-        }
-
-        /* Tabelas de Drivers */
         table {
             width: 100%;
             border-collapse: collapse;
-            background-color: #0b0f19;
+            background-color: #0f172a;
             border-radius: 6px;
             overflow: hidden;
         }
@@ -100,7 +83,7 @@
         }
 
         th {
-            background-color: #070a12;
+            background-color: #0b0f19;
             color: var(--azul-trade);
             font-size: 11px;
             text-transform: uppercase;
@@ -114,15 +97,14 @@
             text-transform: uppercase;
         }
 
-        .alta { color: var(--alta); background: rgba(34, 197, 94, 0.1); }
-        .baixa { color: var(--baixa); background: rgba(239, 68, 68, 0.1); }
+        .alta { color: var(--alta); background: rgba(74, 222, 128, 0.1); }
+        .baixa { color: var(--baixa); background: rgba(248, 113, 113, 0.1); }
 
-        .widget-calendario {
+        .widget-wrapper {
             border: 1px solid var(--borda);
             border-radius: 6px;
             overflow: hidden;
-            height: 400px;
-            background: #0b0f19;
+            background: #0f172a;
         }
     </style>
 </head>
@@ -137,28 +119,32 @@
         <div class="timestamp" id="live-clock">Aguardando Horário...</div>
     </header>
 
-    <!-- 1. COTAÇÕES TRANSMITIDAS EM TEMPO REAL (SEM DELAY) -->
+    <!-- 1. MONITOR DE STREAMING EM TEMPO REAL CORRIGIDO (SEM IFRAME QUEBRADO) -->
     <h2>📊 Monitor de Fluxo Global (Streaming Ao Vivo)</h2>
-    <div class="grid-tickers">
-        <!-- Card EWZ -->
-        <div class="card-ticker">
-            <iframe src="https://it.widgets.investing.com/live-currency-crosses?theme=darkTheme&pairs=940833" width="100%" height="50" frameborder="0" allowtransparency="true" marginwidth="0" marginheight="0"></iframe>
-        </div>
-        <!-- Card S&P 500 Futuro -->
-        <div class="card-ticker">
-            <iframe src="https://it.widgets.investing.com/live-currency-crosses?theme=darkTheme&pairs=8839" width="100%" height="50" frameborder="0" allowtransparency="true" marginwidth="0" marginheight="0"></iframe>
-        </div>
-        <!-- Card EUR/USD -->
-        <div class="card-ticker">
-            <iframe src="https://it.widgets.investing.com/live-currency-crosses?theme=darkTheme&pairs=1" width="100%" height="50" frameborder="0" allowtransparency="true" marginwidth="0" marginheight="0"></iframe>
-        </div>
-        <!-- Card DXY (Índice Dólar) -->
-        <div class="card-ticker">
-            <iframe src="https://it.widgets.investing.com/live-currency-crosses?theme=darkTheme&pairs=8827" width="100%" height="50" frameborder="0" allowtransparency="true" marginwidth="0" marginheight="0"></iframe>
+    <div class="widget-wrapper" style="height: 76px;">
+        <!-- TradingView Ticker Widget Original via Injeção de Script Seguro -->
+        <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+            {
+                "symbols": [
+                    { "proName": "AMEX:EWZ", "title": "EWZ (Brasil)" },
+                    { "proName": "CME_MINI:ES1!", "title": "S&P 500 Fut" },
+                    { "proName": "FX_IDC:DXY", "title": "DXY (Dólar)" },
+                    { "proName": "FX:EURUSD", "title": "EUR/USD" },
+                    { "proName": "FX:USDJPY", "title": "USD/JPY" }
+                ],
+                "showSymbolLogo": true,
+                "colorTheme": "dark",
+                "isWidescreen": true,
+                "displayMode": "regular",
+                "locale": "br"
+            }
+            </script>
         </div>
     </div>
 
-    <!-- 2. TRADUÇÃO DOS DRIVERS PARA OPERAÇÃO -->
+    <!-- 2. TRADUÇÃO OPERACIONAL DOS DRIVERS -->
     <h2>💡 Drivers do Dia & Ações Reais nos Ativos</h2>
     <table>
         <thead>
@@ -171,14 +157,14 @@
         </thead>
         <tbody>
             <tr>
-                <td><strong>Injeção de Estímulos na China</strong></td>
+                <td><strong>Estímulos Econômicos na China</strong></td>
                 <td>HFTs e fundos estrangeiros disparam ordens de compra em VALE3 e PETR4, puxando o índice futuro no leilão.</td>
                 <td>WIN (Índice)</td>
                 <td><span class="badge alta">▲ Compradora</span></td>
             </tr>
             <tr>
-                <td><strong>Europa Fraca (Inflação Alta)</strong></td>
-                <td>Grandes players abandonam posições em Euro e compram contratos de Dólar para proteção de portfólio.</td>
+                <td><strong>Europa Pressionada (Inflação / Baixo Crescimento)</strong></td>
+                <td>Grandes players abandonam posições em Euro devido ao risco de recessão técnica e compram Dólar como proteção global.</td>
                 <td>EUR/USD / WDO</td>
                 <td><span class="badge baixa">▼ Vendedora (EUR)</span></td>
             </tr>
@@ -197,11 +183,22 @@
         </tbody>
     </table>
 
-    <!-- 3. CALENDÁRIO ECONÔMICO TRADUZIDO -->
-    <h2>📅 Calendário Econômico Diário</h2>
-    <div class="widget-calendario">
-        <iframe src="https://sslecal2.investing.com?eco_border_color=%231e293b&eco_background_color=%230b0f19&eco_title_color=%2338bdf8&eco_time_color=%2364748b&eco_text_color=%23f1f5f9&columns=time,currency,importance,event,actual,forecast,previous&features=datepicker,timezone&countries=12,26,32,4,5,72,22,37,43,17,35,36,110,11,14,48,10,39,25,6,38,7,21,106,102,13,8,122,119,41,42,63,93,92,100,53,52,23,51,56,57,55,24,59&calType=day&timeZone=12&lang=12" 
-                width="100%" height="100%" frameborder="0" allowtransparency="true" marginwidth="0" marginheight="0"></iframe>
+    <!-- 3. CALENDÁRIO ECONÔMICO OFICIAL -->
+    <h2>📅 Calendário Econômico Diário (Horário de Brasília)</h2>
+    <div class="widget-wrapper" style="height: 450px;">
+        <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
+            {
+                "colorTheme": "dark",
+                "isWidescreen": true,
+                "width": "100%",
+                "height": "100%",
+                "locale": "br",
+                "importanceFilter": "-1,0,1"
+            }
+            </script>
+        </div>
     </div>
 </div>
 
@@ -212,7 +209,7 @@
         const opcoesData = { timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit', year: 'numeric' };
         
         const hora = agora.toLocaleTimeString('pt-BR', opcoesHora);
-        const data = agora.toLocaleDateString('pt-BR', opcoesData);
+        const data = agora.toLocaleDateString('pt-BR', dataOpcoes = { timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit', year: 'numeric' });
         
         document.getElementById('live-clock').innerText = `${data} • ${hora} (BRT)`;
     }
