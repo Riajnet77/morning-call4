@@ -3,219 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morning Call Pro - B3 & Forex</title>
+    <title>Morning Call - TraderBI</title>
     <style>
-        :root {
-            --bg-principal: #0f172a;
-            --bg-card: #1e293b;
-            --texto-claro: #f1f5f9;
-            --texto-mutado: #94a3b8;
-            --azul-trade: #38bdf8;
-            --alta: #4ade80;
-            --baixa: #f87171;
-            --borda: #334155;
+        :root { 
+            --bg-principal: #090d16; --bg-card: #111827;
+            --texto-claro: #f3f4f6; --texto-mutado: #9ca3af; 
+            --azul-trade: #38bdf8; --borda: #1f2937; 
         }
-
-        body {
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: var(--bg-principal);
-            color: var(--texto-claro);
-            margin: 0;
-            padding: 15px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: auto;
-            background: var(--bg-card);
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid var(--borda);
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--borda);
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            color: var(--azul-trade);
-            font-size: 20px;
-            margin: 0;
-            text-transform: uppercase;
-        }
-
-        .timestamp {
-            font-size: 13px;
-            color: var(--texto-claro);
-            background: #0f172a;
-            padding: 5px 10px;
-            border-radius: 4px;
-            border: 1px solid var(--borda);
-        }
-
-        h2 {
-            font-size: 15px;
-            color: var(--texto-claro);
-            margin-top: 25px;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #0f172a;
-            border-radius: 6px;
-            overflow: hidden;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid var(--borda);
-            font-size: 13px;
-        }
-
-        th {
-            background-color: #0b0f19;
-            color: var(--azul-trade);
-            font-size: 11px;
-            text-transform: uppercase;
-        }
-
-        .badge {
-            padding: 3px 6px;
-            border-radius: 3px;
-            font-weight: bold;
-            font-size: 11px;
-            text-transform: uppercase;
-        }
-
-        .alta { color: var(--alta); background: rgba(74, 222, 128, 0.1); }
-        .baixa { color: var(--baixa); background: rgba(248, 113, 113, 0.1); }
-
-        .widget-wrapper {
-            border: 1px solid var(--borda);
-            border-radius: 6px;
-            overflow: hidden;
-            background: #0f172a;
-        }
+        body { font-family: 'Inter', system-ui, sans-serif; background-color: var(--bg-principal); color: var(--texto-claro); margin: 0; padding: 20px; line-height: 1.6; }
+        .container { max-width: 950px; margin: auto; background: var(--bg-card); padding: 35px; border-radius: 12px; border: 1px solid var(--borda); box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        header { border-bottom: 1px solid var(--borda); padding-bottom: 20px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
+        h1 { color: var(--azul-trade); font-size: 24px; margin: 0; font-weight: 800; }
+        .timestamp { font-size: 12px; background: #090d16; padding: 8px 14px; border-radius: 6px; border: 1px solid var(--borda); color: var(--azul-trade); font-family: monospace; }
+        .conteudo-traderbi { font-size: 15px; color: #e5e7eb; white-space: pre-wrap; word-wrap: break-word; text-align: justify; }
+        .erro-mensagem { color: #ef4444; background: rgba(239, 68, 68, 0.1); padding: 15px; border-radius: 6px; border: 1px solid rgba(239, 68, 68, 0.2); }
     </style>
 </head>
 <body>
-
 <div class="container">
     <header>
         <div>
-            <h1>Painel de Fluxo Matinal</h1>
-            <div style="color: var(--texto-mutado); font-size: 12px; margin-top: 2px;">Análise de Pré-Abertura Operacional B3 & Forex</div>
+            <h1>🌅 Aquecimento do Pregão</h1>
+            <div style="color: var(--texto-mutado); font-size: 13px; margin-top: 4px;">Painel de Análise Integrado • TraderBI</div>
         </div>
-        <div class="timestamp" id="live-clock">Aguardando Horário...</div>
+        <div class="timestamp" id="live-clock">Carregando Relógio...</div>
     </header>
 
-    <!-- 1. MONITOR DE STREAMING EM TEMPO REAL CORRIGIDO (SEM IFRAME QUEBRADO) -->
-    <h2>📊 Monitor de Fluxo Global (Streaming Ao Vivo)</h2>
-    <div class="widget-wrapper" style="height: 76px;">
-        <!-- TradingView Ticker Widget Original via Injeção de Script Seguro -->
-        <div class="tradingview-widget-container">
-            <div class="tradingview-widget-container__widget"></div>
-            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-            {
-                "symbols": [
-                    { "proName": "AMEX:EWZ", "title": "EWZ (Brasil)" },
-                    { "proName": "CME_MINI:ES1!", "title": "S&P 500 Fut" },
-                    { "proName": "FX_IDC:DXY", "title": "DXY (Dólar)" },
-                    { "proName": "FX:EURUSD", "title": "EUR/USD" },
-                    { "proName": "FX:USDJPY", "title": "USD/JPY" }
-                ],
-                "showSymbolLogo": true,
-                "colorTheme": "dark",
-                "isWidescreen": true,
-                "displayMode": "regular",
-                "locale": "br"
-            }
-            </script>
-        </div>
-    </div>
-
-    <!-- 2. TRADUÇÃO OPERACIONAL DOS DRIVERS -->
-    <h2>💡 Drivers do Dia & Ações Reais nos Ativos</h2>
-    <table>
-        <thead>
-            <tr>
-                <th style="width: 25%;">Gatilho Macro (Causa)</th>
-                <th style="width: 45%;">Reação Institucional (Ação)</th>
-                <th style="width: 15%;">Ativo Impactado</th>
-                <th style="width: 15%;">Direção Esperada</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><strong>Estímulos Econômicos na China</strong></td>
-                <td>HFTs e fundos estrangeiros disparam ordens de compra em VALE3 e PETR4, puxando o índice futuro no leilão.</td>
-                <td>WIN (Índice)</td>
-                <td><span class="badge alta">▲ Compradora</span></td>
-            </tr>
-            <tr>
-                <td><strong>Europa Pressionada (Inflação / Baixo Crescimento)</strong></td>
-                <td>Grandes players abandonam posições em Euro devido ao risco de recessão técnica e compram Dólar como proteção global.</td>
-                <td>EUR/USD / WDO</td>
-                <td><span class="badge baixa">▼ Vendedora (EUR)</span></td>
-            </tr>
-            <tr>
-                <td><strong>Tom Hawk do Fed (Juros Altos)</strong></td>
-                <td>Fuga de capital de países emergentes. Investidores trocam ativos da B3 pela segurança dos títulos americanos.</td>
-                <td>WDO (Dólar)</td>
-                <td><span class="badge alta">▲ Compradora</span></td>
-            </tr>
-            <tr>
-                <td><strong>Abertura de Taxas no DI Futuro</strong></td>
-                <td>Bancos e fundos locais reduzem exposição no Ibovespa (ações de consumo) e travam arbitragens de alta no índice.</td>
-                <td>WIN (Índice)</td>
-                <td><span class="badge baixa">▼ Vendedora</span></td>
-            </tr>
-        </tbody>
-    </table>
-
-    <!-- 3. CALENDÁRIO ECONÔMICO OFICIAL -->
-    <h2>📅 Calendário Econômico Diário (Horário de Brasília)</h2>
-    <div class="widget-wrapper" style="height: 450px;">
-        <div class="tradingview-widget-container">
-            <div class="tradingview-widget-container__widget"></div>
-            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
-            {
-                "colorTheme": "dark",
-                "isWidescreen": true,
-                "width": "100%",
-                "height": "100%",
-                "locale": "br",
-                "importanceFilter": "-1,0,1"
-            }
-            </script>
-        </div>
+    <!-- O JAVASCRIPT VAI INJETAR O CONTEÚDO INTEGRAL DO DATA.JSON AQUI DENTRO -->
+    <div id="conteudo-dinamico" class="conteudo-traderbi">
+        <p style="color: var(--texto-mutado);">Carregando dados atualizados do mercado...</p>
     </div>
 </div>
 
 <script>
-    function relogioBrasilia() {
+    // 1. Relógio em tempo real (BRT)
+    function atualizarRelogio() {
         const agora = new Date();
-        const opcoesHora = { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-        const opcoesData = { timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit', year: 'numeric' };
-        
-        const hora = agora.toLocaleTimeString('pt-BR', opcoesHora);
-        const data = agora.toLocaleDateString('pt-BR', dataOpcoes = { timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit', year: 'numeric' });
-        
-        document.getElementById('live-clock').innerText = `${data} • ${hora} (BRT)`;
+        const fHora = { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        const fData = { timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit', year: 'numeric' };
+        document.getElementById('live-clock').innerText = agora.toLocaleDateString('pt-BR', fData) + " • " + agora.toLocaleTimeString('pt-BR', fHora) + " (BRT)";
     }
-    setInterval(relogioBrasilia, 1000);
-    relogioBrasilia();
-</script>
+    setInterval(atualizarRelogio, 1000); 
+    atualizarRelogio();
 
+    // 2. Consome o arquivo data.json gerado pelo seu scrape.py
+    async function carregarDados() {
+        const container = document.getElementById('conteudo-dinamico');
+        try {
+            // Adiciona um timestamp na URL para evitar que o navegador use o cache antigo
+            const resposta = await fetch('data.json?t=' + new Date().getTime());
+            if (!resposta.ok) throw new Error('Não foi possível carregar o arquivo data.json');
+            
+            const dados = await resposta.json();
+            
+            // Se o seu JSON estruturar o texto em uma chave específica (ex: dados.conteudo ou dados.texto), mude aqui.
+            // Caso ele seja um objeto com várias chaves, abaixo vamos varrer e exibir tudo de forma limpa.
+            if (typeof dados === 'object') {
+                let htmlGerado = "";
+                for (const [chave, valor] of Object.entries(dados)) {
+                    if (valor) {
+                        htmlGerado += `<div style="margin-bottom: 25px;">
+                            <h3 style="color: var(--azul-trade); text-transform: uppercase; font-size: 14px; margin-bottom: 8px; border-left: 3px solid var(--azul-trade); padding-left: 8px;">${chave.replace(/_/g, ' ')}</h3>
+                            <p style="margin: 0; color: #e5e7eb;">${valor}</p>
+                        </div>`;
+                    }
+                }
+                container.innerHTML = htmlGerated || "Nenhum dado legível encontrado dentro do JSON.";
+            } else {
+                container.innerHTML = dados;
+            }
+        } catch (erro) {
+            console.error(erro);
+            container.innerHTML = `<div class="erro-mensagem">
+                <strong>⚠️ Erro ao renderizar dados:</strong><br>
+                O arquivo 'data.json' ainda não foi gerado nesta sessão ou possui um formato inválido. Certifique-se de que o workflow de atualização rodou por completo.
+            </div>`;
+        }
+    }
+    carregarDados();
+</script>
 </body>
 </html>
