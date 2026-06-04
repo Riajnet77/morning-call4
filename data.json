@@ -1,11 +1,13 @@
 {
   "date": "--/--/----",
   "lastUpdate": "--/--/---- --:--:--",
-  "lastFetch": "--/--/---- --:--:--",
+  "lastFetch": "04/06/2026 11:41:20",
   "title": "Morning Call",
   "tags": [],
   "tags_tipados": [],
-  "insights": ["⏳ Aguardando primeira coleta automática. O conteúdo será atualizado na próxima execução do workflow."],
+  "insights": [
+    "⏳ Aguardando primeira coleta automática. O conteúdo será atualizado na próxima execução do workflow."
+  ],
   "agenda": [],
   "strategy": "Aguardando coleta automática.",
   "indicators": {
@@ -14,5 +16,5 @@
     "vix": null
   },
   "scrape_ok": false,
-  "feriado_aviso": null
+  "feriado_aviso": "Sem nova publicacao em 04/06/2026. Exibindo conteudo do ultimo dia util."
 }
