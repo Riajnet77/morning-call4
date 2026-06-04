@@ -1,33 +1,18 @@
 {
-  "date": "02/06/2026",
-  "lastUpdate": "02/06/2026 14:53:20",
-  "lastFetch": "04/06/2026 11:31:35",
-  "title": "Morning Call · 02/06",
-  "tags": [
-    "Resistência $147,80",
-    "Suporte $139,20"
-  ],
-  "insights": [
-    "Juniorwuttke — Ideias de Negociação e Scripts — TradingView",
-    "JuniorwuttkePremiumOnlineSeguidores478Seguindo2Ideias190Scripts0SeguirSeguindoPresentear com uma assinaturaTrader profissional e apresentador do Morning Call da ActivTrades. Me tornei vencedor quando entendi o verdadeiro motivo por trás dos movimentos do mercado. Quer vencer também? Me siga aqui e no YouTube.Ingressou em 18 de mai. de 2023·Também em:IdeiasMindsScripts",
-    "PortuguêsPortuguêsDados de mercado selecionados fornecidos por Serviços de Dados ICE. Dados de referência selecionados fornecidos por FactSet. Copyright © 2026 FactSet Research Systems Inc.Copyright © 2026, American Bankers Association. Banco de dados CUSIP fornecido por FactSet Research Systems Inc. Todos os direitos reservados. Registros na SEC e outros documentos fornecidos por Quartr.© 2026 TradingView, Inc. Mais do que um produtoSupergráficosRastreadoresAçõesETFsTítulosCriptomoedasPares CEXPares DEXPineMapas de CalorAçõesETFsCriptomoedasCalendáriosEconomiaResultadosDividendosMais produtosCurvas de RendimentoOpçõesMapas de MacroNews FlowPine Script®AppsDispositivo MóvelDesktopComunidadeRede socialMural do AmorIndique um AmigoRegras da CasaModeradoresIdeiasTradeEducacionalSugestão da CasaPine ScriptIndicadores & estratégiasWizardsFreelancersEspaços pagosFerramentas & assinaturasRecursosPreçosDados de mercadoPlanos de presentesTradeVisão geralPrincipais corretorasComparação de corretorasOfertas especiaisFuturos do CME GroupFuturos EurexConjunto de ações EUASobre a empresaQuem somosMissão espacialBlogCarreirasMedia kitMerchanLoja TradingViewCartas de Tarô para tradersThe C63 TradeTimePolíticas & segurançaTermos de UsoAviso legalPolítica de PrivacidadePolítica de CookiesDeclaração de AcessibilidadeDicas de segurançaPrograma de Recompensa por BugsPágina de StatusSoluções para negóciosWidgetsBibliotecas de gráficosLightweight Charts™Gráficos AvançadosPlataforma de NegociaçãoOportunidades de crescimentoAnúnciosIntegração de CorretorasPrograma de ParceriaPrograma educacionalComunidadeRede socialMural do AmorIndique um AmigoRegras da CasaModeradoresIdeiasTradeEducacionalSugestão da CasaPine ScriptIndicadores & estratégiasWizardsFreelancersEspaços pagosSoluções para negóciosWidgetsBibliotecas de gráficosLightweight Charts™Gráficos AvançadosPlataforma de NegociaçãoOportunidades de crescimentoAnúnciosIntegração de CorretorasPrograma de ParceriaPrograma educacional"
-  ],
-  "agenda": [
-    {
-      "time": "09:30",
-      "event": "Dados de emprego (EUA)"
-    },
-    {
-      "time": "11:00",
-      "event": "Fala do Fed"
-    }
-  ],
-  "strategy": "Aguardar abertura americana para definir posição.",
+  "date": "--/--/----",
+  "lastUpdate": "--/--/---- --:--:--",
+  "lastFetch": "--/--/---- --:--:--",
+  "title": "Morning Call",
+  "tags": [],
+  "tags_tipados": [],
+  "insights": ["⏳ Aguardando primeira coleta automática. O conteúdo será atualizado na próxima execução do workflow."],
+  "agenda": [],
+  "strategy": "Aguardando coleta automática.",
   "indicators": {
-    "fearGreed": 48,
-    "dxy": "104.10",
-    "vix": "15.2"
+    "fearGreed": null,
+    "dxy": null,
+    "vix": null
   },
   "scrape_ok": false,
-  "feriado_aviso": "Sem nova publicacao em 04/06/2026. Exibindo conteudo do ultimo dia util."
+  "feriado_aviso": null
 }
