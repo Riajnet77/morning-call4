@@ -1,174 +1,518 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morning Call Otimizado</title>
-    <style>
-        :root { 
-            --bg-principal: #090d16; --bg-card: #111827; --bg-subcard: #1f2937;
-            --texto-claro: #f3f4f6; --texto-mutado: #9ca3af; 
-            --azul-trade: #38bdf8; --alta: #10b981; --baixa: #ef4444; --alerta: #f59e0b; --borda: #1f2937; 
-        }
-        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: var(--bg-principal); color: var(--texto-claro); margin: 0; padding: 20px; line-height: 1.6; }
-        .container { max-width: 1000px; margin: auto; background: var(--bg-card); padding: 30px; border-radius: 12px; border: 1px solid var(--borda); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3); }
-        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--borda); padding-bottom: 20px; margin-bottom: 25px; }
-        h1 { color: var(--azul-trade); font-size: 24px; margin: 0; font-weight: 800; letter-spacing: -0.025em; }
-        .timestamp { font-size: 12px; background: #090d16; padding: 8px 14px; border-radius: 6px; border: 1px solid var(--borda); font-family: monospace; color: var(--azul-trade); }
-        h2 { font-size: 15px; color: #fff; margin-top: 30px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; border-left: 3px solid var(--azul-trade); padding-left: 8px; }
-        
-        /* Grid de Indicadores */
-        .grid-indicadores { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .card-ind { background: #0f172a; border: 1px solid var(--borda); padding: 15px; border-radius: 8px; text-align: center; }
-        .ind-valor { font-size: 20px; font-weight: 700; color: #fff; margin-top: 5px; font-family: monospace; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Call</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* Badges de Suporte e Resistência */
-        .zone-container { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
-        .badge-ponto { padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; font-family: monospace; }
-        .badge-ponto.resistencia { color: var(--baixa); background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); }
-        .badge-ponto.suporte { color: var(--alta); background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); }
+  :root {
+    --bg: #09090b;
+    --surface: #111113;
+    --surface2: #18181b;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --txt: #e4e4e7;
+    --txt2: #71717a;
+    --txt3: #52525b;
+    --gold: #d4a853;
+    --gold2: #f5c96a;
+    --green: #22c55e;
+    --red: #ef4444;
+    --blue: #60a5fa;
+    --mono: 'IBM Plex Mono', monospace;
+    --display: 'Syne', sans-serif;
+    --body: 'Inter', sans-serif;
+  }
 
-        /* Blocos de Texto */
-        .bloco-texto { background: rgba(255,255,255,0.01); border: 1px solid var(--borda); padding: 20px; border-radius: 8px; font-size: 14.5px; text-align: justify; color: #d1d5db; }
-        
-        /* Tabela de Agenda */
-        .tabela-agenda { width: 100%; border-collapse: collapse; margin-top: 10px; background: #0f172a; border-radius: 8px; overflow: hidden; border: 1px solid var(--borda); }
-        .tabela-agenda th, .tabela-agenda td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--borda); }
-        .tabela-agenda th { background: var(--bg-subcard); color: var(--azul-trade); font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
-        .tabela-agenda td.hora { font-family: monospace; font-weight: 600; color: var(--alerta); width: 80px; }
-    </style>
+  body {
+    font-family: var(--body);
+    background: var(--bg);
+    color: var(--txt);
+    min-height: 100vh;
+    padding: 0;
+    line-height: 1.6;
+  }
+
+  /* ── TOPO ── */
+  .topo {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    background: rgba(9,9,11,0.92);
+    backdrop-filter: blur(12px);
+    z-index: 10;
+  }
+  .topo-esq { display: flex; align-items: center; gap: 16px; }
+  .logo-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    background: rgba(212,168,83,0.1);
+    border: 1px solid rgba(212,168,83,0.25);
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+  .topo-titulo {
+    font-family: var(--display);
+    font-size: 18px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.02em;
+  }
+  .topo-dir { display: flex; align-items: center; gap: 20px; }
+  .clock {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--txt2);
+  }
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 6px var(--green);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  /* ── LAYOUT ── */
+  .wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 32px 80px;
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 32px;
+  }
+  @media(max-width: 860px){
+    .wrapper { grid-template-columns: 1fr; padding: 24px 20px 60px; }
+  }
+
+  /* ── HERO ── */
+  .hero {
+    grid-column: 1 / -1;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 32px;
+    margin-bottom: 8px;
+  }
+  .hero-data {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--txt3);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .hero-h1 {
+    font-family: var(--display);
+    font-size: clamp(36px, 5vw, 58px);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+  .hero-h1 span { color: var(--gold); }
+  .hero-sub {
+    font-size: 14px;
+    color: var(--txt2);
+    font-family: var(--mono);
+  }
+
+  /* ── SECTION TITLE ── */
+  .sec-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--txt3);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sec-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── CARD BASE ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+  }
+
+  /* ── INDICADORES ── */
+  .indicadores-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 32px;
+    grid-column: 1 / -1;
+  }
+  .ind-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .ind-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .ind-card.fg::before { background: linear-gradient(90deg, var(--red), var(--gold), var(--green)); }
+  .ind-card.dxy::before { background: var(--blue); }
+  .ind-card.vix::before { background: var(--red); }
+  .ind-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--txt3);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .ind-valor {
+    font-family: var(--mono);
+    font-size: 28px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1;
+  }
+  .ind-desc {
+    font-size: 11px;
+    color: var(--txt3);
+    margin-top: 4px;
+  }
+  @media(max-width: 600px){
+    .indicadores-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── TAGS (SUPORTES / RESISTÊNCIAS) ── */
+  .tags-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 32px;
+    grid-column: 1 / -1;
+  }
+  .tag {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid;
+  }
+  .tag.resistencia {
+    color: #fca5a5;
+    background: rgba(239,68,68,0.08);
+    border-color: rgba(239,68,68,0.2);
+  }
+  .tag.suporte {
+    color: #86efac;
+    background: rgba(34,197,94,0.08);
+    border-color: rgba(34,197,94,0.2);
+  }
+  .tag.neutro {
+    color: var(--txt2);
+    background: var(--surface2);
+    border-color: var(--border);
+  }
+
+  /* ── COLUNA PRINCIPAL: INSIGHTS ── */
+  .col-main {}
+  .insights-texto {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #d4d4d8;
+  }
+  .insights-texto p {
+    margin-bottom: 18px;
+  }
+  .insights-texto p:last-child { margin-bottom: 0; }
+
+  /* ── COLUNA LATERAL ── */
+  .col-side { display: flex; flex-direction: column; gap: 20px; }
+
+  /* ── ESTRATÉGIA ── */
+  .estrategia-card {
+    background: rgba(212,168,83,0.05);
+    border: 1px solid rgba(212,168,83,0.15);
+    border-radius: 10px;
+    padding: 20px 22px;
+  }
+  .estrategia-txt {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #d4c9a8;
+  }
+
+  /* ── AGENDA ── */
+  .agenda-lista { display: flex; flex-direction: column; gap: 0; }
+  .agenda-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .agenda-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .agenda-hora {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--gold);
+    min-width: 48px;
+    padding-top: 1px;
+  }
+  .agenda-evento {
+    font-size: 13px;
+    color: var(--txt);
+    line-height: 1.5;
+  }
+
+  /* ── ATUALIZAÇÃO ── */
+  .update-bar {
+    grid-column: 1 / -1;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--txt3);
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .scrape-badge {
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+  }
+  .scrape-ok { background: rgba(34,197,94,0.1); color: #86efac; border: 1px solid rgba(34,197,94,0.2); }
+  .scrape-fail { background: rgba(239,68,68,0.1); color: #fca5a5; border: 1px solid rgba(239,68,68,0.2); }
+
+  /* ── ERRO ── */
+  .erro-box {
+    grid-column: 1 / -1;
+    background: rgba(239,68,68,0.06);
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 10px;
+    padding: 20px 24px;
+    color: #fca5a5;
+    font-size: 14px;
+  }
+
+  /* ── LOADING ── */
+  .loading {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 80px 0;
+    color: var(--txt3);
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+</style>
 </head>
 <body>
-<div class="container">
-    <header>
-        <div>
-            <h1 id="txt-titulo">Morning Call</h1>
-            <div style="color: var(--texto-mutado); font-size: 13px; margin-top: 4px;">Data Ref: <span id="txt-data">--/--/----</span> • Mapeamento de Fluxo Operacional</div>
-        </div>
-        <div class="timestamp" id="live-clock">--:--:-- (BRT)</div>
-    </header>
 
-    <h2>📍 Zonas de Liquidez Mapeadas (Tags)</h2>
-    <div class="zone-container" id="container-tags">
-        </div>
+<header class="topo">
+  <div class="topo-esq">
+    <span class="logo-badge">TraderBI</span>
+    <span class="topo-titulo" id="topo-titulo">Morning Call</span>
+  </div>
+  <div class="topo-dir">
+    <div class="status-dot" id="status-dot" style="display:none"></div>
+    <span class="clock" id="clock">--:--:--</span>
+  </div>
+</header>
 
-    <div class="grid-indicadores">
-        <div class="card-ind">
-            <div style="font-size: 12px; color: var(--texto-mutado);">Fear &amp; Greed</div>
-            <div class="ind-valor" id="ind-fg">--</div>
-        </div>
-        <div class="card-ind">
-            <div style="font-size: 12px; color: var(--texto-mutado);">DXY (Dólar Global)</div>
-            <div class="ind-valor" id="ind-dxy">--</div>
-        </div>
-        <div class="card-ind">
-            <div style="font-size: 12px; color: var(--texto-mutado);">VIX (Índice do Medo)</div>
-            <div class="ind-valor" id="ind-vix">--</div>
-        </div>
-    </div>
-
-    <h2>🎯 Direcionamento Estratégico</h2>
-    <div class="bloco-texto" id="txt-estrategia" style="border-left: 4px solid var(--alerta);">
-        </div>
-
-    <h2>📅 Agenda Econômica / Eventos do Dia</h2>
-    <table class="tabela-agenda">
-        <thead>
-            <tr>
-                <th>Horário</th>
-                <th>Evento / Indicador</th>
-            </tr>
-        </thead>
-        <tbody id="tabela-agenda-corpo">
-            </tbody>
-    </table>
-
-    <h2>💡 Insights e Contexto de Mercado</h2>
-    <div class="bloco-texto" id="txt-insights" style="white-space: pre-wrap;">
-        </div>
+<div class="wrapper" id="wrapper">
+  <div class="loading" id="loading">Carregando morning call...</div>
 </div>
 
 <script>
-    function atualizarRelogio() {
-        const agora = new Date();
-        const fHora = { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-        document.getElementById('live-clock').innerText = agora.toLocaleTimeString('pt-BR', fHora) + " (BRT)";
+// ── RELÓGIO ──────────────────────────────────────────────────────────────────
+function tick() {
+  const agora = new Date();
+  const opts = { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+  document.getElementById('clock').textContent = agora.toLocaleTimeString('pt-BR', opts) + ' BRT';
+}
+setInterval(tick, 1000);
+tick();
+
+// ── LIMPEZA DE TEXTO ──────────────────────────────────────────────────────────
+function limparRodape(texto) {
+  const cortes = [/Copyright\s*©/i, /Todos os direitos reservados/i, /TradingView/i, /FactSet/i, /Política de Privacidade/i, /© 20\d\d/i];
+  for (const re of cortes) {
+    const idx = texto.search(re);
+    if (idx > -1) texto = texto.substring(0, idx).trim();
+  }
+  return texto;
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function renderIndicadores(ind) {
+  const fg = ind?.fearGreed;
+  const dxy = ind?.dxy;
+  const vix = ind?.vix;
+  return `
+    <div class="indicadores-grid">
+      <div class="ind-card fg">
+        <div class="ind-label">Fear &amp; Greed</div>
+        <div class="ind-valor">${fg !== null && fg !== undefined ? fg : '—'}</div>
+        <div class="ind-desc">${fg !== null && fg !== undefined ? (fg < 25 ? 'Medo extremo' : fg < 45 ? 'Medo' : fg < 55 ? 'Neutro' : fg < 75 ? 'Ganância' : 'Ganância extrema') : 'Indisponível'}</div>
+      </div>
+      <div class="ind-card dxy">
+        <div class="ind-label">DXY — Dólar Global</div>
+        <div class="ind-valor">${dxy !== null && dxy !== undefined ? dxy : '—'}</div>
+        <div class="ind-desc">Índice do dólar americano</div>
+      </div>
+      <div class="ind-card vix">
+        <div class="ind-label">VIX — Índice do Medo</div>
+        <div class="ind-valor">${vix !== null && vix !== undefined ? vix : '—'}</div>
+        <div class="ind-desc">${vix !== null && vix !== undefined ? (parseFloat(vix) < 15 ? 'Baixa volatilidade' : parseFloat(vix) < 25 ? 'Volatilidade moderada' : 'Alta volatilidade') : 'Indisponível'}</div>
+      </div>
+    </div>`;
+}
+
+function renderTags(tags, tagsTipados) {
+  if (!tags || tags.length === 0) return '';
+  const tipados = tagsTipados || [];
+  const html = tags.map((tag, i) => {
+    const tipo = tipados[i]?.tipo || (tag.toLowerCase().includes('resist') ? 'resistencia' : tag.toLowerCase().includes('suport') ? 'suporte' : 'neutro');
+    return `<span class="tag ${tipo}">${tag}</span>`;
+  }).join('');
+  return `<div class="tags-wrap">${html}</div>`;
+}
+
+function renderAgenda(agenda) {
+  if (!agenda || agenda.length === 0) {
+    return '<p style="color:var(--txt3);font-size:13px;">Nenhum evento registrado para hoje.</p>';
+  }
+  return `<div class="agenda-lista">` + agenda.map(a =>
+    `<div class="agenda-item">
+      <span class="agenda-hora">${a.time}</span>
+      <span class="agenda-evento">${a.event}</span>
+    </div>`
+  ).join('') + '</div>';
+}
+
+function renderInsights(insights) {
+  if (!insights || insights.length === 0) return '<p style="color:var(--txt3)">Sem conteúdo disponível.</p>';
+  return insights.map(p => {
+    const limpo = limparRodape(p);
+    return limpo ? `<p>${limpo}</p>` : '';
+  }).filter(Boolean).join('');
+}
+
+// ── MAIN ──────────────────────────────────────────────────────────────────────
+async function carregar() {
+  try {
+    const resp = await fetch('data.json?t=' + Date.now());
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const d = await resp.json();
+
+    document.getElementById('topo-titulo').textContent = d.title || 'Morning Call';
+    document.getElementById('status-dot').style.display = 'block';
+
+    const wrapper = document.getElementById('wrapper');
+
+    if (!d.scrape_ok && d.insights?.[0]?.startsWith('⚠️')) {
+      wrapper.innerHTML = `
+        <div class="hero" style="grid-column:1/-1">
+          <div class="hero-data">${d.date || ''}</div>
+          <h1 class="hero-h1">Morning <span>Call</span></h1>
+        </div>
+        <div class="erro-box">
+          ⚠️ Falha na coleta automática de hoje.<br>
+          <small style="opacity:0.7">Verifique os logs do GitHub Actions. Última atualização: ${d.lastUpdate}</small>
+        </div>`;
+      return;
     }
-    setInterval(atualizarRelogio, 1000); atualizarRelogio();
 
-    function limparSujeiraRodape(texto) {
-        // Se encontrar o aviso padrão de direitos autorais do FactSet/TradingView, corta dali para frente
-        const padraoCorte = /(Copyright ©|Dados de mercado selecionados|Mais do que um produto|Sobre a empresa)/i;
-        const indiceCorte = texto.search(padraoCorte);
-        if (indiceCorte !== -1) {
-            return texto.substring(0, indiceCorte).trim();
-        }
-        return texto;
-    }
+    wrapper.innerHTML = `
+      <!-- HERO -->
+      <div class="hero">
+        <div class="hero-data">📅 ${d.date} &nbsp;·&nbsp; Mapeamento de Fluxo Operacional</div>
+        <h1 class="hero-h1">Morning <span>Call</span></h1>
+        <div class="hero-sub">Atualizado às ${d.lastUpdate?.split(' ')[1] || '--'} &nbsp;·&nbsp; TraderBI Aquecimento do Pregão</div>
+      </div>
 
-    async function carregarDados() {
-        try {
-            const resposta = await fetch('data.json?t=' + new Date().getTime());
-            if (!resposta.ok) throw new Error('Erro ao abrir o arquivo');
-            const dados = await resposta.json();
+      <!-- INDICADORES -->
+      ${renderIndicadores(d.indicators)}
 
-            // Preenche Textos Simples
-            document.getElementById('txt-titulo').innerText = dados.title || "Morning Call";
-            document.getElementById('txt-data').innerText = dados.date || "--/--/----";
-            document.getElementById('txt-estrategia').innerText = dados.strategy || "Nenhum direcionamento definido.";
+      <!-- TAGS -->
+      ${d.tags?.length > 0 ? `
+        <div style="grid-column:1/-1">
+          <div class="sec-title">Zonas de liquidez mapeadas</div>
+          ${renderTags(d.tags, d.tags_tipados)}
+        </div>` : ''}
 
-            // Preenche Indicadores
-            if (dados.indicators) {
-                document.getElementById('ind-fg').innerText = dados.indicators.fearGreed || "--";
-                document.getElementById('ind-dxy').innerText = dados.indicators.dxy || "--";
-                document.getElementById('ind-vix').innerText = dados.indicators.vix || "--";
-            }
+      <!-- COLUNA PRINCIPAL: INSIGHTS -->
+      <div class="col-main">
+        <div class="sec-title">Análise do pregão</div>
+        <div class="insights-texto" id="insights-box"></div>
+      </div>
 
-            // Preenche Tags (Suportes e Resistências)
-            const containerTags = document.getElementById('container-tags');
-            containerTags.innerHTML = "";
-            if (dados.tags && dados.tags.length > 0) {
-                dados.tags.forEach(tag => {
-                    const classe = tag.toLowerCase().includes('resist') ? 'resistencia' : 'suporte';
-                    containerTags.innerHTML += `<span class="badge-ponto ${classe}">🔹 ${tag}</span>`;
-                });
-            } else {
-                containerTags.innerHTML = `<span style="color: var(--texto-mutado); font-size:13px;">Nenhum ponto fixado para hoje.</span>`;
-            }
+      <!-- COLUNA LATERAL -->
+      <div class="col-side">
 
-            // Preenche Agenda Econômica (Estrutura de Tabela)
-            const corpoAgenda = document.getElementById('tabela-agenda-corpo');
-            corpoAgenda.innerHTML = "";
-            if (dados.agenda && dados.agenda.length > 0) {
-                dados.agenda.forEach(item => {
-                    corpoAgenda.innerHTML += `<tr>
-                        <td class="hora">${item.time}</td>
-                        <td style="color: #fff; font-weight: 500;">${item.event}</td>
-                    </tr>`;
-                });
-            } else {
-                corpoAgenda.innerHTML = `<tr><td colspan="2" style="color: var(--texto-mutado); text-align:center;">Nenhum indicador relevante na agenda hoje.</td></tr>`;
-            }
+        ${d.strategy ? `
+        <div>
+          <div class="sec-title">Direcionamento estratégico</div>
+          <div class="estrategia-card">
+            <div class="estrategia-txt">${d.strategy}</div>
+          </div>
+        </div>` : ''}
 
-            // Preenche Insights limpando a poluição de links institucionais do script
-            const containerInsights = document.getElementById('txt-insights');
-            if (dados.insights && dados.insights.length > 0) {
-                // Junta a lista de parágrafos e aplica a limpeza de rodapé
-                let textoBruto = dados.insights.join("\n\n");
-                let textoLimpo = limparSujeiraRodape(textoBruto);
-                
-                containerInsights.innerText = textoLimpo || "Nenhum insight extraído.";
-            } else {
-                containerInsights.innerText = "Sem insights adicionais para exibir.";
-            }
+        <div>
+          <div class="sec-title">Agenda econômica</div>
+          <div class="card">
+            ${renderAgenda(d.agenda)}
+          </div>
+        </div>
+      </div>
 
-        } catch (erro) {
-            console.error(erro);
-            document.getElementById('txt-estrategia').innerHTML = `<span style="color:var(--baixa)">⚠️ Erro crítico ao processar o formato do arquivo data.json.</span>`;
-        }
-    }
+      <!-- RODAPÉ -->
+      <div class="update-bar">
+        <span>Última coleta: ${d.lastFetch}</span>
+        <span>Fonte: TraderBI · Aquecimento do Pregão</span>
+        <span class="scrape-badge ${d.scrape_ok ? 'scrape-ok' : 'scrape-fail'}">${d.scrape_ok ? 'COLETA OK' : 'COLETA PARCIAL'}</span>
+      </div>`;
 
-    carregarDados();
+    // Insere insights depois do render para evitar XSS acidental via innerText
+    document.getElementById('insights-box').innerHTML = renderInsights(d.insights);
+
+  } catch (err) {
+    document.getElementById('wrapper').innerHTML =
+      `<div class="erro-box" style="grid-column:1/-1">Erro ao carregar data.json: ${err.message}</div>`;
+  }
+}
+
+carregar();
 </script>
 </body>
 </html>
