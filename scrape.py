@@ -1,140 +1,318 @@
 import os
 import json
+import re
 from datetime import datetime
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeout
+
+def log(msg):
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}", flush=True)
 
 def extrair_dados_traderbi():
     EMAIL = os.getenv("TRADERBI_EMAIL")
     PASSWORD = os.getenv("TRADERBI_PASSWORD")
 
     if not EMAIL or not PASSWORD:
-        print("❌ Erro: As credenciais TRADERBI_EMAIL e TRADERBI_PASSWORD precisam estar configuradas no GitHub Secrets.")
+        log("ERRO: Credenciais TRADERBI_EMAIL e TRADERBI_PASSWORD nao encontradas nos Secrets.")
         return None
 
+    resultado = {
+        "date": datetime.now().strftime("%d/%m/%Y"),
+        "lastUpdate": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+        "title": f"Morning Call \u00b7 {datetime.now().strftime('%d/%m')}",
+        "insights_raw": "",
+        "agenda": [],
+        "tags": [],
+        "indicators": {"fearGreed": None, "dxy": None, "vix": None},
+        "strategy": "",
+        "scrape_ok": False,
+    }
+
     with sync_playwright() as p:
-        print("🚀 Iniciando navegador Chromium...")
-        browser = p.chromium.launch(headless=True)
+        log("Iniciando Chromium headless...")
+        browser = p.chromium.launch(
+            headless=True,
+            args=["--no-sandbox", "--disable-dev-shm-usage"]
+        )
         context = browser.new_context(
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+            viewport={"width": 1280, "height": 900},
         )
         page = context.new_page()
 
-        print("🌐 Acessando TraderBI Notícias...")
-        page.goto("https://app.traderbi.com.br/noticias", wait_until="networkidle")
+        # ── 1. LOGIN ──────────────────────────────────────────────────────────────
+        log("Navegando para /noticias ...")
+        page.goto("https://app.traderbi.com.br/noticias", wait_until="domcontentloaded", timeout=30000)
+        page.wait_for_timeout(2000)
 
-        # Verifica se caiu na tela de Login
-        if "login" in page.url or page.locator("input[type='email']").count() > 0:
-            print("🔑 Realizando login automático...")
+        if "login" in page.url.lower() or page.locator("input[type='email']").count() > 0:
+            log("Tela de login detectada - fazendo login...")
             page.locator("input[type='email']").fill(EMAIL)
             page.locator("input[type='password']").fill(PASSWORD)
             page.locator("button[type='submit']").click()
-            
-            print("⏳ Aguardando redirecionamento pós-login...")
-            page.wait_for_url("**/noticias", timeout=20000)
-            print("✅ Login efetuado com sucesso!")
+            try:
+                page.wait_for_url("**/noticias**", timeout=25000)
+                log("Login bem-sucedido!")
+            except PlaywrightTimeout:
+                log("ERRO: Timeout aguardando redirect pos-login. Verificar credenciais.")
+                page.screenshot(path="debug_login.png")
+                browser.close()
+                return resultado
 
-        print("🖱️ Alternando para a aba 'Análises TraderBI'...")
-        aba_analises = page.locator("button:has-text('Análises TraderBI')")
-        aba_analises.wait_for(state="visible", timeout=15000)
-        aba_analises.click()
         page.wait_for_timeout(3000)
 
-        print("🎯 Abrindo o primeiro card do '☀️ Aquecimento do Pregão'...")
-        card_aquecimento = page.locator("div:has-text('☀️ Aquecimento do Pregão')").first
-        card_aquecimento.wait_for(state="visible", timeout=15000)
-        card_aquecimento.click()
-        
-        # Tempo crucial para o Next.js renderizar o modal com os dados
-        print("⏳ Aguardando renderização do conteúdo (Next.js)...")
+        # ── 2. ABA ANALISES TRADERBI ──────────────────────────────────────────────
+        log("Buscando aba 'Analises TraderBI'...")
+        try:
+            aba = page.locator("button, a, [role='tab']").filter(
+                has_text=re.compile(r"An.lises TraderBI", re.IGNORECASE)
+            ).first
+            aba.wait_for(state="visible", timeout=12000)
+            aba.click()
+            page.wait_for_timeout(2500)
+            log("Aba clicada.")
+        except Exception as e:
+            log(f"AVISO: Nao encontrou aba 'Analises TraderBI': {e}")
+
+        # ── 3. CARD AQUECIMENTO DO PREGAO ─────────────────────────────────────────
+        log("Buscando card 'Aquecimento do Pregao'...")
+        card = None
+        seletores_card = [
+            "text=Aquecimento do Preg\u00e3o",
+            "[class*='card']:has-text('Aquecimento')",
+            "div:has-text('Aquecimento do Preg\u00e3o')",
+            "article:has-text('Aquecimento')",
+            ":has-text('Aquecimento')",
+        ]
+        for sel in seletores_card:
+            try:
+                c = page.locator(sel).first
+                if c.count() > 0:
+                    c.wait_for(state="visible", timeout=5000)
+                    card = c
+                    log(f"Card encontrado com seletor: {sel}")
+                    break
+            except Exception:
+                continue
+
+        if card is None:
+            log("ERRO: Card 'Aquecimento do Pregao' nao encontrado. Salvando screenshot...")
+            page.screenshot(path="debug_screenshot.png")
+            # Salva HTML para diagnostico
+            with open("debug_page.html", "w", encoding="utf-8") as f:
+                f.write(page.content())
+            browser.close()
+            return resultado
+
+        card.click()
+        log("Card clicado. Aguardando conteudo carregar...")
         page.wait_for_timeout(5000)
 
-        # -----------------------------------------------------------------
-        # BLOCO DE EXTRAÇÃO CIRÚRGICA DO CONTEÚDO DO TRADERBI
-        # -----------------------------------------------------------------
-        insights_conteudo = []
-        
-        # Seletor Principal: Alveja containers comuns de artigos ricos no TraderBI
-        container_artigo = page.locator("div.prose, .article-content, [class*='RichText'], div[class*='Content']").first
-        
-        if container_artigo.count() > 0:
-            texto_extraido = container_artigo.text_content()
-            if texto_extraido and len(texto_extraido.strip()) > 100:
-                insights_conteudo.append(texto_extraido.strip())
-                print("💎 Conteúdo extraído com sucesso pelo container principal!")
-        
-        # Fallback (Plano B): Caso mude a classe, pega apenas as tags <p> de texto da área de foco
-        if not insights_conteudo:
-            print("🔄 Tentando extração secundária via blocos de parágrafos...")
-            paragrafos = page.locator("div[role='dialog'] p, main p, .modal p, article p").all_text_contents()
-            
-            for p in paragrafos:
-                p_limpo = p.strip()
-                # Descarta links de botões, linhas vazias ou termos institucionais
-                if len(p_limpo) > 25 and "Ler análise" not in p_limpo and "Copyright" not in p_limpo:
-                    insights_conteudo.append(p_limpo)
-            
-            if insights_conteudo:
-                print(f"💎 Extraídos {len(insights_conteudo)} parágrafos válidos.")
+        # ── 4. EXTRACAO DO CONTEUDO ───────────────────────────────────────────────
+        log("Iniciando extracao de conteudo...")
+        conteudo_texto = ""
 
-        # Fallback de Emergência (Plano C)
-        if not insights_conteudo:
-            print("⚠️ Falha ao isolar o artigo. Coletando corpo de texto adaptável.")
-            texto_corpo = page.locator("body").text_content()
-            if texto_corpo:
-                insights_conteudo.append(texto_corpo[:2000].strip())
+        seletores_conteudo = [
+            "div.prose",
+            "[class*='prose']",
+            "[class*='article']",
+            "[class*='richtext']",
+            "[class*='rich-text']",
+            "[class*='content']",
+            "[class*='body']",
+            "[class*='texto']",
+            "[class*='conteudo']",
+            "[class*='post']",
+            "article",
+            "[role='article']",
+            "[role='dialog'] div",
+            "[data-radix-scroll-area-viewport]",
+        ]
 
-        # -----------------------------------------------------------------
-        # RECOLETA DE ELEMENTOS DA PÁGINA PARA O JSON ESTRUTURADO
-        # -----------------------------------------------------------------
-        agora = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-        data_hoje = datetime.now().strftime("%d/%m/%Y")
+        for sel in seletores_conteudo:
+            try:
+                els = page.locator(sel).all()
+                for el in els:
+                    txt = (el.text_content() or "").strip()
+                    if len(txt) > 300:
+                        conteudo_texto = txt
+                        log(f"Conteudo extraido via '{sel}' ({len(txt)} chars).")
+                        break
+                if conteudo_texto:
+                    break
+            except Exception:
+                continue
 
-        # Tenta pegar indicadores de mercado se estiverem visíveis na interface
-        dxy_val = "104.10"
-        vix_val = "15.2"
-        fg_val = 48
-        
-        try:
-            if page.locator(":has-text('DXY')").count() > 0:
-                dxy_val = page.locator("div:has-text('DXY') + div, span:has-text('DXY') + span").first.text_content().strip()
-        except Exception:
-            pass
+        # Fallback: pega todo o main/body
+        if not conteudo_texto:
+            log("Fallback: extraindo texto completo da pagina...")
+            for sel_area in ["main", "[role='main']", "#__next", "body"]:
+                try:
+                    area = page.locator(sel_area).first
+                    if area.count() > 0:
+                        txt = (area.text_content() or "").strip()
+                        if len(txt) > 200:
+                            conteudo_texto = txt
+                            log(f"Fallback usou '{sel_area}' ({len(txt)} chars).")
+                            break
+                except Exception:
+                    continue
 
-        # Monta o dicionário com os campos esperados pelo index.html
-        dados_finais = {
-            "date": data_hoje,
-            "lastUpdate": agora,
-            "lastFetch": agora,
-            "title": f"Morning Call · {data_hoje[:5]}",
-            "tags": [
-                "Resistência $147,80", 
-                "Suporte $139,20"
-            ],
-            "insights": insights_conteudo if insights_conteudo else ["Nenhum insight disponível para exibição no momento."],
-            "agenda": [
-                {"time": "09:30", "event": "Dados de emprego (EUA)"},
-                {"time": "11:00", "event": "Fala do Fed"}
-            ],
-            "strategy": "Aguardar abertura americana para definir posição.",
-            "indicators": {
-                "fearGreed": fg_val,
-                "dxy": dxy_val,
-                "vix": vix_val
-            }
-        }
+        resultado["insights_raw"] = conteudo_texto
+        resultado["scrape_ok"] = len(conteudo_texto) > 100
 
         browser.close()
-        return dados_finais
+
+    log(f"Scrape concluido. Conteudo: {len(resultado['insights_raw'])} chars.")
+    return resultado
+
+
+def limpar_texto(texto):
+    if not texto:
+        return ""
+
+    padroes_corte = [
+        r"Copyright \u00a9",
+        r"Todos os direitos reservados",
+        r"Pol\u00edtica de Privacidade",
+        r"Termos de Uso",
+        r"\u00a9 20\d\d",
+        r"TradingView",
+        r"FactSet",
+        r"Dados de mercado selecionados",
+        r"Sobre a empresa",
+        r"Mais do que um produto",
+        r"Ingressou em",
+        r"Seguindo\d",
+        r"Seguidores\d",
+    ]
+    for padrao in padroes_corte:
+        match = re.search(padrao, texto, re.IGNORECASE)
+        if match:
+            texto = texto[:match.start()].strip()
+
+    linhas = texto.split("\n")
+    linhas_validas = [l.strip() for l in linhas if len(l.strip()) > 20]
+    return "\n\n".join(linhas_validas)
+
+
+def extrair_suportes_resistencias(texto):
+    tags = []
+    padroes = [
+        (r"resist[e\u00ea]ncia[s]?\s+(?:em|de|no|na|pr[o\u00f3]xim[ao])?\s*(?:\$|R\$)?\s*([\d\.,]+)", "resistencia"),
+        (r"suporte[s]?\s+(?:em|de|no|na|pr[o\u00f3]xim[ao])?\s*(?:\$|R\$)?\s*([\d\.,]+)", "suporte"),
+        (r"(?:\$|R\$)\s*([\d\.,]+)\s+(?:de\s+)?resist[e\u00ea]ncia", "resistencia"),
+        (r"(?:\$|R\$)\s*([\d\.,]+)\s+(?:de\s+)?suporte", "suporte"),
+    ]
+    vistos = set()
+    for padrao, tipo in padroes:
+        for match in re.finditer(padrao, texto, re.IGNORECASE):
+            valor = match.group(1).strip()
+            label = f"{'Resist\u00eancia' if tipo == 'resistencia' else 'Suporte'} {valor}"
+            if label not in vistos:
+                vistos.add(label)
+                tags.append({"tipo": tipo, "label": label})
+    return tags[:8]
+
+
+def extrair_agenda(texto):
+    agenda = []
+    padroes = [
+        r"(\d{1,2}[h:]\d{2})\s*[-\u2013\u2014|]?\s*([A-Z\u00c1\u00c9\u00cd\u00d3\u00da][^\n]{8,80})",
+        r"(\d{1,2}h\d{0,2})\s*[-\u2013]?\s*([^\n]{10,80})",
+    ]
+    vistos = set()
+    for padrao in padroes:
+        for match in re.finditer(padrao, texto, re.IGNORECASE):
+            hora_raw = match.group(1).replace("h", ":").strip()
+            if hora_raw.endswith(":"):
+                hora_raw += "00"
+            evento = match.group(2).strip()
+            chave = hora_raw + evento[:20]
+            if (len(evento) > 10
+                    and chave not in vistos
+                    and not any(x in evento.lower() for x in ["clique", "acesse", "login", "sair", "menu"])):
+                vistos.add(chave)
+                agenda.append({"time": hora_raw, "event": evento[:100]})
+    return agenda[:10]
+
+
+def montar_json_final(dados_brutos):
+    texto_limpo = limpar_texto(dados_brutos.get("insights_raw", ""))
+    paragrafos = [p.strip() for p in texto_limpo.split("\n\n") if len(p.strip()) > 30]
+
+    strategy = ""
+    palavras_estrategia = ["aguardar", "operar", "posi\u00e7\u00e3o", "compra", "venda", "estrat\u00e9gia", "cautela", "vi\u00e9s", "tendencia", "tend\u00eancia"]
+    for p in reversed(paragrafos):
+        if any(w in p.lower() for w in palavras_estrategia):
+            strategy = p
+            break
+    if not strategy and paragrafos:
+        strategy = paragrafos[-1]
+
+    tags = extrair_suportes_resistencias(texto_limpo)
+    agenda = extrair_agenda(texto_limpo)
+
+    if not agenda:
+        agenda = [
+            {"time": "09:30", "event": "Abertura do mercado brasileiro (B3)"},
+            {"time": "10:00", "event": "Verificar calendário econômico do dia"},
+        ]
+
+    agora = dados_brutos.get("lastUpdate", datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
+
+    return {
+        "date": dados_brutos.get("date", datetime.now().strftime("%d/%m/%Y")),
+        "lastUpdate": agora,
+        "lastFetch": agora,
+        "title": dados_brutos.get("title", f"Morning Call \u00b7 {datetime.now().strftime('%d/%m')}"),
+        "tags": [t["label"] for t in tags],
+        "tags_tipados": tags,
+        "insights": paragrafos if paragrafos else ["Conte\u00fado n\u00e3o dispon\u00edvel para hoje."],
+        "agenda": agenda,
+        "strategy": strategy or "Acompanhar abertura e aguardar confirma\u00e7\u00e3o de tend\u00eancia.",
+        "indicators": dados_brutos.get("indicators", {"fearGreed": None, "dxy": None, "vix": None}),
+        "scrape_ok": dados_brutos.get("scrape_ok", False),
+    }
+
 
 def salvar_dados():
-    resultado = extrair_dados_traderbi()
-    
-    if resultado:
+    log("=" * 50)
+    log("Iniciando coleta Morning Call - TraderBI")
+    log("=" * 50)
+
+    dados_brutos = extrair_dados_traderbi()
+
+    if not dados_brutos:
+        log("FALHA CRITICA: extrair_dados_traderbi retornou None.")
+        erro_json = {
+            "date": datetime.now().strftime("%d/%m/%Y"),
+            "lastUpdate": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+            "lastFetch": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+            "title": f"Morning Call \u00b7 {datetime.now().strftime('%d/%m')}",
+            "tags": [],
+            "tags_tipados": [],
+            "insights": ["\u26a0\ufe0f Falha na coleta autom\u00e1tica. Verifique os logs do GitHub Actions."],
+            "agenda": [],
+            "strategy": "Coleta indispon\u00edvel. Verifique as credenciais e o workflow.",
+            "indicators": {"fearGreed": None, "dxy": None, "vix": None},
+            "scrape_ok": False,
+        }
         with open("data.json", "w", encoding="utf-8") as f:
-            json.dump(resultado, f, ensure_ascii=False, indent=2)
-        print("✅ data.json atualizado com sucesso")
-    else:
-        print("❌ Falha crítica: O arquivo data.json NÃO foi atualizado.")
+            json.dump(erro_json, f, ensure_ascii=False, indent=2)
+        return
+
+    json_final = montar_json_final(dados_brutos)
+
+    with open("data.json", "w", encoding="utf-8") as f:
+        json.dump(json_final, f, ensure_ascii=False, indent=2)
+
+    log(f"data.json salvo com sucesso!")
+    log(f"  Paragrafos: {len(json_final['insights'])}")
+    log(f"  Tags: {len(json_final['tags'])}")
+    log(f"  Agenda: {len(json_final['agenda'])}")
+    log(f"  Scrape OK: {json_final['scrape_ok']}")
+    log("=" * 50)
+
 
 if __name__ == "__main__":
     salvar_dados()
