@@ -49,14 +49,32 @@ def extrair_dados_traderbi():
             page.locator("input[type='email']").fill(EMAIL)
             page.locator("input[type='password']").fill(PASSWORD)
             page.locator("button[type='submit']").click()
+
+            # Aguarda o formulario sumir (funciona independente da URL de redirect)
             try:
-                page.wait_for_url("**/noticias**", timeout=25000)
-                log("Login bem-sucedido!")
+                page.locator("input[type='email']").wait_for(state="hidden", timeout=25000)
+                log("Login bem-sucedido (formulario desapareceu)!")
             except PlaywrightTimeout:
-                log("ERRO: Timeout aguardando redirect pos-login. Verificar credenciais.")
-                page.screenshot(path="debug_login.png")
-                browser.close()
-                return resultado
+                url_atual = page.url.lower()
+                if "login" not in url_atual and "signin" not in url_atual:
+                    log(f"Login provavelmente ok - URL atual: {page.url}")
+                else:
+                    log("ERRO: Login falhou - ainda na tela de login apos 25s.")
+                    page.screenshot(path="debug_login.png")
+                    browser.close()
+                    return resultado
+
+            # Aguarda pagina destino carregar
+            page.wait_for_load_state("domcontentloaded", timeout=15000)
+            page.wait_for_timeout(2000)
+
+            # Se caiu em outra pagina (ex: /dashboard), navega para /noticias
+            if "/noticias" not in page.url:
+                log(f"Redirect foi para {page.url} - navegando para /noticias...")
+                page.goto("https://app.traderbi.com.br/noticias", wait_until="domcontentloaded", timeout=20000)
+                page.wait_for_timeout(2000)
+
+            log(f"URL final pos-login: {page.url}")
 
         page.wait_for_timeout(3000)
 
