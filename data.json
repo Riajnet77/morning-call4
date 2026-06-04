@@ -1,7 +1,7 @@
 {
   "date": "02/06/2026",
   "lastUpdate": "02/06/2026 14:53:20",
-  "lastFetch": "02/06/2026 14:53:20",
+  "lastFetch": "04/06/2026 11:31:35",
   "title": "Morning Call · 02/06",
   "tags": [
     "Resistência $147,80",
@@ -27,5 +27,7 @@
     "fearGreed": 48,
     "dxy": "104.10",
     "vix": "15.2"
-  }
+  },
+  "scrape_ok": false,
+  "feriado_aviso": "Sem nova publicacao em 04/06/2026. Exibindo conteudo do ultimo dia util."
 }
