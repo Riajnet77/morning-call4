@@ -1,40 +1,58 @@
-name: Atualizar Morning Call
+name: Morning Call — Atualização Diária
 
 on:
   schedule:
-    - cron: '0 11 * * *'    # 11:00 UTC = 8:00 BRT (sem horário de verão)
-  workflow_dispatch:        # permite rodar manualmente
+    # Roda de segunda a sexta às 7h30 (horário de Brasília = 10h30 UTC)
+    - cron: '30 10 * * 1-5'
+  workflow_dispatch: # permite rodar manualmente no GitHub Actions
+
+permissions:
+  contents: write
 
 jobs:
-  update:
+  scrape-and-deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+
     steps:
-      - name: Checkout do código
+      - name: Checkout do repositório
         uses: actions/checkout@v4
 
-      - name: Configurar Python
+      - name: Configurar Python 3.11
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
-      - name: Instalar dependências e navegadores
+      - name: Instalar dependências Python
         run: |
           pip install playwright
-          playwright install --with-deps chromium
+          playwright install chromium
+          playwright install-deps chromium
 
-      - name: Executar scraping
+      - name: Executar scraper
         env:
           TRADERBI_EMAIL: ${{ secrets.TRADERBI_EMAIL }}
           TRADERBI_PASSWORD: ${{ secrets.TRADERBI_PASSWORD }}
         run: python scrape.py
 
-      - name: Commit e push das alterações
+      - name: Upload debug (se houver falha)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-screenshots
+          path: |
+            debug_*.png
+            debug_*.html
+          if-no-files-found: ignore
+
+      - name: Commit e push do data.json atualizado
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
-          # Garante que as mudanças no HTML e no JSON sejam adicionadas ao commit
-          git add index.html data.json || true
-          
-          git diff --quiet && git diff --staged --quiet || git commit -m "Atualização automática do Morning Call - $(date +'%Y-%m-%d %H:%M')"
-          git push
+          git add data.json
+          if git diff --staged --quiet; then
+            echo "Nenhuma mudança no data.json — nada a commitar."
+          else
+            git commit -m "auto: morning call $(date +'%d/%m/%Y %H:%M') [skip ci]"
+            git push
+          fi
