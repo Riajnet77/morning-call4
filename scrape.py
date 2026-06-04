@@ -276,38 +276,80 @@ def montar_json_final(dados_brutos):
     }
 
 
+MIN_CHARS_CONTEUDO = 200  # abaixo disso considera feriado/sem publicacao
+
+
+def carregar_json_anterior():
+    """Carrega o data.json existente, se houver."""
+    try:
+        with open("data.json", "r", encoding="utf-8") as f:
+            dados = json.load(f)
+            log(f"data.json anterior carregado (data: {dados.get('date', '?')}).")
+            return dados
+    except Exception:
+        return None
+
+
 def salvar_dados():
     log("=" * 50)
     log("Iniciando coleta Morning Call - TraderBI")
     log("=" * 50)
 
     dados_brutos = extrair_dados_traderbi()
+    anterior = carregar_json_anterior()
 
+    # ── FALHA TOTAL (login falhou, navegador nao abriu, etc.) ────────────────
     if not dados_brutos:
         log("FALHA CRITICA: extrair_dados_traderbi retornou None.")
-        erro_json = {
-            "date": datetime.now().strftime("%d/%m/%Y"),
-            "lastUpdate": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
-            "lastFetch": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
-            "title": f"Morning Call \u00b7 {datetime.now().strftime('%d/%m')}",
-            "tags": [],
-            "tags_tipados": [],
-            "insights": ["\u26a0\ufe0f Falha na coleta autom\u00e1tica. Verifique os logs do GitHub Actions."],
-            "agenda": [],
-            "strategy": "Coleta indispon\u00edvel. Verifique as credenciais e o workflow.",
-            "indicators": {"fearGreed": None, "dxy": None, "vix": None},
-            "scrape_ok": False,
-        }
-        with open("data.json", "w", encoding="utf-8") as f:
-            json.dump(erro_json, f, ensure_ascii=False, indent=2)
+        if anterior:
+            log("Mantendo data.json anterior intacto (falha de scrape).")
+        else:
+            erro_json = {
+                "date": datetime.now().strftime("%d/%m/%Y"),
+                "lastUpdate": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+                "lastFetch": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+                "title": f"Morning Call \u00b7 {datetime.now().strftime('%d/%m')}",
+                "tags": [], "tags_tipados": [],
+                "insights": ["\u26a0\ufe0f Falha na coleta autom\u00e1tica. Verifique os logs do GitHub Actions."],
+                "agenda": [],
+                "strategy": "Coleta indispon\u00edvel. Verifique as credenciais e o workflow.",
+                "indicators": {"fearGreed": None, "dxy": None, "vix": None},
+                "scrape_ok": False,
+            }
+            with open("data.json", "w", encoding="utf-8") as f:
+                json.dump(erro_json, f, ensure_ascii=False, indent=2)
         return
 
+    # ── CONTEUDO MUITO CURTO (feriado, sem publicacao, pagina nao carregou) ──
+    chars = len((dados_brutos.get("insights_raw") or "").strip())
+    log(f"Conteudo extraido: {chars} chars (minimo: {MIN_CHARS_CONTEUDO}).")
+
+    if chars < MIN_CHARS_CONTEUDO:
+        log(f"Conteudo insuficiente — possivel feriado ou ausencia de publicacao.")
+        if anterior:
+            # Atualiza apenas o lastFetch para registrar que o workflow rodou
+            anterior["lastFetch"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+            anterior["scrape_ok"] = False
+            anterior["feriado_aviso"] = (
+                f"Sem nova publicacao em {datetime.now().strftime('%d/%m/%Y')}. "
+                "Exibindo conteudo do ultimo dia util."
+            )
+            with open("data.json", "w", encoding="utf-8") as f:
+                json.dump(anterior, f, ensure_ascii=False, indent=2)
+            log("data.json anterior preservado com aviso de feriado.")
+        else:
+            log("Sem data.json anterior — nada a preservar.")
+        return
+
+    # ── COLETA NORMAL ─────────────────────────────────────────────────────────
     json_final = montar_json_final(dados_brutos)
+    # Remove aviso de feriado se havia
+    json_final.pop("feriado_aviso", None)
 
     with open("data.json", "w", encoding="utf-8") as f:
         json.dump(json_final, f, ensure_ascii=False, indent=2)
 
-    log(f"data.json salvo com sucesso!")
+    log("data.json salvo com sucesso!")
     log(f"  Paragrafos: {len(json_final['insights'])}")
     log(f"  Tags: {len(json_final['tags'])}")
     log(f"  Agenda: {len(json_final['agenda'])}")
