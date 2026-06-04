@@ -207,7 +207,8 @@ def extrair_suportes_resistencias(texto):
     for padrao, tipo in padroes:
         for match in re.finditer(padrao, texto, re.IGNORECASE):
             valor = match.group(1).strip()
-            label = f"{'Resist\u00eancia' if tipo == 'resistencia' else 'Suporte'} {valor}"
+            prefixo = "Resist\u00eancia" if tipo == "resistencia" else "Suporte"
+            label = f"{prefixo} {valor}"
             if label not in vistos:
                 vistos.add(label)
                 tags.append({"tipo": tipo, "label": label})
