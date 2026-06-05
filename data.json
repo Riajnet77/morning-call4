@@ -1,20 +1,43 @@
 {
-  "date": "--/--/----",
-  "lastUpdate": "--/--/---- --:--:--",
-  "lastFetch": "05/06/2026 13:36:21",
-  "title": "Morning Call",
-  "tags": [],
-  "tags_tipados": [],
-  "insights": [
-    "⏳ Aguardando primeira coleta automática. O conteúdo será atualizado na próxima execução do workflow."
+  "date": "05/06/2026",
+  "lastUpdate": "05/06/2026 16:39:59",
+  "lastFetch": "05/06/2026 16:39:59",
+  "title": "Morning Call · 05/06",
+  "vies": "Neutro",
+  "vies_txt": "",
+  "tags": [
+    "Viés Neutro",
+    "IBOV ▼ -0.78%",
+    "USD/BRL R$ 5.15"
   ],
-  "agenda": [],
-  "strategy": "Aguardando coleta automática.",
+  "tags_tipados": [
+    {
+      "tipo": "neutro",
+      "label": "Viés Neutro"
+    }
+  ],
+  "insights": [
+    "⚠️ Não foi possível gerar a análise hoje. Verifique os logs."
+  ],
+  "agenda": [
+    {
+      "time": "—",
+      "event": "Sem eventos de alto impacto hoje"
+    }
+  ],
+  "strategy": "",
   "indicators": {
     "fearGreed": null,
-    "dxy": null,
-    "vix": null
+    "fearGreedLabel": "N/A",
+    "dxy": 100.08,
+    "dxyChange": 0.67,
+    "vix": 21.09,
+    "vixChange": 36.95,
+    "ibov": 169004.61,
+    "ibovChange": -0.78,
+    "usdbrl": 5.15,
+    "usdbrlChange": 1.49
   },
   "scrape_ok": false,
-  "feriado_aviso": "Sem nova publicacao em 05/06/2026. Exibindo conteudo do ultimo dia util."
+  "feriado_aviso": null
 }
