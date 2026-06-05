@@ -2,9 +2,8 @@ name: Morning Call — Atualização Diária
 
 on:
   schedule:
-    # Roda de segunda a sexta às 7h30 (horário de Brasília = 10h30 UTC)
     - cron: '30 10 * * 1-5'
-  workflow_dispatch: # permite rodar manualmente no GitHub Actions
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -23,35 +22,21 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Instalar dependências Python
-        run: |
-          pip install playwright
-          playwright install chromium
-          playwright install-deps chromium
+      - name: Instalar dependências
+        run: pip install requests feedparser beautifulsoup4
 
       - name: Executar scraper
         env:
-          TRADERBI_EMAIL: ${{ secrets.TRADERBI_EMAIL }}
-          TRADERBI_PASSWORD: ${{ secrets.TRADERBI_PASSWORD }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python scrape.py
 
-      - name: Upload debug (se houver falha)
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: debug-screenshots
-          path: |
-            debug_*.png
-            debug_*.html
-          if-no-files-found: ignore
-
-      - name: Commit e push do data.json atualizado
+      - name: Commit e push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data.json
           if git diff --staged --quiet; then
-            echo "Nenhuma mudança no data.json — nada a commitar."
+            echo "Sem mudancas."
           else
             git commit -m "auto: morning call $(date +'%d/%m/%Y %H:%M') [skip ci]"
             git push
