@@ -1,5 +1,6 @@
 import os
 import json
+import random
 import requests
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -9,53 +10,45 @@ BRT = ZoneInfo("America/Sao_Paulo")
 def log(msg):
     print(f"[{datetime.now(BRT).strftime('%H:%M:%S')}] {msg}", flush=True)
 
-# ── 1. FEAR & GREED ───────────────────────────────────────────────────────────
+# ── COLETA DE DADOS ───────────────────────────────────────────────────────────
+
 def buscar_fear_greed():
-    urls = [
-        "https://production.dataviz.cnn.io/index/fearandgreed/graphdata",
-        "https://fear-and-greed-index.p.rapidapi.com/v1/fgi",
-        "https://api.alternative.me/fng/",
-    ]
-    # Tenta CNN primeiro
     try:
-        r = requests.get(urls[0], timeout=10, headers={"User-Agent": "Mozilla/5.0"})
+        r = requests.get("https://production.dataviz.cnn.io/index/fearandgreed/graphdata",
+                         timeout=10, headers={"User-Agent": "Mozilla/5.0"})
         if r.status_code == 200 and r.text.strip():
-            data = r.json()
-            valor = round(data["fear_and_greed"]["score"])
-            rating = data["fear_and_greed"]["rating"]
-            log(f"Fear & Greed (CNN): {valor} ({rating})")
-            return {"value": valor, "label": rating}
+            d = r.json()
+            v = round(d["fear_and_greed"]["score"])
+            log(f"Fear & Greed (CNN): {v}")
+            return {"value": v, "label": d["fear_and_greed"]["rating"]}
     except Exception:
         pass
-    # Fallback: alternative.me (crypto F&G mas serve como proxy)
     try:
-        r = requests.get(urls[2], timeout=10, headers={"User-Agent": "Mozilla/5.0"})
-        data = r.json()
-        valor = int(data["data"][0]["value"])
-        rating = data["data"][0]["value_classification"]
-        log(f"Fear & Greed (alternative.me): {valor} ({rating})")
-        return {"value": valor, "label": rating}
+        r = requests.get("https://api.alternative.me/fng/", timeout=10,
+                         headers={"User-Agent": "Mozilla/5.0"})
+        d = r.json()
+        v = int(d["data"][0]["value"])
+        label = d["data"][0]["value_classification"]
+        log(f"Fear & Greed (alt): {v} ({label})")
+        return {"value": v, "label": label}
     except Exception as e:
         log(f"AVISO Fear&Greed: {e}")
         return {"value": None, "label": "N/A"}
 
-# ── 2. YAHOO FINANCE ──────────────────────────────────────────────────────────
 def buscar_yahoo(symbol, nome):
     try:
         url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?interval=1d&range=2d"
         r = requests.get(url, timeout=10, headers={"User-Agent": "Mozilla/5.0"})
-        data = r.json()
-        closes = data["chart"]["result"][0]["indicators"]["quote"][0]["close"]
-        closes = [c for c in closes if c is not None]
+        d = r.json()
+        closes = [c for c in d["chart"]["result"][0]["indicators"]["quote"][0]["close"] if c]
         preco = round(closes[-1], 2)
-        variacao = round(((closes[-1] / closes[-2]) - 1) * 100, 2) if len(closes) >= 2 else 0
-        log(f"{nome}: {preco} ({variacao:+.2f}%)")
-        return {"price": preco, "change_pct": variacao}
+        var = round(((closes[-1] / closes[-2]) - 1) * 100, 2) if len(closes) >= 2 else 0.0
+        log(f"{nome}: {preco} ({var:+.2f}%)")
+        return {"price": preco, "change_pct": var}
     except Exception as e:
         log(f"AVISO {nome}: {e}")
         return {"price": None, "change_pct": None}
 
-# ── 3. AGENDA FOREXFACTORY ────────────────────────────────────────────────────
 def buscar_agenda():
     try:
         from bs4 import BeautifulSoup
@@ -64,22 +57,21 @@ def buscar_agenda():
         url = f"https://www.forexfactory.com/calendar?day={data_str}"
         r = requests.get(url, timeout=15, headers={"User-Agent": "Mozilla/5.0"})
         soup = BeautifulSoup(r.text, "html.parser")
-        eventos = []
-        hora_atual = ""
+        eventos, hora_atual = [], ""
         for row in soup.select("tr.calendar__row"):
-            hora_el = row.select_one(".calendar__time")
-            if hora_el and hora_el.text.strip():
-                hora_atual = hora_el.text.strip()
-            impact_el = row.select_one(".calendar__impact span")
+            h = row.select_one(".calendar__time")
+            if h and h.text.strip():
+                hora_atual = h.text.strip()
+            imp = row.select_one(".calendar__impact span")
             impacto = ""
-            if impact_el:
-                cls = " ".join(impact_el.get("class", []))
+            if imp:
+                cls = " ".join(imp.get("class", []))
                 if "high" in cls: impacto = "alto"
                 elif "medium" in cls: impacto = "medio"
             moeda_el = row.select_one(".calendar__currency")
             moeda = moeda_el.text.strip() if moeda_el else ""
-            evento_el = row.select_one(".calendar__event-title")
-            evento = evento_el.text.strip() if evento_el else ""
+            ev_el = row.select_one(".calendar__event-title")
+            evento = ev_el.text.strip() if ev_el else ""
             if evento and moeda in ["USD", "BRL", "EUR"] and impacto in ["alto", "medio"]:
                 eventos.append({"time": hora_atual, "currency": moeda, "event": evento, "impact": impacto})
         log(f"Agenda: {len(eventos)} eventos")
@@ -88,143 +80,291 @@ def buscar_agenda():
         log(f"AVISO Agenda: {e}")
         return []
 
-# ── 4. NOTÍCIAS RSS ───────────────────────────────────────────────────────────
 def buscar_noticias():
     try:
         import feedparser
         noticias = []
-        feeds = [
-            "https://br.investing.com/rss/news_25.rss",
-            "https://br.investing.com/rss/news_14.rss",
-        ]
-        for url in feeds:
+        for url in ["https://br.investing.com/rss/news_25.rss", "https://br.investing.com/rss/news_14.rss"]:
             feed = feedparser.parse(url)
-            for entry in feed.entries[:4]:
-                noticias.append(entry.get("title", ""))
+            for e in feed.entries[:5]:
+                noticias.append(e.get("title", "").strip())
         log(f"Noticias: {len(noticias)} itens")
-        return noticias[:8]
+        return [n for n in noticias if n][:10]
     except Exception as e:
         log(f"AVISO Noticias: {e}")
         return []
 
-# ── 5. GEMINI ─────────────────────────────────────────────────────────────────
-def gerar_com_gemini(dados):
-    try:
-        api_key = os.getenv("GEMINI_API_KEY")
-        if not api_key:
-            log("ERRO: GEMINI_API_KEY nao encontrada nos Secrets.")
-            return None
+# ── ANÁLISE E NARRATIVA ───────────────────────────────────────────────────────
 
-        hoje_str = datetime.now(BRT).strftime("%d/%m/%Y")
-        fg = dados["fear_greed"]
-        dxy = dados["dxy"]
-        vix = dados["vix"]
-        ibov = dados["ibov"]
-        usd = dados["usdbrl"]
-        sp = dados["sp500"]
-        nq = dados["nasdaq"]
-        agenda = dados["agenda"]
-        noticias = dados["noticias"]
+def classificar_fg(v):
+    if v is None: return "indefinido", "neutro"
+    if v <= 20:  return "Medo Extremo", "baixista"
+    if v <= 40:  return "Medo", "levemente baixista"
+    if v <= 60:  return "Neutro", "neutro"
+    if v <= 80:  return "Ganância", "levemente altista"
+    return "Ganância Extrema", "altista"
 
-        def fmt(d, decimais=2):
-            if d.get("price") is None: return "N/A"
-            sinal = "+" if d["change_pct"] >= 0 else ""
-            return f"{d['price']} ({sinal}{d['change_pct']:.2f}%)"
+def classificar_vix(v):
+    if v is None: return "indefinido", "neutro"
+    if v < 15:  return "baixa", "altista"
+    if v < 20:  return "moderada", "neutro"
+    if v < 30:  return "elevada", "levemente baixista"
+    return "muito alta", "baixista"
 
-        agenda_txt = "\n".join([f"  {e['time']} [{e['currency']}] {e['event']} (impacto: {e['impact']})" for e in agenda]) or "  Sem eventos relevantes."
-        noticias_txt = "\n".join([f"  - {n}" for n in noticias]) or "  Sem notícias."
+def sinal(v):
+    if v is None: return "estável"
+    return "em alta" if v > 0 else "em queda" if v < 0 else "estável"
 
-        prompt = f"""Você é um analista de mercado brasileiro experiente. Com base nos dados abaixo, escreva um morning call profissional e objetivo para o dia {hoje_str}.
+def sinal_forte(v, limiar=1.0):
+    if v is None: return False
+    return abs(v) >= limiar
 
-INDICADORES:
-- IBOV: {fmt(ibov)}
-- USD/BRL: {fmt(usd)}
-- S&P 500: {fmt(sp)}
-- Nasdaq: {fmt(nq)}
-- DXY: {fmt(dxy)}
-- VIX: {fmt(vix)}
-- Fear & Greed: {fg.get('value', 'N/A')} ({fg.get('label', 'N/A')})
+def calcular_vies(fg, dxy, vix, ibov, sp, usd):
+    score = 0
+    # Fear & Greed
+    if fg.get("value") is not None:
+        v = fg["value"]
+        if v <= 20: score -= 3
+        elif v <= 40: score -= 1
+        elif v >= 60: score += 1
+        elif v >= 80: score += 3
+    # VIX
+    if vix.get("change_pct") is not None:
+        if vix["change_pct"] > 15: score -= 3
+        elif vix["change_pct"] > 5: score -= 1
+        elif vix["change_pct"] < -5: score += 1
+    # DXY (inverso para emergentes)
+    if dxy.get("change_pct") is not None:
+        if dxy["change_pct"] > 0.5: score -= 2
+        elif dxy["change_pct"] > 0.2: score -= 1
+        elif dxy["change_pct"] < -0.5: score += 2
+        elif dxy["change_pct"] < -0.2: score += 1
+    # S&P500
+    if sp.get("change_pct") is not None:
+        if sp["change_pct"] < -1.5: score -= 2
+        elif sp["change_pct"] < -0.5: score -= 1
+        elif sp["change_pct"] > 1.5: score += 2
+        elif sp["change_pct"] > 0.5: score += 1
+    # IBOV tendência
+    if ibov.get("change_pct") is not None:
+        if ibov["change_pct"] < -1: score -= 1
+        elif ibov["change_pct"] > 1: score += 1
 
-AGENDA ECONÔMICA HOJE:
-{agenda_txt}
+    if score <= -3: return "Baixista", "baixista"
+    if score == -2: return "Levemente Baixista", "baixista"
+    if score == -1: return "Levemente Baixista", "baixista"
+    if score == 0:  return "Neutro", "neutro"
+    if score == 1:  return "Levemente Altista", "altista"
+    if score == 2:  return "Levemente Altista", "altista"
+    return "Altista", "altista"
 
-PRINCIPAIS NOTÍCIAS:
-{noticias_txt}
+def gerar_contexto_global(dxy, vix, sp, nq, usd, fg):
+    fg_label, _ = classificar_fg(fg.get("value"))
+    vix_class, _ = classificar_vix(vix.get("price"))
 
-Escreva o morning call com EXATAMENTE esta estrutura:
+    # Narrativa DXY
+    if dxy.get("change_pct") is not None:
+        if dxy["change_pct"] > 0.5:
+            dxy_txt = f"O índice do dólar (DXY) avançou {dxy['change_pct']:+.2f}%, sinalizando fortalecimento da moeda americana e aumentando a pressão sobre moedas emergentes, incluindo o real."
+        elif dxy["change_pct"] < -0.5:
+            dxy_txt = f"O DXY recuou {dxy['change_pct']:+.2f}%, aliviando a pressão sobre emergentes e abrindo espaço para valorização do real e de ativos de risco."
+        else:
+            dxy_txt = f"O DXY operou relativamente estável ({dxy['change_pct']:+.2f}%), sem grandes desequilíbrios no câmbio global."
+    else:
+        dxy_txt = "O DXY não apresentou variação significativa."
 
-[CONTEXTO GLOBAL]
-Analise o cenário externo e as correlações entre DXY, VIX, S&P e impacto no Brasil.
+    # Narrativa S&P/Nasdaq
+    if sp.get("change_pct") is not None and nq.get("change_pct") is not None:
+        if sp["change_pct"] < -1.5:
+            bolsas_txt = (f"As bolsas americanas encerraram em forte queda, com S&P 500 em {sp['change_pct']:+.2f}% "
+                         f"e Nasdaq em {nq['change_pct']:+.2f}%. O movimento reflete aversão a risco elevada e tende "
+                         f"a contaminar negativamente a abertura brasileira.")
+        elif sp["change_pct"] < -0.3:
+            bolsas_txt = (f"Wall Street fechou no vermelho — S&P 500 em {sp['change_pct']:+.2f}% e Nasdaq em "
+                         f"{nq['change_pct']:+.2f}% —, criando um ambiente de cautela para os mercados emergentes.")
+        elif sp["change_pct"] > 1.5:
+            bolsas_txt = (f"As bolsas americanas tiveram sessão positiva, com S&P 500 em {sp['change_pct']:+.2f}% "
+                         f"e Nasdaq em {nq['change_pct']:+.2f}%, favorecendo o apetite por risco globalmente.")
+        elif sp["change_pct"] > 0.3:
+            bolsas_txt = (f"Wall Street fechou em alta moderada — S&P 500 em {sp['change_pct']:+.2f}% e Nasdaq em "
+                         f"{nq['change_pct']:+.2f}% —, mantendo o ambiente de risk-on.")
+        else:
+            bolsas_txt = (f"As bolsas americanas tiveram sessão mista ou flat (S&P 500 {sp['change_pct']:+.2f}%, "
+                         f"Nasdaq {nq['change_pct']:+.2f}%), sem direcionamento claro para os ativos de risco.")
+    else:
+        bolsas_txt = "Dados das bolsas americanas indisponíveis no momento."
 
-[IBOVESPA]
-Analise o índice, nível atual, suportes e resistências relevantes.
+    # Narrativa VIX + Fear & Greed
+    if vix.get("price") is not None:
+        if vix["change_pct"] > 15:
+            vix_txt = (f"O VIX disparou {vix['change_pct']:+.2f}% para {vix['price']:.1f} pontos, indicando "
+                      f"volatilidade {vix_class} — sinal de estresse no mercado que exige cautela nas posições.")
+        elif vix["change_pct"] > 5:
+            vix_txt = (f"O VIX subiu {vix['change_pct']:+.2f}% para {vix['price']:.1f} pontos, com volatilidade "
+                      f"{vix_class}. O mercado demonstra nervosismo crescente.")
+        elif vix["change_pct"] < -5:
+            vix_txt = (f"O VIX recuou {vix['change_pct']:+.2f}% para {vix['price']:.1f} pontos, com volatilidade "
+                      f"{vix_class}. O ambiente está mais favorável ao risco.")
+        else:
+            vix_txt = f"O VIX permanece em {vix['price']:.1f} pontos, com volatilidade {vix_class}."
+    else:
+        vix_txt = ""
 
-[DÓLAR]
-Analise USD/BRL, contexto do DXY e perspectiva para o real.
+    fg_val = fg.get("value")
+    if fg_val is not None:
+        fg_txt = (f"O índice Fear & Greed marca {fg_val} pontos — zona de \"{fg_label}\" — "
+                 f"{'sugerindo que o mercado precifica risco excessivo e pode estar próximo de um ponto de reversão técnica.' if fg_val <= 25 else 'refletindo o sentimento atual dos investidores.'}")
+    else:
+        fg_txt = ""
 
-[AGENDA DO DIA]
-Destaque os eventos mais relevantes e o que esperar.
+    return "\n\n".join(filter(None, [dxy_txt, bolsas_txt, vix_txt, fg_txt]))
 
-[VIÉS DO DIA]
-Conclua com o viés direcional: ALTISTA, BAIXISTA ou NEUTRO — com justificativa clara e objetiva baseada nos drivers acima."""
+def gerar_analise_ibov(ibov, sp, dxy):
+    if ibov.get("price") is None:
+        return "Dados do Ibovespa indisponíveis."
 
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}"
-        payload = {
-            "contents": [{"parts": [{"text": prompt}]}],
-            "generationConfig": {"temperature": 0.4, "maxOutputTokens": 1500}
-        }
-        r = requests.post(url, json=payload, timeout=30)
-        result = r.json()
+    preco = ibov["price"]
+    var = ibov["change_pct"]
 
-        if "candidates" not in result:
-            log(f"ERRO Gemini: {result}")
-            return None
+    # Nível
+    if preco > 135000:
+        nivel_txt = f"O Ibovespa encerrou a sessão anterior em {int(preco):,} pontos".replace(",", ".")
+    else:
+        nivel_txt = f"O Ibovespa opera em {int(preco):,} pontos".replace(",", ".")
 
-        texto = result["candidates"][0]["content"]["parts"][0]["text"]
-        log(f"Morning call gerado: {len(texto)} chars")
-        return texto
+    # Movimento
+    if var < -1.5:
+        mov_txt = f", com queda expressiva de {var:.2f}%, evidenciando pressão vendedora relevante."
+    elif var < -0.3:
+        mov_txt = f", recuando {var:.2f}% na última sessão."
+    elif var > 1.5:
+        mov_txt = f", com avanço expressivo de {var:+.2f}%, demonstrando força compradora."
+    elif var > 0.3:
+        mov_txt = f", com leve valorização de {var:+.2f}%."
+    else:
+        mov_txt = f", praticamente estável ({var:+.2f}%)."
 
-    except Exception as e:
-        log(f"ERRO Gemini: {e}")
-        return None
+    # Correlação
+    if sp.get("change_pct") is not None:
+        if sp["change_pct"] < -1 and var < -0.5:
+            corr_txt = "O índice segue correlacionado ao movimento negativo de Wall Street, refletindo o ambiente de risk-off global."
+        elif sp["change_pct"] > 1 and var > 0.5:
+            corr_txt = "O índice acompanhou a melhora externa, beneficiado pelo apetite a risco de Wall Street."
+        elif sp["change_pct"] < -1 and var > 0:
+            corr_txt = "O índice mostrou resiliência ao ignorar a fraqueza externa, o que pode indicar força técnica local."
+        else:
+            corr_txt = "A correlação com os mercados externos foi moderada na última sessão."
+    else:
+        corr_txt = ""
 
-# ── 6. PARSEAR TEXTO DA IA ────────────────────────────────────────────────────
-def parsear(texto):
-    if not texto:
-        return [], "Neutro", ""
+    # Suportes e resistências dinâmicos
+    sup1 = int(round(preco * 0.97, -2))
+    sup2 = int(round(preco * 0.94, -2))
+    res1 = int(round(preco * 1.02, -2))
+    res2 = int(round(preco * 1.05, -2))
 
-    secoes = {"CONTEXTO GLOBAL": "", "IBOVESPA": "", "DÓLAR": "", "AGENDA DO DIA": "", "VIÉS DO DIA": ""}
-    atual = None
-    for linha in texto.split("\n"):
-        linha_up = linha.strip().upper()
-        encontrou = False
-        for sec in secoes:
-            if sec in linha_up:
-                atual = sec
-                encontrou = True
-                break
-        if not encontrou and atual:
-            secoes[atual] += linha + "\n"
+    niveis_txt = (f"Tecnicamente, monitorar suporte em {sup1:,} e {sup2:,} pontos. "
+                 f"Resistências relevantes em {res1:,} e {res2:,} pontos.").replace(",", ".")
 
-    paragrafos = []
-    for sec in ["CONTEXTO GLOBAL", "IBOVESPA", "DÓLAR", "AGENDA DO DIA"]:
-        txt = secoes[sec].strip()
-        if txt:
-            paragrafos.append(f"**{sec}**\n{txt}")
+    return " ".join(filter(None, [nivel_txt + mov_txt, corr_txt, niveis_txt]))
 
-    vies_txt = secoes["VIÉS DO DIA"].strip()
-    vies = "Neutro"
-    for palavra in ["ALTISTA", "BAIXISTA", "NEUTRO"]:
-        if palavra in vies_txt.upper():
-            vies = palavra.capitalize()
-            break
+def gerar_analise_dolar(usd, dxy):
+    if usd.get("price") is None:
+        return "Dados do câmbio indisponíveis."
 
-    return paragrafos, vies, vies_txt
+    preco = usd["price"]
+    var = usd["change_pct"]
 
-# ── 7. MAIN ───────────────────────────────────────────────────────────────────
+    if var > 1.0:
+        mov_txt = f"O dólar comercial avançou com força ({var:+.2f}%) para R$ {preco:.2f}, pressionando importadores e acirrando preocupações inflacionárias."
+    elif var > 0.3:
+        mov_txt = f"O dólar subiu {var:+.2f}% para R$ {preco:.2f}, mantendo pressão sobre o real."
+    elif var < -1.0:
+        mov_txt = f"O real se valorizou com força, derrubando o dólar {var:.2f}% para R$ {preco:.2f} — movimento positivo para a inflação doméstica."
+    elif var < -0.3:
+        mov_txt = f"O dólar recuou {var:.2f}% para R$ {preco:.2f}, aliviando a pressão cambial."
+    else:
+        mov_txt = f"O câmbio operou próximo à estabilidade, com o dólar em R$ {preco:.2f} ({var:+.2f}%)."
+
+    if dxy.get("change_pct") is not None:
+        if dxy["change_pct"] > 0.3 and var > 0:
+            dxy_txt = f"O movimento é consistente com o fortalecimento global do dólar (DXY +{dxy['change_pct']:.2f}%), reduzindo o componente idiossincrático do real."
+        elif dxy["change_pct"] < -0.3 and var > 0.5:
+            dxy_txt = f"O movimento do real é mais intenso que o DXY ({dxy['change_pct']:+.2f}%), sugerindo componente local de pressão — atenção ao risco Brasil."
+        elif dxy["change_pct"] > 0.3 and var < 0:
+            dxy_txt = f"O real resistiu ao fortalecimento do DXY ({dxy['change_pct']:+.2f}%), sinal de força relativa da moeda brasileira."
+        else:
+            dxy_txt = ""
+    else:
+        dxy_txt = ""
+
+    return " ".join(filter(None, [mov_txt, dxy_txt]))
+
+def gerar_secao_agenda(agenda):
+    if not agenda:
+        return "Sem eventos de alto impacto agendados para hoje. Fluxo de notícias e movimentos técnicos devem predominar."
+
+    altos = [e for e in agenda if e["impact"] == "alto"]
+    medios = [e for e in agenda if e["impact"] == "medio"]
+
+    linhas = []
+    if altos:
+        linhas.append("Eventos de ALTO impacto no radar:")
+        for e in altos:
+            linhas.append(f"• {e['time']} [{e['currency']}] {e['event']}")
+    if medios:
+        linhas.append("Eventos de impacto MÉDIO:")
+        for e in medios[:4]:
+            linhas.append(f"• {e['time']} [{e['currency']}] {e['event']}")
+
+    linhas.append("\nOs dados americanos costumam gerar volatilidade relevante no câmbio e, por correlação, no Ibovespa. Monitore os releases e evite exposição excessiva nos momentos de divulgação.")
+    return "\n".join(linhas)
+
+def gerar_vies_texto(vies_label, tipo, fg, dxy, vix, ibov, sp, usd):
+    drivers = []
+
+    if vix.get("change_pct") is not None and vix["change_pct"] > 10:
+        drivers.append(f"VIX em alta acentuada ({vix['change_pct']:+.2f}%) sinalizando estresse")
+    if fg.get("value") is not None and fg["value"] <= 25:
+        drivers.append(f"Fear & Greed em {fg['value']} (Medo Extremo)")
+    if dxy.get("change_pct") is not None and dxy["change_pct"] > 0.4:
+        drivers.append(f"DXY em alta ({dxy['change_pct']:+.2f}%) pressionando emergentes")
+    if sp.get("change_pct") is not None and sp["change_pct"] < -1:
+        drivers.append(f"S&P 500 em queda expressiva ({sp['change_pct']:+.2f}%)")
+    if dxy.get("change_pct") is not None and dxy["change_pct"] < -0.4:
+        drivers.append(f"DXY em queda ({dxy['change_pct']:+.2f}%) favorecendo emergentes")
+    if sp.get("change_pct") is not None and sp["change_pct"] > 1:
+        drivers.append(f"S&P 500 em alta ({sp['change_pct']:+.2f}%)")
+
+    if tipo == "baixista":
+        intro = random.choice([
+            f"O conjunto de fatores aponta para viés {vies_label} no pregão de hoje.",
+            f"A leitura dos drivers globais indica abertura com pressão vendedora — viés {vies_label}.",
+            f"Diante do cenário externo adverso, o viés para hoje é {vies_label}.",
+        ])
+        recom = "Gestão de risco é prioridade. Evitar posições compradas sem proteção e aguardar sinais de estabilização antes de ampliar exposição."
+    elif tipo == "altista":
+        intro = random.choice([
+            f"O ambiente externo favorável sustenta viés {vies_label} para o pregão.",
+            f"Os drivers globais apontam para uma abertura positiva — viés {vies_label}.",
+            f"Com o cenário externo contribuindo, o viés para hoje é {vies_label}.",
+        ])
+        recom = "Oportunidade para posições compradas em ativos de qualidade, com stops bem definidos."
+    else:
+        intro = f"Os fatores estão equilibrados, sustentando viés {vies_label} para o pregão de hoje."
+        recom = "Seletividade é a palavra-chave. Operar em ativos com catalisadores próprios e aguardar o mercado mostrar direção."
+
+    drivers_txt = ""
+    if drivers:
+        drivers_txt = "Principais drivers: " + " | ".join(drivers) + "."
+
+    return "\n\n".join(filter(None, [intro, drivers_txt, recom]))
+
+# ── MAIN ──────────────────────────────────────────────────────────────────────
+
 def salvar_dados():
     log("=" * 50)
-    log("Morning Call — Gemini + Fontes públicas")
+    log("Morning Call — Análise Programática")
     log("=" * 50)
 
     agora = datetime.now(BRT)
@@ -240,38 +380,50 @@ def salvar_dados():
     agenda   = buscar_agenda()
     noticias = buscar_noticias()
 
-    dados = {
-        "fear_greed": fg, "dxy": dxy, "vix": vix,
-        "ibov": ibov, "usdbrl": usd, "sp500": sp, "nasdaq": nq,
-        "agenda": agenda, "noticias": noticias,
-    }
+    # Gera as seções
+    log("Gerando análise...")
+    contexto   = gerar_contexto_global(dxy, vix, sp, nq, usd, fg)
+    analise_ibov = gerar_analise_ibov(ibov, sp, dxy)
+    analise_usd  = gerar_analise_dolar(usd, dxy)
+    sec_agenda   = gerar_secao_agenda(agenda)
+    vies_label, vies_tipo = calcular_vies(fg, dxy, vix, ibov, sp, usd)
+    vies_txt     = gerar_vies_texto(vies_label, vies_tipo, fg, dxy, vix, ibov, sp, usd)
 
-    texto = gerar_com_gemini(dados)
-    paragrafos, vies, vies_txt = parsear(texto)
+    paragrafos = [
+        f"**CONTEXTO GLOBAL**\n{contexto}",
+        f"**IBOVESPA**\n{analise_ibov}",
+        f"**DÓLAR / CÂMBIO**\n{analise_usd}",
+        f"**AGENDA DO DIA**\n{sec_agenda}",
+    ]
 
-    if not paragrafos:
-        paragrafos = ["⚠️ Não foi possível gerar a análise hoje. Verifique os logs."]
+    if noticias:
+        noticias_txt = "\n".join([f"• {n}" for n in noticias])
+        paragrafos.append(f"**MANCHETES**\n{noticias_txt}")
 
+    # Agenda formatada
     agenda_fmt = [{"time": e["time"], "event": f"[{e['currency']}] {e['event']}"} for e in agenda]
     if not agenda_fmt:
         agenda_fmt = [{"time": "—", "event": "Sem eventos de alto impacto hoje"}]
 
-    tags = [f"Viés {vies}"]
+    # Tags
+    tags = [f"Viés {vies_label}"]
     if ibov.get("change_pct") is not None:
         d = "▲" if ibov["change_pct"] >= 0 else "▼"
         tags.append(f"IBOV {d} {ibov['change_pct']:+.2f}%")
     if usd.get("price") is not None:
         tags.append(f"USD/BRL R$ {usd['price']:.2f}")
+    if vix.get("price") is not None:
+        tags.append(f"VIX {vix['price']:.1f}")
 
     json_final = {
         "date": agora.strftime("%d/%m/%Y"),
         "lastUpdate": agora_str,
         "lastFetch": agora_str,
         "title": f"Morning Call · {agora.strftime('%d/%m')}",
-        "vies": vies,
+        "vies": vies_label,
         "vies_txt": vies_txt,
         "tags": tags,
-        "tags_tipados": [{"tipo": vies.lower(), "label": tags[0]}],
+        "tags_tipados": [{"tipo": vies_tipo, "label": tags[0]}],
         "insights": paragrafos,
         "agenda": agenda_fmt,
         "strategy": vies_txt,
@@ -287,14 +439,14 @@ def salvar_dados():
             "usdbrl": usd.get("price"),
             "usdbrlChange": usd.get("change_pct"),
         },
-        "scrape_ok": bool(texto),
+        "scrape_ok": True,
         "feriado_aviso": None,
     }
 
     with open("data.json", "w", encoding="utf-8") as f:
         json.dump(json_final, f, ensure_ascii=False, indent=2)
 
-    log(f"data.json salvo! Viés: {vies} | Parágrafos: {len(paragrafos)} | Agenda: {len(agenda_fmt)}")
+    log(f"data.json salvo! Viés: {vies_label} | Seções: {len(paragrafos)}")
     log("=" * 50)
 
 if __name__ == "__main__":
