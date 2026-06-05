@@ -497,9 +497,8 @@ function renderInsights(insights) {
   return insights.map(p => {
     const limpo = limparRodape(p);
     if (!limpo) return '';
-    // Detecta seção com título **TÍTULO**
-conteudo
-        const match = limpo.match(/^\*\*([^*]+)\*\*\n([\s\S]+)/);
+    // Detecta seção com título **TITULO**
+    const match = limpo.match(/^\*\*([^*]+)\*\*\n([\s\S]+)/);
     if (match) {
       const titulo = match[1];
       const corpo = match[2].trim()
