@@ -26,8 +26,6 @@ jobs:
         run: pip install requests feedparser beautifulsoup4
 
       - name: Executar scraper
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python scrape.py
 
       - name: Commit e push
