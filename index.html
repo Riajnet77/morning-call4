@@ -523,7 +523,8 @@ conteudo
 // ── MAIN ──────────────────────────────────────────────────────────────────────
 async function carregar() {
   try {
-    const resp = await fetch('data.json?t=' + Date.now());
+    const base = window.location.pathname.replace(/\/[^\/]*$/, '') || '';
+    const resp = await fetch(base + '/data.json?t=' + Date.now());
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
     const d = await resp.json();
 
