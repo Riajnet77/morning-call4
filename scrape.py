@@ -11,13 +11,29 @@ def log(msg):
 
 # ── 1. FEAR & GREED ───────────────────────────────────────────────────────────
 def buscar_fear_greed():
+    urls = [
+        "https://production.dataviz.cnn.io/index/fearandgreed/graphdata",
+        "https://fear-and-greed-index.p.rapidapi.com/v1/fgi",
+        "https://api.alternative.me/fng/",
+    ]
+    # Tenta CNN primeiro
     try:
-        url = "https://production.dataviz.cnn.io/index/fearandgreed/graphdata"
-        r = requests.get(url, timeout=10, headers={"User-Agent": "Mozilla/5.0"})
+        r = requests.get(urls[0], timeout=10, headers={"User-Agent": "Mozilla/5.0"})
+        if r.status_code == 200 and r.text.strip():
+            data = r.json()
+            valor = round(data["fear_and_greed"]["score"])
+            rating = data["fear_and_greed"]["rating"]
+            log(f"Fear & Greed (CNN): {valor} ({rating})")
+            return {"value": valor, "label": rating}
+    except Exception:
+        pass
+    # Fallback: alternative.me (crypto F&G mas serve como proxy)
+    try:
+        r = requests.get(urls[2], timeout=10, headers={"User-Agent": "Mozilla/5.0"})
         data = r.json()
-        valor = round(data["fear_and_greed"]["score"])
-        rating = data["fear_and_greed"]["rating"]
-        log(f"Fear & Greed: {valor} ({rating})")
+        valor = int(data["data"][0]["value"])
+        rating = data["data"][0]["value_classification"]
+        log(f"Fear & Greed (alternative.me): {valor} ({rating})")
         return {"value": valor, "label": rating}
     except Exception as e:
         log(f"AVISO Fear&Greed: {e}")
@@ -152,7 +168,7 @@ Destaque os eventos mais relevantes e o que esperar.
 [VIÉS DO DIA]
 Conclua com o viés direcional: ALTISTA, BAIXISTA ou NEUTRO — com justificativa clara e objetiva baseada nos drivers acima."""
 
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}"
         payload = {
             "contents": [{"parts": [{"text": prompt}]}],
             "generationConfig": {"temperature": 0.4, "maxOutputTokens": 1500}
