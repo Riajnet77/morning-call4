@@ -46,9 +46,40 @@ def extrair_dados_traderbi():
 
         if "login" in page.url.lower() or page.locator("input[type='email']").count() > 0:
             log("Tela de login detectada - fazendo login...")
-            page.locator("input[type='email']").fill(EMAIL)
-            page.locator("input[type='password']").fill(PASSWORD)
-            page.locator("button[type='submit']").click()
+            # Preenche email
+            email_input = page.locator("input[type='email'], input[name='email'], input[placeholder*='email' i]").first
+            email_input.fill(EMAIL)
+            page.wait_for_timeout(500)
+
+            # Preenche senha
+            pass_input = page.locator("input[type='password'], input[name='password'], input[placeholder*='senha' i]").first
+            pass_input.fill(PASSWORD)
+            page.wait_for_timeout(500)
+
+            # Clica no botão de login — tenta várias formas
+            botao_seletores = [
+                "button[type='submit']",
+                "button:has-text('Entrar')",
+                "button:has-text('Login')",
+                "button:has-text('Acessar')",
+                "button:has-text('Sign in')",
+                "input[type='submit']",
+                "form button",
+            ]
+            clicou = False
+            for sel_botao in botao_seletores:
+                try:
+                    btn = page.locator(sel_botao).first
+                    if btn.count() > 0:
+                        btn.click()
+                        log(f"Botao clicado via seletor: {sel_botao}")
+                        clicou = True
+                        break
+                except Exception:
+                    continue
+            if not clicou:
+                log("AVISO: Nenhum botao de submit encontrado — tentando Enter no campo senha...")
+                pass_input.press("Enter")
 
             # Aguarda o formulario sumir (funciona independente da URL de redirect)
             try:
