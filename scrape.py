@@ -1,431 +1,285 @@
 import os
 import json
-import re
+import requests
 from datetime import datetime
-from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeout
+from zoneinfo import ZoneInfo
+
+BRT = ZoneInfo("America/Sao_Paulo")
 
 def log(msg):
-    print(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}", flush=True)
+    print(f"[{datetime.now(BRT).strftime('%H:%M:%S')}] {msg}", flush=True)
 
-def extrair_dados_traderbi():
-    EMAIL = os.getenv("TRADERBI_EMAIL")
-    PASSWORD = os.getenv("TRADERBI_PASSWORD")
-
-    if not EMAIL or not PASSWORD:
-        log("ERRO: Credenciais TRADERBI_EMAIL e TRADERBI_PASSWORD nao encontradas nos Secrets.")
-        return None
-
-    resultado = {
-        "date": datetime.now().strftime("%d/%m/%Y"),
-        "lastUpdate": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
-        "title": f"Morning Call \u00b7 {datetime.now().strftime('%d/%m')}",
-        "insights_raw": "",
-        "agenda": [],
-        "tags": [],
-        "indicators": {"fearGreed": None, "dxy": None, "vix": None},
-        "strategy": "",
-        "scrape_ok": False,
-    }
-
-    with sync_playwright() as p:
-        log("Iniciando Chromium headless...")
-        browser = p.chromium.launch(
-            headless=True,
-            args=[
-                "--no-sandbox",
-                "--disable-dev-shm-usage",
-                "--disable-blink-features=AutomationControlled",
-                "--disable-infobars",
-                "--window-size=1280,900",
-            ]
-        )
-        context = browser.new_context(
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-            viewport={"width": 1280, "height": 900},
-            locale="pt-BR",
-            timezone_id="America/Sao_Paulo",
-            extra_http_headers={
-                "Accept-Language": "pt-BR,pt;q=0.9,en;q=0.8",
-            }
-        )
-        # Remove webdriver flag que sites usam para detectar automacao
-        context.add_init_script("""
-            Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
-            Object.defineProperty(navigator, 'languages', { get: () => ['pt-BR', 'pt', 'en'] });
-            Object.defineProperty(navigator, 'plugins', { get: () => [1, 2, 3] });
-        """)
-        page = context.new_page()
-
-        # ── 1. LOGIN ──────────────────────────────────────────────────────────────
-        log("Navegando para /noticias ...")
-        page.goto("https://app.traderbi.com.br/noticias", wait_until="domcontentloaded", timeout=30000)
-        page.wait_for_timeout(2000)
-
-        if "login" in page.url.lower() or page.locator("input[type='email']").count() > 0:
-            log("Tela de login detectada - fazendo login...")
-            # Preenche email simulando digitacao humana
-            email_input = page.locator("input[type='email'], input[name='email'], input[placeholder*='email' i]").first
-            email_input.click()
-            page.wait_for_timeout(300)
-            email_input.type(EMAIL, delay=80)
-            page.wait_for_timeout(400)
-
-            # Preenche senha simulando digitacao humana
-            pass_input = page.locator("input[type='password'], input[name='password'], input[placeholder*='senha' i]").first
-            pass_input.click()
-            page.wait_for_timeout(300)
-            pass_input.type(PASSWORD, delay=80)
-            page.wait_for_timeout(600)
-
-            # Clica no botão de login — tenta várias formas
-            botao_seletores = [
-                "button[type='submit']",
-                "button:has-text('Entrar')",
-                "button:has-text('Login')",
-                "button:has-text('Acessar')",
-                "button:has-text('Sign in')",
-                "input[type='submit']",
-                "form button",
-            ]
-            clicou = False
-            for sel_botao in botao_seletores:
-                try:
-                    btn = page.locator(sel_botao).first
-                    if btn.count() > 0:
-                        btn.click()
-                        log(f"Botao clicado via seletor: {sel_botao}")
-                        clicou = True
-                        break
-                except Exception:
-                    continue
-            if not clicou:
-                log("AVISO: Nenhum botao de submit encontrado — tentando Enter no campo senha...")
-                pass_input.press("Enter")
-
-            # Aguarda o formulario sumir (funciona independente da URL de redirect)
-            try:
-                page.locator("input[type='email']").wait_for(state="hidden", timeout=25000)
-                log("Login bem-sucedido (formulario desapareceu)!")
-            except PlaywrightTimeout:
-                url_atual = page.url.lower()
-                if "login" not in url_atual and "signin" not in url_atual:
-                    log(f"Login provavelmente ok - URL atual: {page.url}")
-                else:
-                    log("ERRO: Login falhou - ainda na tela de login apos 25s.")
-                    page.screenshot(path="debug_login.png")
-                    browser.close()
-                    return resultado
-
-            # Aguarda pagina destino carregar
-            page.wait_for_load_state("domcontentloaded", timeout=15000)
-            page.wait_for_timeout(2000)
-
-            # Se caiu em outra pagina (ex: /dashboard), navega para /noticias
-            if "/noticias" not in page.url:
-                log(f"Redirect foi para {page.url} - navegando para /noticias...")
-                page.goto("https://app.traderbi.com.br/noticias", wait_until="domcontentloaded", timeout=20000)
-                page.wait_for_timeout(2000)
-
-            log(f"URL final pos-login: {page.url}")
-
-        page.wait_for_timeout(3000)
-
-        # ── 2. ABA ANALISES TRADERBI ──────────────────────────────────────────────
-        log("Buscando aba 'Analises TraderBI'...")
-        try:
-            aba = page.locator("button, a, [role='tab']").filter(
-                has_text=re.compile(r"An.lises TraderBI", re.IGNORECASE)
-            ).first
-            aba.wait_for(state="visible", timeout=12000)
-            aba.click()
-            page.wait_for_timeout(2500)
-            log("Aba clicada.")
-        except Exception as e:
-            log(f"AVISO: Nao encontrou aba 'Analises TraderBI': {e}")
-
-        # ── 3. CARD AQUECIMENTO DO PREGAO ─────────────────────────────────────────
-        log("Buscando card 'Aquecimento do Pregao'...")
-        card = None
-        seletores_card = [
-            "text=Aquecimento do Preg\u00e3o",
-            "[class*='card']:has-text('Aquecimento')",
-            "div:has-text('Aquecimento do Preg\u00e3o')",
-            "article:has-text('Aquecimento')",
-            ":has-text('Aquecimento')",
-        ]
-        for sel in seletores_card:
-            try:
-                c = page.locator(sel).first
-                if c.count() > 0:
-                    c.wait_for(state="visible", timeout=5000)
-                    card = c
-                    log(f"Card encontrado com seletor: {sel}")
-                    break
-            except Exception:
-                continue
-
-        if card is None:
-            log("ERRO: Card 'Aquecimento do Pregao' nao encontrado. Salvando screenshot...")
-            page.screenshot(path="debug_screenshot.png")
-            # Salva HTML para diagnostico
-            with open("debug_page.html", "w", encoding="utf-8") as f:
-                f.write(page.content())
-            browser.close()
-            return resultado
-
-        card.click()
-        log("Card clicado. Aguardando conteudo carregar...")
-        page.wait_for_timeout(5000)
-
-        # ── 4. EXTRACAO DO CONTEUDO ───────────────────────────────────────────────
-        log("Iniciando extracao de conteudo...")
-        conteudo_texto = ""
-
-        seletores_conteudo = [
-            "div.prose",
-            "[class*='prose']",
-            "[class*='article']",
-            "[class*='richtext']",
-            "[class*='rich-text']",
-            "[class*='content']",
-            "[class*='body']",
-            "[class*='texto']",
-            "[class*='conteudo']",
-            "[class*='post']",
-            "article",
-            "[role='article']",
-            "[role='dialog'] div",
-            "[data-radix-scroll-area-viewport]",
-        ]
-
-        for sel in seletores_conteudo:
-            try:
-                els = page.locator(sel).all()
-                for el in els:
-                    txt = (el.text_content() or "").strip()
-                    if len(txt) > 300:
-                        conteudo_texto = txt
-                        log(f"Conteudo extraido via '{sel}' ({len(txt)} chars).")
-                        break
-                if conteudo_texto:
-                    break
-            except Exception:
-                continue
-
-        # Fallback: pega todo o main/body
-        if not conteudo_texto:
-            log("Fallback: extraindo texto completo da pagina...")
-            for sel_area in ["main", "[role='main']", "#__next", "body"]:
-                try:
-                    area = page.locator(sel_area).first
-                    if area.count() > 0:
-                        txt = (area.text_content() or "").strip()
-                        if len(txt) > 200:
-                            conteudo_texto = txt
-                            log(f"Fallback usou '{sel_area}' ({len(txt)} chars).")
-                            break
-                except Exception:
-                    continue
-
-        resultado["insights_raw"] = conteudo_texto
-        resultado["scrape_ok"] = len(conteudo_texto) > 100
-
-        browser.close()
-
-    log(f"Scrape concluido. Conteudo: {len(resultado['insights_raw'])} chars.")
-    return resultado
-
-
-def limpar_texto(texto):
-    if not texto:
-        return ""
-
-    padroes_corte = [
-        r"Copyright \u00a9",
-        r"Todos os direitos reservados",
-        r"Pol\u00edtica de Privacidade",
-        r"Termos de Uso",
-        r"\u00a9 20\d\d",
-        r"TradingView",
-        r"FactSet",
-        r"Dados de mercado selecionados",
-        r"Sobre a empresa",
-        r"Mais do que um produto",
-        r"Ingressou em",
-        r"Seguindo\d",
-        r"Seguidores\d",
-    ]
-    for padrao in padroes_corte:
-        match = re.search(padrao, texto, re.IGNORECASE)
-        if match:
-            texto = texto[:match.start()].strip()
-
-    linhas = texto.split("\n")
-    linhas_validas = [l.strip() for l in linhas if len(l.strip()) > 20]
-    return "\n\n".join(linhas_validas)
-
-
-def extrair_suportes_resistencias(texto):
-    tags = []
-    padroes = [
-        (r"resist[e\u00ea]ncia[s]?\s+(?:em|de|no|na|pr[o\u00f3]xim[ao])?\s*(?:\$|R\$)?\s*([\d\.,]+)", "resistencia"),
-        (r"suporte[s]?\s+(?:em|de|no|na|pr[o\u00f3]xim[ao])?\s*(?:\$|R\$)?\s*([\d\.,]+)", "suporte"),
-        (r"(?:\$|R\$)\s*([\d\.,]+)\s+(?:de\s+)?resist[e\u00ea]ncia", "resistencia"),
-        (r"(?:\$|R\$)\s*([\d\.,]+)\s+(?:de\s+)?suporte", "suporte"),
-    ]
-    vistos = set()
-    for padrao, tipo in padroes:
-        for match in re.finditer(padrao, texto, re.IGNORECASE):
-            valor = match.group(1).strip()
-            prefixo = "Resist\u00eancia" if tipo == "resistencia" else "Suporte"
-            label = f"{prefixo} {valor}"
-            if label not in vistos:
-                vistos.add(label)
-                tags.append({"tipo": tipo, "label": label})
-    return tags[:8]
-
-
-def extrair_agenda(texto):
-    agenda = []
-    padroes = [
-        r"(\d{1,2}[h:]\d{2})\s*[-\u2013\u2014|]?\s*([A-Z\u00c1\u00c9\u00cd\u00d3\u00da][^\n]{8,80})",
-        r"(\d{1,2}h\d{0,2})\s*[-\u2013]?\s*([^\n]{10,80})",
-    ]
-    vistos = set()
-    for padrao in padroes:
-        for match in re.finditer(padrao, texto, re.IGNORECASE):
-            hora_raw = match.group(1).replace("h", ":").strip()
-            if hora_raw.endswith(":"):
-                hora_raw += "00"
-            evento = match.group(2).strip()
-            chave = hora_raw + evento[:20]
-            if (len(evento) > 10
-                    and chave not in vistos
-                    and not any(x in evento.lower() for x in ["clique", "acesse", "login", "sair", "menu"])):
-                vistos.add(chave)
-                agenda.append({"time": hora_raw, "event": evento[:100]})
-    return agenda[:10]
-
-
-def montar_json_final(dados_brutos):
-    texto_limpo = limpar_texto(dados_brutos.get("insights_raw", ""))
-    paragrafos = [p.strip() for p in texto_limpo.split("\n\n") if len(p.strip()) > 30]
-
-    strategy = ""
-    palavras_estrategia = ["aguardar", "operar", "posi\u00e7\u00e3o", "compra", "venda", "estrat\u00e9gia", "cautela", "vi\u00e9s", "tendencia", "tend\u00eancia"]
-    for p in reversed(paragrafos):
-        if any(w in p.lower() for w in palavras_estrategia):
-            strategy = p
-            break
-    if not strategy and paragrafos:
-        strategy = paragrafos[-1]
-
-    tags = extrair_suportes_resistencias(texto_limpo)
-    agenda = extrair_agenda(texto_limpo)
-
-    if not agenda:
-        agenda = [
-            {"time": "09:30", "event": "Abertura do mercado brasileiro (B3)"},
-            {"time": "10:00", "event": "Verificar calendário econômico do dia"},
-        ]
-
-    agora = dados_brutos.get("lastUpdate", datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
-
-    return {
-        "date": dados_brutos.get("date", datetime.now().strftime("%d/%m/%Y")),
-        "lastUpdate": agora,
-        "lastFetch": agora,
-        "title": dados_brutos.get("title", f"Morning Call \u00b7 {datetime.now().strftime('%d/%m')}"),
-        "tags": [t["label"] for t in tags],
-        "tags_tipados": tags,
-        "insights": paragrafos if paragrafos else ["Conte\u00fado n\u00e3o dispon\u00edvel para hoje."],
-        "agenda": agenda,
-        "strategy": strategy or "Acompanhar abertura e aguardar confirma\u00e7\u00e3o de tend\u00eancia.",
-        "indicators": dados_brutos.get("indicators", {"fearGreed": None, "dxy": None, "vix": None}),
-        "scrape_ok": dados_brutos.get("scrape_ok", False),
-    }
-
-
-MIN_CHARS_CONTEUDO = 200  # abaixo disso considera feriado/sem publicacao
-
-
-def carregar_json_anterior():
-    """Carrega o data.json existente, se houver."""
+# ── 1. FEAR & GREED ───────────────────────────────────────────────────────────
+def buscar_fear_greed():
     try:
-        with open("data.json", "r", encoding="utf-8") as f:
-            dados = json.load(f)
-            log(f"data.json anterior carregado (data: {dados.get('date', '?')}).")
-            return dados
-    except Exception:
+        url = "https://production.dataviz.cnn.io/index/fearandgreed/graphdata"
+        r = requests.get(url, timeout=10, headers={"User-Agent": "Mozilla/5.0"})
+        data = r.json()
+        valor = round(data["fear_and_greed"]["score"])
+        rating = data["fear_and_greed"]["rating"]
+        log(f"Fear & Greed: {valor} ({rating})")
+        return {"value": valor, "label": rating}
+    except Exception as e:
+        log(f"AVISO Fear&Greed: {e}")
+        return {"value": None, "label": "N/A"}
+
+# ── 2. YAHOO FINANCE ──────────────────────────────────────────────────────────
+def buscar_yahoo(symbol, nome):
+    try:
+        url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?interval=1d&range=2d"
+        r = requests.get(url, timeout=10, headers={"User-Agent": "Mozilla/5.0"})
+        data = r.json()
+        closes = data["chart"]["result"][0]["indicators"]["quote"][0]["close"]
+        closes = [c for c in closes if c is not None]
+        preco = round(closes[-1], 2)
+        variacao = round(((closes[-1] / closes[-2]) - 1) * 100, 2) if len(closes) >= 2 else 0
+        log(f"{nome}: {preco} ({variacao:+.2f}%)")
+        return {"price": preco, "change_pct": variacao}
+    except Exception as e:
+        log(f"AVISO {nome}: {e}")
+        return {"price": None, "change_pct": None}
+
+# ── 3. AGENDA FOREXFACTORY ────────────────────────────────────────────────────
+def buscar_agenda():
+    try:
+        from bs4 import BeautifulSoup
+        hoje = datetime.now(BRT)
+        data_str = hoje.strftime("%b%d.%Y").lower()
+        url = f"https://www.forexfactory.com/calendar?day={data_str}"
+        r = requests.get(url, timeout=15, headers={"User-Agent": "Mozilla/5.0"})
+        soup = BeautifulSoup(r.text, "html.parser")
+        eventos = []
+        hora_atual = ""
+        for row in soup.select("tr.calendar__row"):
+            hora_el = row.select_one(".calendar__time")
+            if hora_el and hora_el.text.strip():
+                hora_atual = hora_el.text.strip()
+            impact_el = row.select_one(".calendar__impact span")
+            impacto = ""
+            if impact_el:
+                cls = " ".join(impact_el.get("class", []))
+                if "high" in cls: impacto = "alto"
+                elif "medium" in cls: impacto = "medio"
+            moeda_el = row.select_one(".calendar__currency")
+            moeda = moeda_el.text.strip() if moeda_el else ""
+            evento_el = row.select_one(".calendar__event-title")
+            evento = evento_el.text.strip() if evento_el else ""
+            if evento and moeda in ["USD", "BRL", "EUR"] and impacto in ["alto", "medio"]:
+                eventos.append({"time": hora_atual, "currency": moeda, "event": evento, "impact": impacto})
+        log(f"Agenda: {len(eventos)} eventos")
+        return eventos[:12]
+    except Exception as e:
+        log(f"AVISO Agenda: {e}")
+        return []
+
+# ── 4. NOTÍCIAS RSS ───────────────────────────────────────────────────────────
+def buscar_noticias():
+    try:
+        import feedparser
+        noticias = []
+        feeds = [
+            "https://br.investing.com/rss/news_25.rss",
+            "https://br.investing.com/rss/news_14.rss",
+        ]
+        for url in feeds:
+            feed = feedparser.parse(url)
+            for entry in feed.entries[:4]:
+                noticias.append(entry.get("title", ""))
+        log(f"Noticias: {len(noticias)} itens")
+        return noticias[:8]
+    except Exception as e:
+        log(f"AVISO Noticias: {e}")
+        return []
+
+# ── 5. GEMINI ─────────────────────────────────────────────────────────────────
+def gerar_com_gemini(dados):
+    try:
+        api_key = os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            log("ERRO: GEMINI_API_KEY nao encontrada nos Secrets.")
+            return None
+
+        hoje_str = datetime.now(BRT).strftime("%d/%m/%Y")
+        fg = dados["fear_greed"]
+        dxy = dados["dxy"]
+        vix = dados["vix"]
+        ibov = dados["ibov"]
+        usd = dados["usdbrl"]
+        sp = dados["sp500"]
+        nq = dados["nasdaq"]
+        agenda = dados["agenda"]
+        noticias = dados["noticias"]
+
+        def fmt(d, decimais=2):
+            if d.get("price") is None: return "N/A"
+            sinal = "+" if d["change_pct"] >= 0 else ""
+            return f"{d['price']} ({sinal}{d['change_pct']:.2f}%)"
+
+        agenda_txt = "\n".join([f"  {e['time']} [{e['currency']}] {e['event']} (impacto: {e['impact']})" for e in agenda]) or "  Sem eventos relevantes."
+        noticias_txt = "\n".join([f"  - {n}" for n in noticias]) or "  Sem notícias."
+
+        prompt = f"""Você é um analista de mercado brasileiro experiente. Com base nos dados abaixo, escreva um morning call profissional e objetivo para o dia {hoje_str}.
+
+INDICADORES:
+- IBOV: {fmt(ibov)}
+- USD/BRL: {fmt(usd)}
+- S&P 500: {fmt(sp)}
+- Nasdaq: {fmt(nq)}
+- DXY: {fmt(dxy)}
+- VIX: {fmt(vix)}
+- Fear & Greed: {fg.get('value', 'N/A')} ({fg.get('label', 'N/A')})
+
+AGENDA ECONÔMICA HOJE:
+{agenda_txt}
+
+PRINCIPAIS NOTÍCIAS:
+{noticias_txt}
+
+Escreva o morning call com EXATAMENTE esta estrutura:
+
+[CONTEXTO GLOBAL]
+Analise o cenário externo e as correlações entre DXY, VIX, S&P e impacto no Brasil.
+
+[IBOVESPA]
+Analise o índice, nível atual, suportes e resistências relevantes.
+
+[DÓLAR]
+Analise USD/BRL, contexto do DXY e perspectiva para o real.
+
+[AGENDA DO DIA]
+Destaque os eventos mais relevantes e o que esperar.
+
+[VIÉS DO DIA]
+Conclua com o viés direcional: ALTISTA, BAIXISTA ou NEUTRO — com justificativa clara e objetiva baseada nos drivers acima."""
+
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+        payload = {
+            "contents": [{"parts": [{"text": prompt}]}],
+            "generationConfig": {"temperature": 0.4, "maxOutputTokens": 1500}
+        }
+        r = requests.post(url, json=payload, timeout=30)
+        result = r.json()
+
+        if "candidates" not in result:
+            log(f"ERRO Gemini: {result}")
+            return None
+
+        texto = result["candidates"][0]["content"]["parts"][0]["text"]
+        log(f"Morning call gerado: {len(texto)} chars")
+        return texto
+
+    except Exception as e:
+        log(f"ERRO Gemini: {e}")
         return None
 
+# ── 6. PARSEAR TEXTO DA IA ────────────────────────────────────────────────────
+def parsear(texto):
+    if not texto:
+        return [], "Neutro", ""
 
+    secoes = {"CONTEXTO GLOBAL": "", "IBOVESPA": "", "DÓLAR": "", "AGENDA DO DIA": "", "VIÉS DO DIA": ""}
+    atual = None
+    for linha in texto.split("\n"):
+        linha_up = linha.strip().upper()
+        encontrou = False
+        for sec in secoes:
+            if sec in linha_up:
+                atual = sec
+                encontrou = True
+                break
+        if not encontrou and atual:
+            secoes[atual] += linha + "\n"
+
+    paragrafos = []
+    for sec in ["CONTEXTO GLOBAL", "IBOVESPA", "DÓLAR", "AGENDA DO DIA"]:
+        txt = secoes[sec].strip()
+        if txt:
+            paragrafos.append(f"**{sec}**\n{txt}")
+
+    vies_txt = secoes["VIÉS DO DIA"].strip()
+    vies = "Neutro"
+    for palavra in ["ALTISTA", "BAIXISTA", "NEUTRO"]:
+        if palavra in vies_txt.upper():
+            vies = palavra.capitalize()
+            break
+
+    return paragrafos, vies, vies_txt
+
+# ── 7. MAIN ───────────────────────────────────────────────────────────────────
 def salvar_dados():
     log("=" * 50)
-    log("Iniciando coleta Morning Call - TraderBI")
+    log("Morning Call — Gemini + Fontes públicas")
     log("=" * 50)
 
-    dados_brutos = extrair_dados_traderbi()
-    anterior = carregar_json_anterior()
+    agora = datetime.now(BRT)
+    agora_str = agora.strftime("%d/%m/%Y %H:%M:%S")
 
-    # ── FALHA TOTAL (login falhou, navegador nao abriu, etc.) ────────────────
-    if not dados_brutos:
-        log("FALHA CRITICA: extrair_dados_traderbi retornou None.")
-        if anterior:
-            log("Mantendo data.json anterior intacto (falha de scrape).")
-        else:
-            erro_json = {
-                "date": datetime.now().strftime("%d/%m/%Y"),
-                "lastUpdate": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
-                "lastFetch": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
-                "title": f"Morning Call \u00b7 {datetime.now().strftime('%d/%m')}",
-                "tags": [], "tags_tipados": [],
-                "insights": ["\u26a0\ufe0f Falha na coleta autom\u00e1tica. Verifique os logs do GitHub Actions."],
-                "agenda": [],
-                "strategy": "Coleta indispon\u00edvel. Verifique as credenciais e o workflow.",
-                "indicators": {"fearGreed": None, "dxy": None, "vix": None},
-                "scrape_ok": False,
-            }
-            with open("data.json", "w", encoding="utf-8") as f:
-                json.dump(erro_json, f, ensure_ascii=False, indent=2)
-        return
+    fg    = buscar_fear_greed()
+    dxy   = buscar_yahoo("DX-Y.NYB", "DXY")
+    vix   = buscar_yahoo("^VIX", "VIX")
+    ibov  = buscar_yahoo("^BVSP", "IBOV")
+    usd   = buscar_yahoo("USDBRL=X", "USD/BRL")
+    sp    = buscar_yahoo("^GSPC", "S&P500")
+    nq    = buscar_yahoo("^IXIC", "Nasdaq")
+    agenda   = buscar_agenda()
+    noticias = buscar_noticias()
 
-    # ── CONTEUDO MUITO CURTO (feriado, sem publicacao, pagina nao carregou) ──
-    chars = len((dados_brutos.get("insights_raw") or "").strip())
-    log(f"Conteudo extraido: {chars} chars (minimo: {MIN_CHARS_CONTEUDO}).")
+    dados = {
+        "fear_greed": fg, "dxy": dxy, "vix": vix,
+        "ibov": ibov, "usdbrl": usd, "sp500": sp, "nasdaq": nq,
+        "agenda": agenda, "noticias": noticias,
+    }
 
-    if chars < MIN_CHARS_CONTEUDO:
-        log(f"Conteudo insuficiente — possivel feriado ou ausencia de publicacao.")
-        if anterior:
-            # Atualiza apenas o lastFetch para registrar que o workflow rodou
-            anterior["lastFetch"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-            anterior["scrape_ok"] = False
-            anterior["feriado_aviso"] = (
-                f"Sem nova publicacao em {datetime.now().strftime('%d/%m/%Y')}. "
-                "Exibindo conteudo do ultimo dia util."
-            )
-            with open("data.json", "w", encoding="utf-8") as f:
-                json.dump(anterior, f, ensure_ascii=False, indent=2)
-            log("data.json anterior preservado com aviso de feriado.")
-        else:
-            log("Sem data.json anterior — nada a preservar.")
-        return
+    texto = gerar_com_gemini(dados)
+    paragrafos, vies, vies_txt = parsear(texto)
 
-    # ── COLETA NORMAL ─────────────────────────────────────────────────────────
-    json_final = montar_json_final(dados_brutos)
-    # Remove aviso de feriado se havia
-    json_final.pop("feriado_aviso", None)
+    if not paragrafos:
+        paragrafos = ["⚠️ Não foi possível gerar a análise hoje. Verifique os logs."]
+
+    agenda_fmt = [{"time": e["time"], "event": f"[{e['currency']}] {e['event']}"} for e in agenda]
+    if not agenda_fmt:
+        agenda_fmt = [{"time": "—", "event": "Sem eventos de alto impacto hoje"}]
+
+    tags = [f"Viés {vies}"]
+    if ibov.get("change_pct") is not None:
+        d = "▲" if ibov["change_pct"] >= 0 else "▼"
+        tags.append(f"IBOV {d} {ibov['change_pct']:+.2f}%")
+    if usd.get("price") is not None:
+        tags.append(f"USD/BRL R$ {usd['price']:.2f}")
+
+    json_final = {
+        "date": agora.strftime("%d/%m/%Y"),
+        "lastUpdate": agora_str,
+        "lastFetch": agora_str,
+        "title": f"Morning Call · {agora.strftime('%d/%m')}",
+        "vies": vies,
+        "vies_txt": vies_txt,
+        "tags": tags,
+        "tags_tipados": [{"tipo": vies.lower(), "label": tags[0]}],
+        "insights": paragrafos,
+        "agenda": agenda_fmt,
+        "strategy": vies_txt,
+        "indicators": {
+            "fearGreed": fg.get("value"),
+            "fearGreedLabel": fg.get("label"),
+            "dxy": dxy.get("price"),
+            "dxyChange": dxy.get("change_pct"),
+            "vix": vix.get("price"),
+            "vixChange": vix.get("change_pct"),
+            "ibov": ibov.get("price"),
+            "ibovChange": ibov.get("change_pct"),
+            "usdbrl": usd.get("price"),
+            "usdbrlChange": usd.get("change_pct"),
+        },
+        "scrape_ok": bool(texto),
+        "feriado_aviso": None,
+    }
 
     with open("data.json", "w", encoding="utf-8") as f:
         json.dump(json_final, f, ensure_ascii=False, indent=2)
 
-    log("data.json salvo com sucesso!")
-    log(f"  Paragrafos: {len(json_final['insights'])}")
-    log(f"  Tags: {len(json_final['tags'])}")
-    log(f"  Agenda: {len(json_final['agenda'])}")
-    log(f"  Scrape OK: {json_final['scrape_ok']}")
+    log(f"data.json salvo! Viés: {vies} | Parágrafos: {len(paragrafos)} | Agenda: {len(agenda_fmt)}")
     log("=" * 50)
-
 
 if __name__ == "__main__":
     salvar_dados()
