@@ -1,23 +1,28 @@
 {
   "date": "05/06/2026",
-  "lastUpdate": "05/06/2026 16:42:35",
-  "lastFetch": "05/06/2026 16:42:35",
+  "lastUpdate": "05/06/2026 16:55:37",
+  "lastFetch": "05/06/2026 16:55:37",
   "title": "Morning Call · 05/06",
-  "vies": "Neutro",
-  "vies_txt": "",
+  "vies": "Baixista",
+  "vies_txt": "A leitura dos drivers globais indica abertura com pressão vendedora — viés Baixista.\n\nPrincipais drivers: VIX em alta acentuada (+31.75%) sinalizando estresse | Fear & Greed em 12 (Medo Extremo) | DXY em alta (+0.66%) pressionando emergentes | S&P 500 em queda expressiva (-2.46%).\n\nGestão de risco é prioridade. Evitar posições compradas sem proteção e aguardar sinais de estabilização antes de ampliar exposição.",
   "tags": [
-    "Viés Neutro",
-    "IBOV ▼ -0.76%",
-    "USD/BRL R$ 5.15"
+    "Viés Baixista",
+    "IBOV ▼ -0.71%",
+    "USD/BRL R$ 5.15",
+    "VIX 20.3"
   ],
   "tags_tipados": [
     {
-      "tipo": "neutro",
-      "label": "Viés Neutro"
+      "tipo": "baixista",
+      "label": "Viés Baixista"
     }
   ],
   "insights": [
-    "⚠️ Não foi possível gerar a análise hoje. Verifique os logs."
+    "**CONTEXTO GLOBAL**\nO índice do dólar (DXY) avançou +0.66%, sinalizando fortalecimento da moeda americana e aumentando a pressão sobre moedas emergentes, incluindo o real.\n\nAs bolsas americanas encerraram em forte queda, com S&P 500 em -2.46% e Nasdaq em -3.91%. O movimento reflete aversão a risco elevada e tende a contaminar negativamente a abertura brasileira.\n\nO VIX disparou +31.75% para 20.3 pontos, indicando volatilidade elevada — sinal de estresse no mercado que exige cautela nas posições.\n\nO índice Fear & Greed marca 12 pontos — zona de \"Medo Extremo\" — sugerindo que o mercado precifica risco excessivo e pode estar próximo de um ponto de reversão técnica.",
+    "**IBOVESPA**\nO Ibovespa encerrou a sessão anterior em 169.117 pontos, recuando -0.71% na última sessão. O índice segue correlacionado ao movimento negativo de Wall Street, refletindo o ambiente de risk-off global. Tecnicamente. monitorar suporte em 164.000 e 159.000 pontos. Resistências relevantes em 172.500 e 177.600 pontos.",
+    "**DÓLAR / CÂMBIO**\nO dólar comercial avançou com força (+1.48%) para R$ 5.15, pressionando importadores e acirrando preocupações inflacionárias. O movimento é consistente com o fortalecimento global do dólar (DXY +0.66%), reduzindo o componente idiossincrático do real.",
+    "**AGENDA DO DIA**\nSem eventos de alto impacto agendados para hoje. Fluxo de notícias e movimentos técnicos devem predominar.",
+    "**MANCHETES**\n• Negociação de opções da Marvell Technology dispara para 605.010 contratos\n• Ações da TerraVest despencam após alegações de uso de informação privilegiada\n• Negociação de opções da Mondelez salta para 3.842 contratos\n• Negociação de opções da AngloGold Ashanti salta para 4.786 contratos\n• Negociação de opções da Strategy Inc. dispara para 952.761 contratos\n• Pesquisa do Citi mostra que economistas elevam previsão de inflação no México\n• Corte orçamentário ameaça vistorias de barragens e processos minerários\n• Trump diz que quer juros mais baixos e deixa decisão de outubro para Warsh\n• Regulador britânico assume controle de empresa de câmbio por suspeita de lavagem de dinheiro\n• Aoun acusa o Irã de usar o Líbano como moeda de troca"
   ],
   "agenda": [
     {
@@ -25,19 +30,19 @@
       "event": "Sem eventos de alto impacto hoje"
     }
   ],
-  "strategy": "",
+  "strategy": "A leitura dos drivers globais indica abertura com pressão vendedora — viés Baixista.\n\nPrincipais drivers: VIX em alta acentuada (+31.75%) sinalizando estresse | Fear & Greed em 12 (Medo Extremo) | DXY em alta (+0.66%) pressionando emergentes | S&P 500 em queda expressiva (-2.46%).\n\nGestão de risco é prioridade. Evitar posições compradas sem proteção e aguardar sinais de estabilização antes de ampliar exposição.",
   "indicators": {
     "fearGreed": 12,
     "fearGreedLabel": "Extreme Fear",
-    "dxy": 100.08,
-    "dxyChange": 0.67,
-    "vix": 20.75,
-    "vixChange": 34.74,
-    "ibov": 169043.23,
-    "ibovChange": -0.76,
+    "dxy": 100.06,
+    "dxyChange": 0.66,
+    "vix": 20.29,
+    "vixChange": 31.75,
+    "ibov": 169117.02,
+    "ibovChange": -0.71,
     "usdbrl": 5.15,
-    "usdbrlChange": 1.51
+    "usdbrlChange": 1.48
   },
-  "scrape_ok": false,
+  "scrape_ok": true,
   "feriado_aviso": null
 }
