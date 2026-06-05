@@ -499,8 +499,7 @@ function renderInsights(insights) {
     if (!limpo) return '';
     // Detecta seção com título **TÍTULO**
 conteudo
-    const match = limpo.match(/^\*\*([^*]+)\*\*
-([\s\S]+)/);
+        const match = limpo.match(/^\*\*([^*]+)\*\*\n([\s\S]+)/);
     if (match) {
       const titulo = match[1];
       const corpo = match[2].trim()
