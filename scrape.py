@@ -31,12 +31,29 @@ def extrair_dados_traderbi():
         log("Iniciando Chromium headless...")
         browser = p.chromium.launch(
             headless=True,
-            args=["--no-sandbox", "--disable-dev-shm-usage"]
+            args=[
+                "--no-sandbox",
+                "--disable-dev-shm-usage",
+                "--disable-blink-features=AutomationControlled",
+                "--disable-infobars",
+                "--window-size=1280,900",
+            ]
         )
         context = browser.new_context(
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
             viewport={"width": 1280, "height": 900},
+            locale="pt-BR",
+            timezone_id="America/Sao_Paulo",
+            extra_http_headers={
+                "Accept-Language": "pt-BR,pt;q=0.9,en;q=0.8",
+            }
         )
+        # Remove webdriver flag que sites usam para detectar automacao
+        context.add_init_script("""
+            Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
+            Object.defineProperty(navigator, 'languages', { get: () => ['pt-BR', 'pt', 'en'] });
+            Object.defineProperty(navigator, 'plugins', { get: () => [1, 2, 3] });
+        """)
         page = context.new_page()
 
         # ── 1. LOGIN ──────────────────────────────────────────────────────────────
@@ -46,15 +63,19 @@ def extrair_dados_traderbi():
 
         if "login" in page.url.lower() or page.locator("input[type='email']").count() > 0:
             log("Tela de login detectada - fazendo login...")
-            # Preenche email
+            # Preenche email simulando digitacao humana
             email_input = page.locator("input[type='email'], input[name='email'], input[placeholder*='email' i]").first
-            email_input.fill(EMAIL)
-            page.wait_for_timeout(500)
+            email_input.click()
+            page.wait_for_timeout(300)
+            email_input.type(EMAIL, delay=80)
+            page.wait_for_timeout(400)
 
-            # Preenche senha
+            # Preenche senha simulando digitacao humana
             pass_input = page.locator("input[type='password'], input[name='password'], input[placeholder*='senha' i]").first
-            pass_input.fill(PASSWORD)
-            page.wait_for_timeout(500)
+            pass_input.click()
+            page.wait_for_timeout(300)
+            pass_input.type(PASSWORD, delay=80)
+            page.wait_for_timeout(600)
 
             # Clica no botão de login — tenta várias formas
             botao_seletores = [
