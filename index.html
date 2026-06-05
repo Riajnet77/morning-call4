@@ -523,7 +523,9 @@ conteudo
 // ── MAIN ──────────────────────────────────────────────────────────────────────
 async function carregar() {
   try {
-    const resp = await fetch('./data.json?t=' + Date.now());
+    const url = './data.json?t=' + Date.now();
+    document.getElementById('loading').textContent = 'Buscando ' + url + '...';
+    const resp = await fetch(url);
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
     const d = await resp.json();
 
