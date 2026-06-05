@@ -392,7 +392,6 @@
 
 <header class="topo">
   <div class="topo-esq">
-    <span class="logo-badge">TraderBI</span>
     <span class="topo-titulo" id="topo-titulo">Morning Call</span>
   </div>
   <div class="topo-dir">
@@ -434,6 +433,24 @@ function chg(v) {
   return `<span style="font-size:12px;color:${cor};margin-left:6px">${sinal} ${Math.abs(n).toFixed(2)}%</span>`;
 }
 
+function fgFaixa(v) {
+  if (v === null || v === undefined) return {label:'—', cor:'var(--txt3)', bar:0};
+  if (v <= 20)  return {label:'Medo Extremo',    cor:'#ef4444', bar: v};
+  if (v <= 40)  return {label:'Medo',            cor:'#f97316', bar: v};
+  if (v <= 60)  return {label:'Neutro',          cor:'#eab308', bar: v};
+  if (v <= 80)  return {label:'Ganância',        cor:'#84cc16', bar: v};
+  return             {label:'Ganância Extrema',  cor:'#22c55e', bar: v};
+}
+
+function vixFaixa(v) {
+  if (v === null || v === undefined) return {label:'—', cor:'var(--txt3)'};
+  if (v < 15)  return {label:'Calmo',            cor:'#22c55e'};
+  if (v < 20)  return {label:'Normal',           cor:'#84cc16'};
+  if (v < 25)  return {label:'Atenção',          cor:'#eab308'};
+  if (v < 35)  return {label:'Estresse',         cor:'#f97316'};
+  return            {label:'Pânico',             cor:'#ef4444'};
+}
+
 function renderIndicadores(ind) {
   const fg = ind?.fearGreed;
   const dxy = ind?.dxy;
@@ -443,9 +460,11 @@ function renderIndicadores(ind) {
   return `
     <div class="indicadores-grid" style="grid-template-columns:repeat(5,1fr)">
       <div class="ind-card fg">
-        <div class="ind-label">Fear &amp; Greed</div>
-        <div class="ind-valor">${fg ?? '—'}</div>
-        <div class="ind-desc">${ind?.fearGreedLabel || (fg !== null && fg !== undefined ? (fg < 25 ? 'Medo extremo' : fg < 45 ? 'Medo' : fg < 55 ? 'Neutro' : fg < 75 ? 'Ganância' : 'Ganância extrema') : 'Indisponível')}</div>
+        <div class="ind-label">Fear &amp; Greed Index</div>
+        <div class="ind-valor" style="color:${fgFaixa(fg).cor}">${fg ?? '—'}<span style="font-size:13px;color:var(--txt3);margin-left:4px">/100</span></div>
+        <div class="ind-desc" style="color:${fgFaixa(fg).cor};font-weight:600">${fgFaixa(fg).label}</div>
+        ${fg !== null && fg !== undefined ? `<div style="margin-top:8px;background:rgba(255,255,255,0.06);border-radius:4px;height:4px;overflow:hidden"><div style="height:4px;width:${fg}%;background:${fgFaixa(fg).cor};border-radius:4px"></div></div>` : ''}
+        <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--txt3);margin-top:4px;font-family:var(--mono)"><span>Medo</span><span>Neutro</span><span>Ganância</span></div>
       </div>
       <div class="ind-card dxy">
         <div class="ind-label">DXY${chg(ind?.dxyChange)}</div>
@@ -453,9 +472,10 @@ function renderIndicadores(ind) {
         <div class="ind-desc">Índice do dólar</div>
       </div>
       <div class="ind-card vix">
-        <div class="ind-label">VIX${chg(ind?.vixChange)}</div>
-        <div class="ind-valor">${vix ?? '—'}</div>
-        <div class="ind-desc">${vix ? (parseFloat(vix) < 15 ? 'Baixa volatilidade' : parseFloat(vix) < 25 ? 'Vol. moderada' : 'Alta volatilidade') : 'Indisponível'}</div>
+        <div class="ind-label">VIX — Volatilidade${chg(ind?.vixChange)}</div>
+        <div class="ind-valor" style="color:${vixFaixa(vix).cor}">${vix ?? '—'}</div>
+        <div class="ind-desc" style="color:${vixFaixa(vix).cor};font-weight:600">${vixFaixa(vix).label}</div>
+        <div style="margin-top:6px;font-size:10px;color:var(--txt3);font-family:var(--mono)">&lt;15 calmo · 15-25 normal · &gt;25 estresse</div>
       </div>
       <div class="ind-card" style="--bar:var(--green)">
         <div class="ind-label">IBOV${chg(ind?.ibovChange)}</div>
@@ -466,6 +486,18 @@ function renderIndicadores(ind) {
         <div class="ind-label">USD/BRL${chg(ind?.usdbrlChange)}</div>
         <div class="ind-valor">R$ ${usd ? parseFloat(usd).toFixed(2) : '—'}</div>
         <div class="ind-desc">Dólar comercial</div>
+      </div>
+    </div>
+    <div class="indicadores-grid" style="grid-template-columns:repeat(2,1fr);margin-top:0">
+      <div class="ind-card" style="border-top:2px solid #a78bfa">
+        <div class="ind-label">SELIC — Juros BR</div>
+        <div class="ind-valor" style="color:#a78bfa">${ind?.selic ? ind.selic.toFixed(2) + '%' : '—'}</div>
+        <div class="ind-desc">Taxa básica a.a. · Banco Central</div>
+      </div>
+      <div class="ind-card" style="border-top:2px solid #38bdf8">
+        <div class="ind-label">Treasury 10Y (EUA)${chg(ind?.us10yChange)}</div>
+        <div class="ind-valor" style="color:#38bdf8">${ind?.us10y ? ind.us10y.toFixed(2) + '%' : '—'}</div>
+        <div class="ind-desc">Juro longo americano · referência global</div>
       </div>
     </div>`;
 }
@@ -593,7 +625,7 @@ async function carregar() {
       <!-- RODAPÉ -->
       <div class="update-bar">
         <span>Última coleta: ${d.lastFetch}</span>
-        <span>Fonte: TraderBI · Aquecimento do Pregão</span>
+        <span>Fontes: Yahoo Finance · ForexFactory · Investing.com</span>
         <span class="scrape-badge ${d.scrape_ok ? 'scrape-ok' : 'scrape-fail'}">${d.scrape_ok ? 'COLETA OK' : 'COLETA PARCIAL'}</span>
       </div>`;
 
