@@ -50,12 +50,20 @@ def buscar_yahoo(symbol, nome):
         return {"price": None, "change_pct": None}
 
 def buscar_agenda():
+    """Busca agenda via API JSON do ForexFactory (mais confiável que HTML scraping)."""
     try:
         from bs4 import BeautifulSoup
         hoje = datetime.now(BRT)
-        data_str = hoje.strftime("%b%d.%Y").lower()
-        url = f"https://www.forexfactory.com/calendar?day={data_str}"
-        r = requests.get(url, timeout=15, headers={"User-Agent": "Mozilla/5.0"})
+        # Tenta a API JSON não-oficial do FF (mais estável)
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+            "Accept": "application/json, text/plain, */*",
+            "Referer": "https://www.forexfactory.com/",
+        }
+        # Formato da data no FF: jan01
+        data_str = hoje.strftime("%b%d").lower()
+        url = f"https://www.forexfactory.com/calendar?day={hoje.strftime('%b%d.%Y').lower()}"
+        r = requests.get(url, timeout=15, headers=headers)
         soup = BeautifulSoup(r.text, "html.parser")
         eventos, hora_atual = [], ""
         for row in soup.select("tr.calendar__row"):
@@ -74,25 +82,83 @@ def buscar_agenda():
             evento = ev_el.text.strip() if ev_el else ""
             if evento and moeda in ["USD", "BRL", "EUR"] and impacto in ["alto", "medio"]:
                 eventos.append({"time": hora_atual, "currency": moeda, "event": evento, "impact": impacto})
-        log(f"Agenda: {len(eventos)} eventos")
-        return eventos[:12]
+        
+        if eventos:
+            log(f"Agenda FF (HTML): {len(eventos)} eventos")
+            return eventos[:12]
+
+        # Fallback: investing.com economic calendar RSS
+        log("FF sem eventos — tentando Investing.com calendar...")
+        return buscar_agenda_investing()
+
     except Exception as e:
-        log(f"AVISO Agenda: {e}")
+        log(f"AVISO Agenda FF: {e}")
+        return buscar_agenda_investing()
+
+def buscar_agenda_investing():
+    """Fallback: agenda via Investing.com RSS."""
+    try:
+        import feedparser
+        feed = feedparser.parse("https://br.investing.com/rss/economic_calendar.rss")
+        eventos = []
+        for entry in feed.entries[:15]:
+            title = entry.get("title", "").strip()
+            if title and any(w in title.upper() for w in ["PAYROLL", "CPI", "PIB", "SELIC", "COPOM", "FED", "FOMC", "GDP", "NFP", "PMI", "IPCA", "INFLAÇÃO"]):
+                eventos.append({"time": "Ver agenda", "currency": "USD/BRL", "event": title, "impact": "alto"})
+        log(f"Agenda Investing: {len(eventos)} eventos")
+        return eventos[:8]
+    except Exception as e:
+        log(f"AVISO Agenda Investing: {e}")
         return []
 
 def buscar_noticias():
     try:
         import feedparser
         noticias = []
-        for url in ["https://br.investing.com/rss/news_25.rss", "https://br.investing.com/rss/news_14.rss"]:
-            feed = feedparser.parse(url)
-            for e in feed.entries[:5]:
-                noticias.append(e.get("title", "").strip())
+        feeds = [
+            "https://br.investing.com/rss/news_25.rss",   # Brasil
+            "https://br.investing.com/rss/news_14.rss",   # Economia global
+            "https://br.investing.com/rss/news_301.rss",  # Forex
+        ]
+        for url in feeds:
+            try:
+                feed = feedparser.parse(url)
+                for e in feed.entries[:4]:
+                    t = e.get("title", "").strip()
+                    if t:
+                        noticias.append(t)
+            except Exception:
+                continue
         log(f"Noticias: {len(noticias)} itens")
-        return [n for n in noticias if n][:10]
+        return list(dict.fromkeys(noticias))[:12]  # deduplica mantendo ordem
     except Exception as e:
         log(f"AVISO Noticias: {e}")
         return []
+
+def buscar_juros_br():
+    """Busca taxa Selic atual via API do Banco Central do Brasil."""
+    try:
+        # API pública do BCB — série 432 = Taxa Selic
+        url = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados/ultimos/1?formato=json"
+        r = requests.get(url, timeout=10)
+        data = r.json()
+        selic = float(data[0]["valor"].replace(",", "."))
+        log(f"Selic: {selic}% a.a.")
+        return selic
+    except Exception as e:
+        log(f"AVISO Selic: {e}")
+        return None
+
+def buscar_di_futuro():
+    """DI futuro curto prazo via Yahoo Finance (proxy: juros EUA 10Y para comparação)."""
+    try:
+        # Treasury 10Y como referência global de juros
+        us10y = buscar_yahoo("^TNX", "US10Y")
+        br_etf = buscar_yahoo("EWZ", "EWZ-BR")  # ETF Brasil como proxy de risco BR
+        return {"us10y": us10y, "ewz": br_etf}
+    except Exception as e:
+        log(f"AVISO DI/Juros: {e}")
+        return {"us10y": {"price": None, "change_pct": None}, "ewz": {"price": None, "change_pct": None}}
 
 # ── ANÁLISE E NARRATIVA ───────────────────────────────────────────────────────
 
@@ -377,6 +443,8 @@ def salvar_dados():
     usd   = buscar_yahoo("USDBRL=X", "USD/BRL")
     sp    = buscar_yahoo("^GSPC", "S&P500")
     nq    = buscar_yahoo("^IXIC", "Nasdaq")
+    selic = buscar_juros_br()
+    juros = buscar_di_futuro()
     agenda   = buscar_agenda()
     noticias = buscar_noticias()
 
@@ -389,10 +457,29 @@ def salvar_dados():
     vies_label, vies_tipo = calcular_vies(fg, dxy, vix, ibov, sp, usd)
     vies_txt     = gerar_vies_texto(vies_label, vies_tipo, fg, dxy, vix, ibov, sp, usd)
 
+    # Seção de juros
+    selic_txt = ""
+    if selic is not None:
+        selic_txt = f"A taxa Selic está em {selic:.2f}% a.a."
+        us10y = juros.get("us10y", {})
+        ewz = juros.get("ewz", {})
+        if us10y.get("price") is not None:
+            selic_txt += f" Os juros americanos (Treasury 10Y) operam em {us10y['price']:.2f}% ({us10y['change_pct']:+.2f}%)."
+            if us10y["change_pct"] > 0.05:
+                selic_txt += " A alta dos Treasuries aumenta o custo de capital global e reduz o apelo relativo de emergentes."
+            elif us10y["change_pct"] < -0.05:
+                selic_txt += " A queda dos Treasuries alivia a pressão sobre emergentes e favorece fluxo para ativos de risco."
+        if ewz.get("change_pct") is not None:
+            selic_txt += f" O ETF EWZ (proxy do Brasil no exterior) operou {ewz['change_pct']:+.2f}%, sinalizando o apetite do investidor estrangeiro pelo mercado brasileiro."
+
     paragrafos = [
         f"**CONTEXTO GLOBAL**\n{contexto}",
         f"**IBOVESPA**\n{analise_ibov}",
         f"**DÓLAR / CÂMBIO**\n{analise_usd}",
+    ]
+    if selic_txt:
+        paragrafos.append(f"**JUROS & RENDA FIXA**\n{selic_txt}")
+    paragrafos += [
         f"**AGENDA DO DIA**\n{sec_agenda}",
     ]
 
@@ -438,6 +525,9 @@ def salvar_dados():
             "ibovChange": ibov.get("change_pct"),
             "usdbrl": usd.get("price"),
             "usdbrlChange": usd.get("change_pct"),
+            "selic": selic,
+            "us10y": juros.get("us10y", {}).get("price"),
+            "us10yChange": juros.get("us10y", {}).get("change_pct"),
         },
         "scrape_ok": True,
         "feriado_aviso": None,
