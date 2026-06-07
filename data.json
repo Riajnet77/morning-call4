@@ -1,14 +1,14 @@
 {
-  "date": "05/06/2026",
-  "lastUpdate": "05/06/2026 17:55:29",
-  "lastFetch": "05/06/2026 17:55:29",
-  "title": "Morning Call · 05/06",
+  "date": "07/06/2026",
+  "lastUpdate": "07/06/2026 17:12:39",
+  "lastFetch": "07/06/2026 17:12:39",
+  "title": "Morning Call · 07/06",
   "vies": "Baixista",
-  "vies_txt": "O conjunto de fatores aponta para viés Baixista no pregão de hoje.\n\nPrincipais drivers: VIX em alta acentuada (+39.68%) sinalizando estresse | Fear & Greed em 12 (Medo Extremo) | DXY em alta (+0.66%) pressionando emergentes | S&P 500 em queda expressiva (-2.64%).\n\nGestão de risco é prioridade. Evitar posições compradas sem proteção e aguardar sinais de estabilização antes de ampliar exposição.",
+  "vies_txt": "O conjunto de fatores aponta para viés Baixista no pregão de hoje.\n\nPrincipais drivers: VIX em alta acentuada (+39.68%) sinalizando estresse | Fear & Greed em 12 (Medo Extremo) | S&P 500 em queda expressiva (-2.64%).\n\nGestão de risco é prioridade. Evitar posições compradas sem proteção e aguardar sinais de estabilização antes de ampliar exposição.",
   "tags": [
     "Viés Baixista",
     "IBOV ▼ -0.77%",
-    "USD/BRL R$ 5.17",
+    "USD/BRL R$ 5.15",
     "VIX 21.5"
   ],
   "tags_tipados": [
@@ -18,34 +18,42 @@
     }
   ],
   "insights": [
-    "**CONTEXTO GLOBAL**\nO índice do dólar (DXY) avançou +0.66%, sinalizando fortalecimento da moeda americana e aumentando a pressão sobre moedas emergentes, incluindo o real.\n\nAs bolsas americanas encerraram em forte queda, com S&P 500 em -2.64% e Nasdaq em -4.18%. O movimento reflete aversão a risco elevada e tende a contaminar negativamente a abertura brasileira.\n\nO VIX disparou +39.68% para 21.5 pontos, indicando volatilidade elevada — sinal de estresse no mercado que exige cautela nas posições.\n\nO índice Fear & Greed marca 12 pontos — zona de \"Medo Extremo\" — sugerindo que o mercado precifica risco excessivo e pode estar próximo de um ponto de reversão técnica.",
+    "**CONTEXTO GLOBAL**\nO DXY operou relativamente estável (+0.00%), sem grandes desequilíbrios no câmbio global.\n\nAs bolsas americanas encerraram em forte queda, com S&P 500 em -2.64% e Nasdaq em -4.18%. O movimento reflete aversão a risco elevada e tende a contaminar negativamente a abertura brasileira.\n\nO VIX disparou +39.68% para 21.5 pontos, indicando volatilidade elevada — sinal de estresse no mercado que exige cautela nas posições.\n\nO índice Fear & Greed marca 12 pontos — zona de \"Medo Extremo\" — sugerindo que o mercado precifica risco excessivo e pode estar próximo de um ponto de reversão técnica.\n\nCommodities e cripto: Ouro subiu +0.00% para US$ 4.365 | WTI subiu +0.00% para US$ 90.54 | Bitcoin subiu +1.16% para US$ 61.575.",
     "**IBOVESPA**\nO Ibovespa encerrou a sessão anterior em 169.019 pontos, recuando -0.77% na última sessão. O índice segue correlacionado ao movimento negativo de Wall Street, refletindo o ambiente de risk-off global. Tecnicamente. monitorar suporte em 163.900 e 158.900 pontos. Resistências relevantes em 172.400 e 177.500 pontos.",
-    "**DÓLAR / CÂMBIO**\nO dólar comercial avançou com força (+2.11%) para R$ 5.17, pressionando importadores e acirrando preocupações inflacionárias. O movimento é consistente com o fortalecimento global do dólar (DXY +0.66%), reduzindo o componente idiossincrático do real.",
+    "**DÓLAR / CÂMBIO**\nO dólar comercial avançou com força (+1.79%) para R$ 5.15, pressionando importadores e acirrando preocupações inflacionárias.",
     "**JUROS & RENDA FIXA**\nA taxa Selic está em 14.50% a.a. Os juros americanos (Treasury 10Y) operam em 4.54% (+1.32%). A alta dos Treasuries aumenta o custo de capital global e reduz o apelo relativo de emergentes. O ETF EWZ (proxy do Brasil no exterior) operou -2.21%, sinalizando o apetite do investidor estrangeiro pelo mercado brasileiro.",
-    "**AGENDA DO DIA**\nSem eventos de alto impacto agendados para hoje. Fluxo de notícias e movimentos técnicos devem predominar.",
-    "**MANCHETES**\n• E.U.A. - Ações fecharam o pregão em queda e o Índice Dow Jones Industrial Average recuou 1,35%\n• Canadá - Ações fecharam o pregão em queda e o Índice S&P/TSX recuou 2,28%\n• Brasil - Ações fecharam o pregão em queda e o Índice Bovespa recuou 0,77%\n• Moody’s revisa perspectiva da Insulet após recalls de produtos\n• Wall St termina em forte baixa com queda no setor de chips e dados de emprego gerando receio de alta dos juros\n• EXCLUSIVO-Brasil planeja anunciar primeira emissão de títulos em iuanes durante viagem de delegação à China este mês\n• Pesquisa do Citi mostra que economistas elevam previsão de inflação no México\n• Corte orçamentário ameaça vistorias de barragens e processos minerários\n• Painel da Câmara propõe novas regras tributárias para ativos digitais\n• Preço do Bitcoin hoje: Pânico em derivativos e quebra na Zcash disparam liquidação\n• Ações de criptomoedas caem com bitcoin no menor nível desde outubro\n• EOS desvaloriza 11% em selloff"
+    "**AGENDA DO DIA**\nEventos de impacto MÉDIO:\n• 08:30 [USD] Initial Jobless Claims\n\nOs dados americanos costumam gerar volatilidade relevante no câmbio e, por correlação, no Ibovespa. Monitore os releases e evite exposição excessiva nos momentos de divulgação.",
+    "**MANCHETES**\n• Stocks Face Rising Risk With Mega AI Deals Ready to Flood Market\n• Kevin O’Leary’s Huge Data Center in Canada Faces a Skeptical Public\n• Why an AI 'Death Spiral' Threatens the Internet\n• Inside Apple’s Secret Meeting That Led It to Finally Take AI Seriously\n• Nvidia’s CEO Says New Vera Chip Will Use SK Hynix’s Memory Chips\n• CEO da LATAM vê mais cortes de capacidade no setor aéreo se choque de combustíveis persistir\n• O checklist de mercado baixista do Citi: os 18 fatores a observar\n• United vê grande fusão como improvável após negativa da American, mas pode comprar ativos, diz CEO\n• Embraer vê eventual avanço na China para jatos E2\n• Cathay Pacific planeja mais encomendas de aeronaves, diz CEO\n• UBS responde às principais perguntas sobre saídas do KOSPI e o won coreano\n• Kevin Warsh está certo sobre o impacto da IA na inflação?\n• Copa do Mundo 2026: Deutsche Bank aponta as melhores ações para investir\n• A zona do euro enfrenta desaceleração econômica significativa em 2026?\n• Bombas de calor: um motor subestimado do crescimento da demanda por energia?"
   ],
   "agenda": [
     {
-      "time": "—",
-      "event": "Sem eventos de alto impacto hoje"
+      "time": "08:30",
+      "event": "[USD] Initial Jobless Claims"
     }
   ],
-  "strategy": "O conjunto de fatores aponta para viés Baixista no pregão de hoje.\n\nPrincipais drivers: VIX em alta acentuada (+39.68%) sinalizando estresse | Fear & Greed em 12 (Medo Extremo) | DXY em alta (+0.66%) pressionando emergentes | S&P 500 em queda expressiva (-2.64%).\n\nGestão de risco é prioridade. Evitar posições compradas sem proteção e aguardar sinais de estabilização antes de ampliar exposição.",
+  "strategy": "O conjunto de fatores aponta para viés Baixista no pregão de hoje.\n\nPrincipais drivers: VIX em alta acentuada (+39.68%) sinalizando estresse | Fear & Greed em 12 (Medo Extremo) | S&P 500 em queda expressiva (-2.64%).\n\nGestão de risco é prioridade. Evitar posições compradas sem proteção e aguardar sinais de estabilização antes de ampliar exposição.",
   "indicators": {
     "fearGreed": 12,
     "fearGreedLabel": "Extreme Fear",
     "dxy": 100.07,
-    "dxyChange": 0.66,
+    "dxyChange": 0.0,
     "vix": 21.51,
     "vixChange": 39.68,
-    "ibov": 169019.12,
+    "ibov": 169019.0,
     "ibovChange": -0.77,
-    "usdbrl": 5.17,
-    "usdbrlChange": 2.11,
+    "usdbrl": 5.15,
+    "usdbrlChange": 1.79,
     "selic": 14.5,
     "us10y": 4.54,
-    "us10yChange": 1.32
+    "us10yChange": 1.32,
+    "btc": 61575.18,
+    "btcChange": 1.16,
+    "gold": 4365.3,
+    "goldChange": 0.0,
+    "oil": 90.54,
+    "oilChange": 0.0,
+    "stoxx": 6062.07,
+    "stoxxChange": -0.68
   },
   "scrape_ok": true,
   "feriado_aviso": null
