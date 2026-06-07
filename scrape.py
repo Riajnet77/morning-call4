@@ -125,9 +125,10 @@ def buscar_agenda():
     log("FF bloqueado — usando fallback inteligente...")
     import feedparser
     noticias_upper = []
-    for url in ["https://br.investing.com/rss/news_25.rss", "https://br.investing.com/rss/news_14.rss"]:
+    for feed_url in ["https://br.investing.com/rss/news_25.rss", "https://br.investing.com/rss/news_14.rss",
+                     "https://feeds.marketwatch.com/marketwatch/marketpulse/"]:
         try:
-            feed = feedparser.parse(url)
+            feed = feedparser.parse(feed_url)
             for e in feed.entries[:10]:
                 noticias_upper.append(e.get("title", "").upper())
         except Exception:
@@ -140,13 +141,16 @@ def buscar_agenda():
                 encontrados.add(nome)
                 eventos.append({"time": hora, "currency": moeda, "event": nome, "impact": impacto})
 
-    # Adiciona eventos típicos do dia da semana
+    # SEMPRE adiciona eventos típicos do dia da semana (seg-sex)
     dia = hoje.weekday()
     for ev in AGENDA_SEMANAL.get(dia, []):
-        if ev["event"] not in encontrados:
+        if ev["event"] not in {e["event"] for e in eventos}:
             eventos.append(ev)
 
-    log(f"Agenda fallback: {len(eventos)} eventos")
+    if not eventos:
+        log("Agenda: sem eventos identificados hoje")
+    else:
+        log(f"Agenda fallback: {len(eventos)} eventos")
     return eventos[:10]
 
 def extrair_eventos_das_noticias(noticias):
@@ -422,7 +426,11 @@ def gerar_analise_dolar(usd, dxy):
 
 def gerar_secao_agenda(agenda):
     if not agenda:
-        return "Sem eventos de alto impacto agendados para hoje. Fluxo de notícias e movimentos técnicos devem predominar."
+        return (
+            "Nenhum evento de alto impacto identificado para hoje via ForexFactory. "
+            "Consulte o calendário completo em forexfactory.com. "
+            "O fluxo de notícias e movimentos técnicos devem predominar na sessão."
+        )
 
     altos = [e for e in agenda if e["impact"] == "alto"]
     medios = [e for e in agenda if e["impact"] == "medio"]
