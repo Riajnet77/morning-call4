@@ -49,23 +49,56 @@ def buscar_yahoo(symbol, nome):
         log(f"AVISO {nome}: {e}")
         return {"price": None, "change_pct": None}
 
+# Eventos econômicos fixos de alto impacto para identificar no texto de notícias
+EVENTOS_CHAVE = [
+    "Nonfarm Payroll", "NFP", "Payroll", "CPI", "Core CPI", "PCE", "Core PCE",
+    "FOMC", "Fed", "Powell", "GDP", "Retail Sales", "ISM", "PMI", "Jobless Claims",
+    "IPCA", "SELIC", "COPOM", "PIB", "IGP", "Focus", "Caged", "Balança Comercial",
+    "Taxa de Desemprego", "Confiança", "Ata do", "Decisão de juros",
+]
+
+AGENDA_SEMANAL = {
+    0: [{"time": "10:00", "currency": "USD", "event": "ISM Manufacturing PMI", "impact": "medio"}],
+    1: [{"time": "10:00", "currency": "USD", "event": "JOLTS Job Openings", "impact": "medio"}],
+    2: [{"time": "14:00", "currency": "USD", "event": "FOMC Minutes / Beige Book", "impact": "alto"}],
+    3: [{"time": "08:30", "currency": "USD", "event": "Initial Jobless Claims", "impact": "medio"}],
+    4: [
+        {"time": "08:30", "currency": "USD", "event": "Non-Farm Payrolls (NFP)", "impact": "alto"},
+        {"time": "08:30", "currency": "USD", "event": "Unemployment Rate", "impact": "alto"},
+    ],
+}
+
+KEYWORDS_AGENDA = {
+    "PAYROLL": ("08:30", "USD", "Non-Farm Payrolls (NFP)", "alto"),
+    "NFP": ("08:30", "USD", "Non-Farm Payrolls (NFP)", "alto"),
+    "CPI": ("08:30", "USD", "CPI — Inflação EUA", "alto"),
+    "FOMC": ("14:00", "USD", "Decisão FOMC / Fed", "alto"),
+    "COPOM": ("18:00", "BRL", "Decisão COPOM — Selic", "alto"),
+    "IPCA": ("09:00", "BRL", "IPCA — Inflação Brasil", "alto"),
+    "CAGED": ("09:00", "BRL", "CAGED — Empregos Formais", "medio"),
+    "PIB": ("09:00", "BRL", "PIB Brasil", "alto"),
+    "GDP": ("08:30", "USD", "GDP — PIB EUA", "alto"),
+    "PMI": ("09:45", "USD", "PMI Composto", "medio"),
+    "JOBLESS": ("08:30", "USD", "Initial Jobless Claims", "medio"),
+    "JOLTS": ("10:00", "USD", "JOLTS — Vagas de Emprego", "medio"),
+    "ADP": ("08:15", "USD", "ADP Payroll Privado", "medio"),
+    "PPI": ("08:30", "USD", "PPI — Preços ao Produtor", "medio"),
+    "RETAIL": ("08:30", "USD", "Retail Sales — Varejo EUA", "medio"),
+}
+
 def buscar_agenda():
-    """Busca agenda via API JSON do ForexFactory (mais confiável que HTML scraping)."""
+    """Tenta ForexFactory, fallback inteligente via notícias + dia da semana."""
+    hoje = datetime.now(BRT)
+    eventos = []
+
+    # Tenta ForexFactory
     try:
         from bs4 import BeautifulSoup
-        hoje = datetime.now(BRT)
-        # Tenta a API JSON não-oficial do FF (mais estável)
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-            "Accept": "application/json, text/plain, */*",
-            "Referer": "https://www.forexfactory.com/",
-        }
-        # Formato da data no FF: jan01
-        data_str = hoje.strftime("%b%d").lower()
         url = f"https://www.forexfactory.com/calendar?day={hoje.strftime('%b%d.%Y').lower()}"
+        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"}
         r = requests.get(url, timeout=15, headers=headers)
         soup = BeautifulSoup(r.text, "html.parser")
-        eventos, hora_atual = [], ""
+        hora_atual = ""
         for row in soup.select("tr.calendar__row"):
             h = row.select_one(".calendar__time")
             if h and h.text.strip():
@@ -82,34 +115,55 @@ def buscar_agenda():
             evento = ev_el.text.strip() if ev_el else ""
             if evento and moeda in ["USD", "BRL", "EUR"] and impacto in ["alto", "medio"]:
                 eventos.append({"time": hora_atual, "currency": moeda, "event": evento, "impact": impacto})
-        
         if eventos:
-            log(f"Agenda FF (HTML): {len(eventos)} eventos")
+            log(f"Agenda FF: {len(eventos)} eventos")
             return eventos[:12]
-
-        # Fallback: investing.com economic calendar RSS
-        log("FF sem eventos — tentando Investing.com calendar...")
-        return buscar_agenda_investing()
-
     except Exception as e:
-        log(f"AVISO Agenda FF: {e}")
-        return buscar_agenda_investing()
+        log(f"AVISO FF: {e}")
 
-def buscar_agenda_investing():
-    """Fallback: agenda via Investing.com RSS."""
-    try:
-        import feedparser
-        feed = feedparser.parse("https://br.investing.com/rss/economic_calendar.rss")
-        eventos = []
-        for entry in feed.entries[:15]:
-            title = entry.get("title", "").strip()
-            if title and any(w in title.upper() for w in ["PAYROLL", "CPI", "PIB", "SELIC", "COPOM", "FED", "FOMC", "GDP", "NFP", "PMI", "IPCA", "INFLAÇÃO"]):
-                eventos.append({"time": "Ver agenda", "currency": "USD/BRL", "event": title, "impact": "alto"})
-        log(f"Agenda Investing: {len(eventos)} eventos")
-        return eventos[:8]
-    except Exception as e:
-        log(f"AVISO Agenda Investing: {e}")
-        return []
+    # Fallback: notícias + dia da semana
+    log("FF bloqueado — usando fallback inteligente...")
+    import feedparser
+    noticias_upper = []
+    for url in ["https://br.investing.com/rss/news_25.rss", "https://br.investing.com/rss/news_14.rss"]:
+        try:
+            feed = feedparser.parse(url)
+            for e in feed.entries[:10]:
+                noticias_upper.append(e.get("title", "").upper())
+        except Exception:
+            pass
+
+    encontrados = set()
+    for noticia in noticias_upper:
+        for kw, (hora, moeda, nome, impacto) in KEYWORDS_AGENDA.items():
+            if kw in noticia and nome not in encontrados:
+                encontrados.add(nome)
+                eventos.append({"time": hora, "currency": moeda, "event": nome, "impact": impacto})
+
+    # Adiciona eventos típicos do dia da semana
+    dia = hoje.weekday()
+    for ev in AGENDA_SEMANAL.get(dia, []):
+        if ev["event"] not in encontrados:
+            eventos.append(ev)
+
+    log(f"Agenda fallback: {len(eventos)} eventos")
+    return eventos[:10]
+
+def extrair_eventos_das_noticias(noticias):
+    """Identifica eventos econômicos importantes nas manchetes do dia."""
+    eventos = []
+    for noticia in noticias:
+        n_upper = noticia.upper()
+        for ev in EVENTOS_CHAVE:
+            if ev.upper() in n_upper:
+                eventos.append({
+                    "time": "Hoje",
+                    "currency": "BRL" if any(x in n_upper for x in ["SELIC","COPOM","IPCA","PIB BR","CAGED"]) else "USD",
+                    "event": noticia[:80],
+                    "impact": "alto"
+                })
+                break
+    return eventos[:6]
 
 def buscar_noticias():
     try:
@@ -447,6 +501,11 @@ def salvar_dados():
     juros = buscar_di_futuro()
     agenda   = buscar_agenda()
     noticias = buscar_noticias()
+    # Se agenda vazia, extrai eventos das próprias notícias
+    if not agenda and noticias:
+        agenda = extrair_eventos_das_noticias(noticias)
+        if agenda:
+            log(f"Agenda extraída das notícias: {len(agenda)} eventos")
 
     # Gera as seções
     log("Gerando análise...")
