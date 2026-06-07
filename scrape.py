@@ -170,28 +170,43 @@ def extrair_eventos_das_noticias(noticias):
     return eventos[:6]
 
 def buscar_noticias():
-    try:
-        import feedparser
-        noticias = []
-        feeds = [
-            "https://br.investing.com/rss/news_25.rss",   # Brasil
-            "https://br.investing.com/rss/news_14.rss",   # Economia global
-            "https://br.investing.com/rss/news_301.rss",  # Forex
-        ]
-        for url in feeds:
-            try:
-                feed = feedparser.parse(url)
-                for e in feed.entries[:4]:
-                    t = e.get("title", "").strip()
-                    if t:
-                        noticias.append(t)
-            except Exception:
-                continue
-        log(f"Noticias: {len(noticias)} itens")
-        return list(dict.fromkeys(noticias))[:12]  # deduplica mantendo ordem
-    except Exception as e:
-        log(f"AVISO Noticias: {e}")
-        return []
+    """Coleta notícias de Reuters, Bloomberg e Investing via RSS/Google News."""
+    import feedparser
+    FEEDS = [
+        # Reuters via Google News (gratuito, tempo real)
+        ("Reuters", "https://news.google.com/rss/search?q=when:24h+allinurl:reuters.com/business&hl=pt-BR&gl=BR&ceid=BR:pt-419"),
+        ("Reuters Mercados", "https://news.google.com/rss/search?q=when:24h+site:reuters.com+mercado+OR+economia+OR+juros+OR+bolsa&hl=pt-BR&gl=BR&ceid=BR:pt-419"),
+        # Bloomberg via Google News
+        ("Bloomberg", "https://news.google.com/rss/search?q=when:24h+allinurl:bloomberg.com&hl=pt-BR&gl=BR&ceid=BR:pt-419"),
+        # Bloomberg Technology RSS direto
+        ("Bloomberg Tech", "https://feeds.bloomberg.com/technology/news.rss"),
+        # Investing.com Brasil
+        ("Investing BR", "https://br.investing.com/rss/news_25.rss"),
+        ("Investing Global", "https://br.investing.com/rss/news_14.rss"),
+    ]
+
+    noticias = []
+    contagem = {}
+    for nome, url in FEEDS:
+        try:
+            feed = feedparser.parse(url)
+            count = 0
+            for e in feed.entries[:5]:
+                t = e.get("title", "").strip()
+                # Remove prefixos de fonte do Google News (ex: "Reuters - ")
+                for prefixo in ["Reuters - ", "Bloomberg - ", "Reuters:", "Bloomberg:"]:
+                    if t.startswith(prefixo):
+                        t = t[len(prefixo):].strip()
+                if t and t not in noticias:
+                    noticias.append(t)
+                    count += 1
+            contagem[nome] = count
+        except Exception as ex:
+            contagem[nome] = f"ERRO: {ex}"
+            continue
+
+    log(f"Noticias: {len(noticias)} itens — " + " | ".join(f"{k}:{v}" for k,v in contagem.items()))
+    return noticias[:15]
 
 def buscar_juros_br():
     """Busca taxa Selic atual via API do Banco Central do Brasil."""
@@ -282,7 +297,7 @@ def calcular_vies(fg, dxy, vix, ibov, sp, usd):
     if score == 2:  return "Levemente Altista", "altista"
     return "Altista", "altista"
 
-def gerar_contexto_global(dxy, vix, sp, nq, usd, fg):
+def gerar_contexto_global(dxy, vix, sp, nq, usd, fg, gold=None, oil=None, btc=None):
     fg_label, _ = classificar_fg(fg.get("value"))
     vix_class, _ = classificar_vix(vix.get("price"))
 
@@ -341,7 +356,20 @@ def gerar_contexto_global(dxy, vix, sp, nq, usd, fg):
     else:
         fg_txt = ""
 
-    return "\n\n".join(filter(None, [dxy_txt, bolsas_txt, vix_txt, fg_txt]))
+    # Commodities
+    comod_partes = []
+    if gold and gold.get("price"):
+        direcao = "subiu" if gold["change_pct"] >= 0 else "recuou"
+        comod_partes.append(f"Ouro {direcao} {gold['change_pct']:+.2f}% para US$ {gold['price']:,.0f}".replace(",","."))
+    if oil and oil.get("price"):
+        direcao = "subiu" if oil["change_pct"] >= 0 else "recuou"
+        comod_partes.append(f"WTI {direcao} {oil['change_pct']:+.2f}% para US$ {oil['price']:.2f}")
+    if btc and btc.get("price"):
+        direcao = "subiu" if btc["change_pct"] >= 0 else "recuou"
+        comod_partes.append(f"Bitcoin {direcao} {btc['change_pct']:+.2f}% para US$ {btc['price']:,.0f}".replace(",","."))
+    comod_txt = "Commodities e cripto: " + " | ".join(comod_partes) + "." if comod_partes else ""
+
+    return "\n\n".join(filter(None, [dxy_txt, bolsas_txt, vix_txt, fg_txt, comod_txt]))
 
 def gerar_analise_ibov(ibov, sp, dxy):
     if ibov.get("price") is None:
@@ -505,6 +533,10 @@ def salvar_dados():
     usd   = buscar_yahoo("USDBRL=X", "USD/BRL")
     sp    = buscar_yahoo("^GSPC", "S&P500")
     nq    = buscar_yahoo("^IXIC", "Nasdaq")
+    btc   = buscar_yahoo("BTC-USD", "Bitcoin")
+    gold  = buscar_yahoo("GC=F", "Ouro")
+    oil   = buscar_yahoo("CL=F", "Petróleo WTI")
+    stoxx = buscar_yahoo("^STOXX50E", "Euro Stoxx 50")
     selic = buscar_juros_br()
     juros = buscar_di_futuro()
     agenda   = buscar_agenda()
@@ -517,7 +549,7 @@ def salvar_dados():
 
     # Gera as seções
     log("Gerando análise...")
-    contexto   = gerar_contexto_global(dxy, vix, sp, nq, usd, fg)
+    contexto   = gerar_contexto_global(dxy, vix, sp, nq, usd, fg, gold, oil, btc)
     analise_ibov = gerar_analise_ibov(ibov, sp, dxy)
     analise_usd  = gerar_analise_dolar(usd, dxy)
     sec_agenda   = gerar_secao_agenda(agenda)
@@ -595,6 +627,14 @@ def salvar_dados():
             "selic": selic,
             "us10y": juros.get("us10y", {}).get("price"),
             "us10yChange": juros.get("us10y", {}).get("change_pct"),
+            "btc": btc.get("price"),
+            "btcChange": btc.get("change_pct"),
+            "gold": gold.get("price"),
+            "goldChange": gold.get("change_pct"),
+            "oil": oil.get("price"),
+            "oilChange": oil.get("change_pct"),
+            "stoxx": stoxx.get("price"),
+            "stoxxChange": stoxx.get("change_pct"),
         },
         "scrape_ok": True,
         "feriado_aviso": None,
