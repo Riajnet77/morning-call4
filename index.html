@@ -499,6 +499,28 @@ function renderIndicadores(ind) {
         <div class="ind-valor" style="color:#38bdf8">${ind?.us10y ? ind.us10y.toFixed(2) + '%' : '—'}</div>
         <div class="ind-desc">Juro longo americano · referência global</div>
       </div>
+      <div class="indicadores-grid" style="grid-template-columns:repeat(4,1fr);margin-top:0">
+        <div class="ind-card" style="border-top:2px solid #f59e0b">
+          <div class="ind-label">Ouro (XAU/USD)${chg(ind?.goldChange)}</div>
+          <div class="ind-valor" style="font-size:18px;color:#f59e0b">US$ ${ind?.gold ? Math.round(ind.gold).toLocaleString('pt-BR') : '—'}</div>
+          <div class="ind-desc">Safe haven global</div>
+        </div>
+        <div class="ind-card" style="border-top:2px solid #78716c">
+          <div class="ind-label">Petróleo WTI${chg(ind?.oilChange)}</div>
+          <div class="ind-valor" style="font-size:18px;color:#a8a29e">US$ ${ind?.oil ? ind.oil.toFixed(2) : '—'}</div>
+          <div class="ind-desc">Crude oil — contrato futuro</div>
+        </div>
+        <div class="ind-card" style="border-top:2px solid #f97316">
+          <div class="ind-label">Bitcoin (BTC)${chg(ind?.btcChange)}</div>
+          <div class="ind-valor" style="font-size:18px;color:#f97316">US$ ${ind?.btc ? Math.round(ind.btc).toLocaleString('pt-BR') : '—'}</div>
+          <div class="ind-desc">Proxy de apetite a risco</div>
+        </div>
+        <div class="ind-card" style="border-top:2px solid #818cf8">
+          <div class="ind-label">Euro Stoxx 50${chg(ind?.stoxxChange)}</div>
+          <div class="ind-valor" style="font-size:18px;color:#818cf8">${ind?.stoxx ? ind.stoxx.toLocaleString('pt-BR') : '—'}</div>
+          <div class="ind-desc">Índice europeu de referência</div>
+        </div>
+      </div>
     </div>`;
 }
 
