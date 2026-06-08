@@ -57,41 +57,85 @@ EVENTOS_CHAVE = [
     "Taxa de Desemprego", "Confiança", "Ata do", "Decisão de juros",
 ]
 
+# Calendário fixo de eventos de alto impacto 2026 (atualizar trimestralmente)
+# Formato: "YYYY-MM-DD": [{"time":"HH:MM","currency":"USD","event":"Nome","impact":"alto"}]
+CALENDARIO_FIXO = {
+    # JUNHO 2026
+    "2026-06-10": [{"time":"08:30","currency":"USD","event":"CPI — Inflação EUA (Mai)","impact":"alto"}],
+    "2026-06-11": [{"time":"08:30","currency":"USD","event":"PPI — Preços ao Produtor (Mai)","impact":"medio"}],
+    "2026-06-12": [{"time":"08:30","currency":"USD","event":"Initial Jobless Claims","impact":"medio"}],
+    "2026-06-13": [
+        {"time":"08:30","currency":"USD","event":"Retail Sales (Mai)","impact":"alto"},
+        {"time":"09:15","currency":"USD","event":"Industrial Production (Mai)","impact":"medio"},
+    ],
+    "2026-06-17": [{"time":"08:30","currency":"USD","event":"Housing Starts (Mai)","impact":"medio"}],
+    "2026-06-18": [{"time":"14:00","currency":"USD","event":"Decisão do Fed — FOMC Rate Decision","impact":"alto"}],
+    "2026-06-19": [{"time":"08:30","currency":"USD","event":"Initial Jobless Claims","impact":"medio"}],
+    "2026-06-25": [{"time":"08:30","currency":"USD","event":"GDP Final Q1 2026","impact":"alto"}],
+    "2026-06-26": [{"time":"08:30","currency":"USD","event":"PCE Price Index (Mai)","impact":"alto"}],
+    # JULHO 2026
+    "2026-07-02": [
+        {"time":"08:30","currency":"USD","event":"Non-Farm Payrolls (Jun)","impact":"alto"},
+        {"time":"08:30","currency":"USD","event":"Unemployment Rate (Jun)","impact":"alto"},
+    ],
+    "2026-07-10": [{"time":"08:30","currency":"USD","event":"CPI — Inflação EUA (Jun)","impact":"alto"}],
+    "2026-07-29": [{"time":"14:00","currency":"USD","event":"Decisão do Fed — FOMC Rate Decision","impact":"alto"}],
+    # BRASIL
+    "2026-06-18": [{"time":"18:00","currency":"BRL","event":"Decisão COPOM — Taxa Selic","impact":"alto"}],
+    "2026-06-10": [{"time":"09:00","currency":"BRL","event":"IPCA (Mai) — Inflação Brasil","impact":"alto"}],
+    "2026-07-09": [{"time":"09:00","currency":"BRL","event":"IPCA (Jun) — Inflação Brasil","impact":"alto"}],
+    "2026-07-29": [{"time":"18:00","currency":"BRL","event":"Decisão COPOM — Taxa Selic","impact":"alto"}],
+}
+
 AGENDA_SEMANAL = {
-    0: [{"time": "10:00", "currency": "USD", "event": "ISM Manufacturing PMI", "impact": "medio"}],
-    1: [{"time": "10:00", "currency": "USD", "event": "JOLTS Job Openings", "impact": "medio"}],
-    2: [{"time": "14:00", "currency": "USD", "event": "FOMC Minutes / Beige Book", "impact": "alto"}],
-    3: [{"time": "08:30", "currency": "USD", "event": "Initial Jobless Claims", "impact": "medio"}],
+    0: [{"time":"10:00","currency":"USD","event":"ISM Manufacturing PMI","impact":"medio"}],
+    1: [{"time":"10:00","currency":"USD","event":"JOLTS Job Openings","impact":"medio"}],
+    2: [{"time":"14:00","currency":"USD","event":"FOMC Minutes / Beige Book","impact":"alto"}],
+    3: [{"time":"08:30","currency":"USD","event":"Initial Jobless Claims","impact":"medio"}],
     4: [
-        {"time": "08:30", "currency": "USD", "event": "Non-Farm Payrolls (NFP)", "impact": "alto"},
-        {"time": "08:30", "currency": "USD", "event": "Unemployment Rate", "impact": "alto"},
+        {"time":"08:30","currency":"USD","event":"Non-Farm Payrolls (NFP)","impact":"alto"},
+        {"time":"08:30","currency":"USD","event":"Unemployment Rate","impact":"alto"},
     ],
 }
 
 KEYWORDS_AGENDA = {
-    "PAYROLL": ("08:30", "USD", "Non-Farm Payrolls (NFP)", "alto"),
-    "NFP": ("08:30", "USD", "Non-Farm Payrolls (NFP)", "alto"),
-    "CPI": ("08:30", "USD", "CPI — Inflação EUA", "alto"),
-    "FOMC": ("14:00", "USD", "Decisão FOMC / Fed", "alto"),
-    "COPOM": ("18:00", "BRL", "Decisão COPOM — Selic", "alto"),
-    "IPCA": ("09:00", "BRL", "IPCA — Inflação Brasil", "alto"),
-    "CAGED": ("09:00", "BRL", "CAGED — Empregos Formais", "medio"),
-    "PIB": ("09:00", "BRL", "PIB Brasil", "alto"),
-    "GDP": ("08:30", "USD", "GDP — PIB EUA", "alto"),
-    "PMI": ("09:45", "USD", "PMI Composto", "medio"),
-    "JOBLESS": ("08:30", "USD", "Initial Jobless Claims", "medio"),
-    "JOLTS": ("10:00", "USD", "JOLTS — Vagas de Emprego", "medio"),
-    "ADP": ("08:15", "USD", "ADP Payroll Privado", "medio"),
-    "PPI": ("08:30", "USD", "PPI — Preços ao Produtor", "medio"),
-    "RETAIL": ("08:30", "USD", "Retail Sales — Varejo EUA", "medio"),
+    "PAYROLL": ("08:30","USD","Non-Farm Payrolls (NFP)","alto"),
+    "NFP":     ("08:30","USD","Non-Farm Payrolls (NFP)","alto"),
+    "CPI":     ("08:30","USD","CPI — Inflação EUA","alto"),
+    "FOMC":    ("14:00","USD","Decisão FOMC / Fed","alto"),
+    "COPOM":   ("18:00","BRL","Decisão COPOM — Selic","alto"),
+    "IPCA":    ("09:00","BRL","IPCA — Inflação Brasil","alto"),
+    "CAGED":   ("09:00","BRL","CAGED — Empregos Formais","medio"),
+    "PIB":     ("09:00","BRL","PIB Brasil","alto"),
+    "GDP":     ("08:30","USD","GDP — PIB EUA","alto"),
+    "PMI":     ("09:45","USD","PMI Composto","medio"),
+    "JOBLESS": ("08:30","USD","Initial Jobless Claims","medio"),
+    "JOLTS":   ("10:00","USD","JOLTS — Vagas de Emprego","medio"),
+    "ADP":     ("08:15","USD","ADP Payroll Privado","medio"),
+    "PPI":     ("08:30","USD","PPI — Preços ao Produtor","medio"),
+    "RETAIL":  ("08:30","USD","Retail Sales — Varejo EUA","medio"),
+    "PCE":     ("08:30","USD","PCE Price Index","alto"),
+    "SELIC":   ("18:00","BRL","Decisão COPOM — Selic","alto"),
 }
 
 def buscar_agenda():
-    """Tenta ForexFactory, fallback inteligente via notícias + dia da semana."""
+    """Calendário econômico: fixo + ForexFactory + fallback notícias."""
+    from datetime import date
     hoje = datetime.now(BRT)
+    hoje_str = hoje.strftime("%Y-%m-%d")
+    dia = hoje.weekday()
     eventos = []
+    encontrados = set()
 
-    # Tenta ForexFactory
+    # 1. Calendário fixo (datas exatas conhecidas)
+    for ev in CALENDARIO_FIXO.get(hoje_str, []):
+        if ev["event"] not in encontrados:
+            encontrados.add(ev["event"])
+            eventos.append(ev)
+    if eventos:
+        log(f"Agenda calendário fixo: {len(eventos)} eventos")
+
+    # 2. Tenta ForexFactory HTML
     try:
         from bs4 import BeautifulSoup
         url = f"https://www.forexfactory.com/calendar?day={hoje.strftime('%b%d.%Y').lower()}"
@@ -113,45 +157,40 @@ def buscar_agenda():
             moeda = moeda_el.text.strip() if moeda_el else ""
             ev_el = row.select_one(".calendar__event-title")
             evento = ev_el.text.strip() if ev_el else ""
-            if evento and moeda in ["USD", "BRL", "EUR"] and impacto in ["alto", "medio"]:
+            if evento and moeda in ["USD","BRL","EUR"] and impacto in ["alto","medio"] and evento not in encontrados:
+                encontrados.add(evento)
                 eventos.append({"time": hora_atual, "currency": moeda, "event": evento, "impact": impacto})
-        if eventos:
-            log(f"Agenda FF: {len(eventos)} eventos")
-            return eventos[:12]
+        if len(eventos) > len(CALENDARIO_FIXO.get(hoje_str,[])):
+            log(f"Agenda FF adicionou eventos: total {len(eventos)}")
     except Exception as e:
         log(f"AVISO FF: {e}")
 
-    # Fallback: notícias + dia da semana
-    log("FF bloqueado — usando fallback inteligente...")
-    import feedparser
-    noticias_upper = []
-    for feed_url in ["https://br.investing.com/rss/news_25.rss", "https://br.investing.com/rss/news_14.rss",
-                     "https://feeds.marketwatch.com/marketwatch/marketpulse/"]:
-        try:
-            feed = feedparser.parse(feed_url)
-            for e in feed.entries[:10]:
-                noticias_upper.append(e.get("title", "").upper())
-        except Exception:
-            pass
+    # 3. Fallback notícias para detectar eventos não previstos
+    try:
+        import feedparser
+        noticias_upper = []
+        for url in ["https://br.investing.com/rss/news_25.rss", "https://br.investing.com/rss/news_14.rss"]:
+            try:
+                feed = feedparser.parse(url)
+                for e in feed.entries[:8]:
+                    noticias_upper.append(e.get("title","").upper())
+            except Exception:
+                pass
+        for noticia in noticias_upper:
+            for kw, (hora, moeda, nome, impacto) in KEYWORDS_AGENDA.items():
+                if kw in noticia and nome not in encontrados:
+                    encontrados.add(nome)
+                    eventos.append({"time": hora, "currency": moeda, "event": nome, "impact": impacto})
+    except Exception:
+        pass
 
-    encontrados = set()
-    for noticia in noticias_upper:
-        for kw, (hora, moeda, nome, impacto) in KEYWORDS_AGENDA.items():
-            if kw in noticia and nome not in encontrados:
-                encontrados.add(nome)
-                eventos.append({"time": hora, "currency": moeda, "event": nome, "impact": impacto})
-
-    # SEMPRE adiciona eventos típicos do dia da semana (seg-sex)
-    dia = hoje.weekday()
+    # 4. Sempre adiciona eventos recorrentes do dia da semana (se não conflitar)
     for ev in AGENDA_SEMANAL.get(dia, []):
-        if ev["event"] not in {e["event"] for e in eventos}:
+        if ev["event"] not in encontrados:
             eventos.append(ev)
 
-    if not eventos:
-        log("Agenda: sem eventos identificados hoje")
-    else:
-        log(f"Agenda fallback: {len(eventos)} eventos")
-    return eventos[:10]
+    log(f"Agenda final: {len(eventos)} eventos")
+    return sorted(eventos, key=lambda x: x.get("time","99:99"))[:12]
 
 def extrair_eventos_das_noticias(noticias):
     """Identifica eventos econômicos importantes nas manchetes do dia."""
