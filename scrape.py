@@ -170,43 +170,44 @@ def extrair_eventos_das_noticias(noticias):
     return eventos[:6]
 
 def buscar_noticias():
-    """Coleta notícias de Reuters, Bloomberg e Investing via RSS/Google News."""
+    """Coleta noticias de Reuters, Bloomberg, FT, MarketWatch via RSS."""
     import feedparser
     FEEDS = [
-        # Reuters via Google News (gratuito, tempo real)
-        ("Reuters", "https://news.google.com/rss/search?q=when:24h+allinurl:reuters.com/business&hl=pt-BR&gl=BR&ceid=BR:pt-419"),
-        ("Reuters Mercados", "https://news.google.com/rss/search?q=when:24h+site:reuters.com+mercado+OR+economia+OR+juros+OR+bolsa&hl=pt-BR&gl=BR&ceid=BR:pt-419"),
-        # Bloomberg via Google News
-        ("Bloomberg", "https://news.google.com/rss/search?q=when:24h+allinurl:bloomberg.com&hl=pt-BR&gl=BR&ceid=BR:pt-419"),
-        # Bloomberg Technology RSS direto
-        ("Bloomberg Tech", "https://feeds.bloomberg.com/technology/news.rss"),
-        # Investing.com Brasil
-        ("Investing BR", "https://br.investing.com/rss/news_25.rss"),
-        ("Investing Global", "https://br.investing.com/rss/news_14.rss"),
+        ("Reuters",    "https://news.google.com/rss/search?q=when:24h+allinurl:reuters.com/markets&hl=en-US&gl=US&ceid=US:en"),
+        ("Bloomberg",  "https://news.google.com/rss/search?q=when:24h+allinurl:bloomberg.com/news&hl=en-US&gl=US&ceid=US:en"),
+        ("FT",         "https://www.ft.com/rss/home/international"),
+        ("MarketWatch","https://feeds.marketwatch.com/marketwatch/topstories/"),
+        ("Yahoo Fin",  "https://finance.yahoo.com/news/rssindex"),
+        ("Investing BR","https://br.investing.com/rss/news_25.rss"),
     ]
 
     noticias = []
-    contagem = {}
+    vistos = set()
     for nome, url in FEEDS:
         try:
             feed = feedparser.parse(url)
             count = 0
             for e in feed.entries[:5]:
-                t = e.get("title", "").strip()
-                # Remove prefixos de fonte do Google News (ex: "Reuters - ")
-                for prefixo in ["Reuters - ", "Bloomberg - ", "Reuters:", "Bloomberg:"]:
-                    if t.startswith(prefixo):
-                        t = t[len(prefixo):].strip()
-                if t and t not in noticias:
-                    noticias.append(t)
+                titulo = e.get("title", "").strip()
+                # Pega fonte real se vier do Google News
+                fonte_real = nome
+                if hasattr(e, "source") and hasattr(e.source, "title"):
+                    fonte_real = e.source.title
+                # Remove prefixo "Reuters - " etc
+                for pref in ["Reuters - ", "Bloomberg - ", "Reuters:", "Bloomberg:", "FT - "]:
+                    if titulo.startswith(pref):
+                        titulo = titulo[len(pref):].strip()
+                if titulo and titulo not in vistos:
+                    vistos.add(titulo)
+                    noticias.append({"title": titulo, "source": fonte_real})
                     count += 1
-            contagem[nome] = count
+                    if count >= 4: break
+            log(f"Noticias {nome}: {count}")
         except Exception as ex:
-            contagem[nome] = f"ERRO: {ex}"
-            continue
+            log(f"AVISO {nome}: {ex}")
 
-    log(f"Noticias: {len(noticias)} itens — " + " | ".join(f"{k}:{v}" for k,v in contagem.items()))
-    return noticias[:15]
+    log(f"Total noticias: {len(noticias)}")
+    return noticias[:16]
 
 def buscar_juros_br():
     """Busca taxa Selic atual via API do Banco Central do Brasil."""
@@ -583,7 +584,16 @@ def salvar_dados():
     ]
 
     if noticias:
-        noticias_txt = "\n".join([f"• {n}" for n in noticias])
+        # Formata com fonte: "• Título [Reuters]"
+        linhas = []
+        for n in noticias:
+            if isinstance(n, dict):
+                fonte = n.get("source", "")
+                titulo = n.get("title", "")
+                linhas.append(f"• {titulo} [{fonte}]" if fonte else f"• {titulo}")
+            else:
+                linhas.append(f"• {n}")
+        noticias_txt = "\n".join(linhas)
         paragrafos.append(f"**MANCHETES**\n{noticias_txt}")
 
     # Agenda formatada
