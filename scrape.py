@@ -173,12 +173,23 @@ def buscar_noticias():
     """Coleta noticias de Reuters, Bloomberg, FT, MarketWatch via RSS."""
     import feedparser
     FEEDS = [
-        ("Reuters",    "https://news.google.com/rss/search?q=when:24h+allinurl:reuters.com/markets&hl=en-US&gl=US&ceid=US:en"),
-        ("Bloomberg",  "https://news.google.com/rss/search?q=when:24h+allinurl:bloomberg.com/news&hl=en-US&gl=US&ceid=US:en"),
-        ("FT",         "https://www.ft.com/rss/home/international"),
-        ("MarketWatch","https://feeds.marketwatch.com/marketwatch/topstories/"),
-        ("Yahoo Fin",  "https://finance.yahoo.com/news/rssindex"),
+        # Reuters via múltiplos canais
+        ("Reuters",     "https://news.google.com/rss/search?q=site:reuters.com+markets+OR+economy+OR+fed&hl=en-US&gl=US&ceid=US:en"),
+        ("Reuters BR",  "https://news.google.com/rss/search?q=site:reuters.com+brasil+OR+brazil+OR+ibovespa&hl=pt-BR&gl=BR&ceid=BR:pt-419"),
+        # Bloomberg
+        ("Bloomberg",   "https://news.google.com/rss/search?q=site:bloomberg.com+markets+OR+economy&hl=en-US&gl=US&ceid=US:en"),
+        # Financial Times
+        ("FT",          "https://www.ft.com/rss/home/international"),
+        # MarketWatch
+        ("MarketWatch", "https://feeds.marketwatch.com/marketwatch/topstories/"),
+        # Yahoo Finance (sindicado Reuters/Bloomberg)
+        ("Yahoo Fin",   "https://finance.yahoo.com/news/rssindex"),
+        # CNBC
+        ("CNBC",        "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114"),
+        ("CNBC Markets","https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=15839135"),
+        # Investing.com
         ("Investing BR","https://br.investing.com/rss/news_25.rss"),
+        ("Investing GL","https://br.investing.com/rss/news_14.rss"),
     ]
 
     noticias = []
@@ -647,6 +658,7 @@ def salvar_dados():
             "stoxxChange": stoxx.get("change_pct"),
         },
         "scrape_ok": True,
+        "generated_at": agora_str,
         "feriado_aviso": None,
     }
 
