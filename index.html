@@ -557,7 +557,16 @@ function renderInsights(insights) {
       const titulo = match[1];
       const corpo = match[2].trim()
         .split('\n')
-        .map(linha => linha.startsWith('•') ? `<li>${linha.slice(1).trim()}</li>` : `<span>${linha}</span>`)
+        .map(linha => {
+          if (!linha.startsWith('•')) return `<span>${linha}</span>`;
+          const txt = linha.slice(1).trim();
+          // Destaca [Fonte] no final
+          const m = txt.match(/^(.*?)\s*\[([^\]]+)\]$/);
+          if (m) {
+            return `<li>${m[1]} <span style="font-family:var(--mono);font-size:10px;color:var(--gold);opacity:0.8;margin-left:4px">[${m[2]}]</span></li>`;
+          }
+          return `<li>${txt}</li>`;
+        })
         .join('\n');
       const temLi = corpo.includes('<li>');
       const corpofmt = temLi
