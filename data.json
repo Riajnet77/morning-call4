@@ -1,14 +1,14 @@
 {
   "date": "08/06/2026",
-  "lastUpdate": "08/06/2026 09:02:17",
-  "lastFetch": "08/06/2026 09:02:17",
+  "lastUpdate": "08/06/2026 09:13:42",
+  "lastFetch": "08/06/2026 09:13:42",
   "title": "Morning Call · 08/06",
   "vies": "Baixista",
-  "vies_txt": "Diante do cenário externo adverso, o viés para hoje é Baixista.\n\nPrincipais drivers: Fear & Greed em 8 (Medo Extremo) | S&P 500 em queda expressiva (-2.64%).\n\nGestão de risco é prioridade. Evitar posições compradas sem proteção e aguardar sinais de estabilização antes de ampliar exposição.",
+  "vies_txt": "A leitura dos drivers globais indica abertura com pressão vendedora — viés Baixista.\n\nPrincipais drivers: Fear & Greed em 8 (Medo Extremo) | S&P 500 em queda expressiva (-2.64%).\n\nGestão de risco é prioridade. Evitar posições compradas sem proteção e aguardar sinais de estabilização antes de ampliar exposição.",
   "tags": [
     "Viés Baixista",
     "IBOV ▼ -0.77%",
-    "USD/BRL R$ 5.15",
+    "USD/BRL R$ 5.14",
     "VIX 18.9"
   ],
   "tags_tipados": [
@@ -18,48 +18,44 @@
     }
   ],
   "insights": [
-    "**CONTEXTO GLOBAL**\nO DXY operou relativamente estável (+0.00%), sem grandes desequilíbrios no câmbio global.\n\nAs bolsas americanas encerraram em forte queda, com S&P 500 em -2.64% e Nasdaq em -4.18%. O movimento reflete aversão a risco elevada e tende a contaminar negativamente a abertura brasileira.\n\nO VIX recuou -12.18% para 18.9 pontos, com volatilidade moderada. O ambiente está mais favorável ao risco.\n\nO índice Fear & Greed marca 8 pontos — zona de \"Medo Extremo\" — sugerindo que o mercado precifica risco excessivo e pode estar próximo de um ponto de reversão técnica.\n\nCommodities e cripto: Ouro subiu +0.00% para US$ 4.352 | WTI subiu +0.00% para US$ 91.30 | Bitcoin recuou -0.06% para US$ 63.203.",
+    "**CONTEXTO GLOBAL**\nO DXY operou relativamente estável (+0.00%), sem grandes desequilíbrios no câmbio global.\n\nAs bolsas americanas encerraram em forte queda, com S&P 500 em -2.64% e Nasdaq em -4.18%. O movimento reflete aversão a risco elevada e tende a contaminar negativamente a abertura brasileira.\n\nO VIX recuou -12.13% para 18.9 pontos, com volatilidade moderada. O ambiente está mais favorável ao risco.\n\nO índice Fear & Greed marca 8 pontos — zona de \"Medo Extremo\" — sugerindo que o mercado precifica risco excessivo e pode estar próximo de um ponto de reversão técnica.\n\nCommodities e cripto: Ouro subiu +0.00% para US$ 4.358 | WTI subiu +0.00% para US$ 91.44 | Bitcoin recuou -0.48% para US$ 62.936.",
     "**IBOVESPA**\nO Ibovespa encerrou a sessão anterior em 169.019 pontos, recuando -0.77% na última sessão. O índice segue correlacionado ao movimento negativo de Wall Street, refletindo o ambiente de risk-off global. Tecnicamente. monitorar suporte em 163.900 e 158.900 pontos. Resistências relevantes em 172.400 e 177.500 pontos.",
-    "**DÓLAR / CÂMBIO**\nO dólar comercial avançou com força (+1.73%) para R$ 5.15, pressionando importadores e acirrando preocupações inflacionárias.",
+    "**DÓLAR / CÂMBIO**\nO dólar comercial avançou com força (+1.57%) para R$ 5.14, pressionando importadores e acirrando preocupações inflacionárias.",
     "**JUROS & RENDA FIXA**\nA taxa Selic está em 14.50% a.a. Os juros americanos (Treasury 10Y) operam em 4.54% (+1.32%). A alta dos Treasuries aumenta o custo de capital global e reduz o apelo relativo de emergentes. O ETF EWZ (proxy do Brasil no exterior) operou -2.21%, sinalizando o apetite do investidor estrangeiro pelo mercado brasileiro.",
-    "**AGENDA DO DIA**\nEventos de impacto MÉDIO:\n• 08:30 [USD] Initial Jobless Claims\n• 10:00 [USD] ISM Manufacturing PMI\n\nOs dados americanos costumam gerar volatilidade relevante no câmbio e, por correlação, no Ibovespa. Monitore os releases e evite exposição excessiva nos momentos de divulgação.",
-    "**MANCHETES**\n• Businesses fear for economy if Swiss vote to cap population at 10 million - Reuters [Reuters]\n• South Korea's KOSPI craters over 8% as Fed fears spark tech rout - Reuters [Reuters]\n• Goldman Sachs pushes Fed rate-cut call to 2027 on strong US jobs data - Reuters [Reuters]\n• Dollar scales two-month peak as Fed hike bets ramp up - Reuters [Reuters]\n• Checagem de fatos: Torcida impediu abertura de bandeirão do iFood, não do PT, em jogo do Brasil - Reuters [Reuters]\n• Checagem de fatos: Empresa nega migração de produção de Nike, Adidas e Umbro para o Paraguai - Reuters [Reuters]\n• Checagem de fatos: Mercedes-Benz fechou fábrica de carros no Brasil em 2020; nova unidade na Argentina produz caminhões - Reuters [Reuters]\n• Brazil senator and presidential contender Flavio Bolsonaro meets Trump at White House - Reuters [Reuters]\n• US Stock Futures Drop After Tech Selloff, Oil Up: Markets Wrap - Bloomberg.com [Bloomberg.com]\n• Big Oil Is Changing Its Mind About Venezuela: New Economy - Bloomberg.com [Bloomberg.com]\n• India’s Economy Faces Threats That Currency Band-Aid Can’t Fix - Bloomberg.com [Bloomberg.com]\n• Watch Markets 'Terribly Wrong' to Price in Rate Hike, Kevin Hassett Says - Bloomberg.com [Bloomberg.com]\n• Iran declares halt to military operations against Israel [FT]\n• Netanyahu’s grand strategy is coming apart [FT]\n• Trump says Netanyahu will have ‘no choice’ but to accept a deal with Iran [FT]\n• New AI espionage powers trigger Putin camera scare [FT]"
+    "**AGENDA DO DIA**\nEventos de impacto MÉDIO:\n• 10:00 [USD] ISM Manufacturing PMI\n\nOs dados americanos costumam gerar volatilidade relevante no câmbio e, por correlação, no Ibovespa. Monitore os releases e evite exposição excessiva nos momentos de divulgação.",
+    "**MANCHETES**\n• South Korea's KOSPI craters over 8% as Fed fears spark tech rout - Reuters [Reuters]\n• Businesses fear for economy if Swiss vote to cap population at 10 million - Reuters [Reuters]\n• Goldman Sachs pushes Fed rate-cut call to 2027 on strong US jobs data - Reuters [Reuters]\n• Dollar scales two-month peak as Fed hike bets ramp up - Reuters [Reuters]\n• Checagem de fatos: Torcida impediu abertura de bandeirão do iFood, não do PT, em jogo do Brasil - Reuters [Reuters]\n• Checagem de fatos: Empresa nega migração de produção de Nike, Adidas e Umbro para o Paraguai - Reuters [Reuters]\n• Checagem de fatos: Mercedes-Benz fechou fábrica de carros no Brasil em 2020; nova unidade na Argentina produz caminhões - Reuters [Reuters]\n• Brazil senator and presidential contender Flavio Bolsonaro meets Trump at White House - Reuters [Reuters]\n• US Stock Futures Drop After Tech Selloff, Oil Up: Markets Wrap - Bloomberg [Bloomberg]\n• Big Oil Is Changing Its Mind About Venezuela: New Economy - Bloomberg [Bloomberg]\n• India’s Economy Faces Threats That Currency Band-Aid Can’t Fix - Bloomberg [Bloomberg]\n• Watch Markets 'Terribly Wrong' to Price in Rate Hike, Kevin Hassett Says - Bloomberg [Bloomberg]\n• Iran declares halt to military operations against Israel [FT]\n• Netanyahu’s grand strategy is coming apart [FT]\n• Trump says Netanyahu will have ‘no choice’ but to accept a deal with Iran [FT]\n• New AI espionage powers trigger Putin camera scare [FT]"
   ],
   "agenda": [
-    {
-      "time": "08:30",
-      "event": "[USD] Initial Jobless Claims"
-    },
     {
       "time": "10:00",
       "event": "[USD] ISM Manufacturing PMI"
     }
   ],
-  "strategy": "Diante do cenário externo adverso, o viés para hoje é Baixista.\n\nPrincipais drivers: Fear & Greed em 8 (Medo Extremo) | S&P 500 em queda expressiva (-2.64%).\n\nGestão de risco é prioridade. Evitar posições compradas sem proteção e aguardar sinais de estabilização antes de ampliar exposição.",
+  "strategy": "A leitura dos drivers globais indica abertura com pressão vendedora — viés Baixista.\n\nPrincipais drivers: Fear & Greed em 8 (Medo Extremo) | S&P 500 em queda expressiva (-2.64%).\n\nGestão de risco é prioridade. Evitar posições compradas sem proteção e aguardar sinais de estabilização antes de ampliar exposição.",
   "indicators": {
     "fearGreed": 8,
     "fearGreedLabel": "Extreme Fear",
-    "dxy": 99.93,
+    "dxy": 99.89,
     "dxyChange": 0.0,
-    "vix": 18.89,
-    "vixChange": -12.18,
+    "vix": 18.9,
+    "vixChange": -12.13,
     "ibov": 169019.0,
     "ibovChange": -0.77,
-    "usdbrl": 5.15,
-    "usdbrlChange": 1.73,
+    "usdbrl": 5.14,
+    "usdbrlChange": 1.57,
     "selic": 14.5,
     "us10y": 4.54,
     "us10yChange": 1.32,
-    "btc": 63202.96,
-    "btcChange": -0.06,
-    "gold": 4351.6,
+    "btc": 62935.92,
+    "btcChange": -0.48,
+    "gold": 4357.9,
     "goldChange": 0.0,
-    "oil": 91.3,
+    "oil": 91.44,
     "oilChange": 0.0,
-    "stoxx": 6061.45,
-    "stoxxChange": -0.01
+    "stoxx": 6058.9,
+    "stoxxChange": -0.05
   },
   "scrape_ok": true,
-  "generated_at": "08/06/2026 09:02:17",
+  "generated_at": "08/06/2026 09:13:42",
   "feriado_aviso": null
 }
