@@ -451,6 +451,32 @@ function vixFaixa(v) {
   return            {label:'Pânico',             cor:'#ef4444'};
 }
 
+function renderFocus(ind) {
+  if (!ind || (!ind.selicEsperada && !ind.ipcaEsperado && !ind.ptax)) return '';
+  let html = '<div class="indicadores-grid" style="grid-template-columns:repeat(3,1fr);margin-top:0">';
+  if (ind.selicEsperada) {
+    html += '<div class="ind-card" style="border-top:2px solid #a78bfa">';
+    html += '<div class="ind-label">Selic Esperada · Focus BCB</div>';
+    html += '<div class="ind-valor" style="color:#a78bfa">' + ind.selicEsperada.toFixed(2) + '%</div>';
+    html += '<div class="ind-desc">Projeção mercado · Boletim Focus</div></div>';
+  }
+  if (ind.ipcaEsperado) {
+    html += '<div class="ind-card" style="border-top:2px solid #fb923c">';
+    html += '<div class="ind-label">IPCA Esperado · Focus BCB</div>';
+    html += '<div class="ind-valor" style="color:#fb923c">' + ind.ipcaEsperado.toFixed(2) + '%</div>';
+    html += '<div class="ind-desc">Projeção inflação · Boletim Focus</div></div>';
+  }
+  if (ind.ptax) {
+    const dataLabel = ind.ptaxData ? ' · ' + ind.ptaxData : '';
+    html += '<div class="ind-card" style="border-top:2px solid var(--gold)">';
+    html += '<div class="ind-label">PTax Oficial · BCB' + dataLabel + '</div>';
+    html += '<div class="ind-valor" style="color:var(--gold)">R$ ' + ind.ptax.toFixed(4) + '</div>';
+    html += '<div class="ind-desc">Taxa oficial do Banco Central</div></div>';
+  }
+  html += '</div>';
+  return html;
+}
+
 function renderIndicadores(ind) {
   const fg = ind?.fearGreed;
   const dxy = ind?.dxy;
@@ -503,24 +529,7 @@ function renderIndicadores(ind) {
       </div>
     </div>
     ${(ind?.selicEsperada || ind?.ipcaEsperado || ind?.ptax) ? `
-    <div class="indicadores-grid" style="grid-template-columns:repeat(3,1fr);margin-top:0">
-      ${ind?.selicEsperada ? \`<div class="ind-card" style="border-top:2px solid #a78bfa">
-        <div class="ind-label">Selic Esperada · Focus BCB</div>
-        <div class="ind-valor" style="color:#a78bfa">\${ind.selicEsperada.toFixed(2)}%</div>
-        <div class="ind-desc">Projeção mercado · Boletim Focus</div>
-      </div>\` : ''}
-      ${ind?.ipcaEsperado ? \`<div class="ind-card" style="border-top:2px solid #fb923c">
-        <div class="ind-label">IPCA Esperado · Focus BCB</div>
-        <div class="ind-valor" style="color:#fb923c">\${ind.ipcaEsperado.toFixed(2)}%</div>
-        <div class="ind-desc">Projeção inflação · Boletim Focus</div>
-      </div>\` : ''}
-      ${ind?.ptax ? \`<div class="ind-card" style="border-top:2px solid var(--gold)">
-        <div class="ind-label">PTax Oficial · BCB\${ind?.ptaxData ? ' · ' + ind.ptaxData : ''}</div>
-        <div class="ind-valor" style="color:var(--gold)">R\$ \${ind.ptax.toFixed(4)}</div>
-        <div class="ind-desc">Taxa oficial do Banco Central</div>
-      </div>\` : ''}
-    </div>` : ''}
-        <div class="ind-card" style="border-top:2px solid #f59e0b">
+    ${renderFocus(ind)}
           <div class="ind-label">Ouro (XAU/USD)${chg(ind?.goldChange)}</div>
           <div class="ind-valor" style="font-size:18px;color:#f59e0b">US$ ${ind?.gold ? Math.round(ind.gold).toLocaleString('pt-BR') : '—'}</div>
           <div class="ind-desc">Safe haven global</div>
