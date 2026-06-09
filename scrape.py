@@ -629,7 +629,7 @@ def gerar_contexto_global(dxy, vix, sp, nq, usd, fg, gold=None, oil=None, btc=No
 
     return "\n\n".join(filter(None, [dxy_txt, bolsas_txt, vix_txt, fg_txt, comod_txt]))
 
-def gerar_analise_ibov(ibov, sp, dxy):
+def gerar_analise_ibov(ibov, sp, dxy, eww=None, ech=None):
     if ibov.get("price") is None:
         return "Dados do Ibovespa indisponíveis."
 
@@ -678,6 +678,8 @@ def gerar_analise_ibov(ibov, sp, dxy):
 
     # Peers emergentes
     peers = []
+    eww = eww or {}
+    ech = ech or {}
     if eww.get("change_pct") is not None:
         peers.append(f"México (EWW) {'+' if eww['change_pct']>=0 else ''}{eww['change_pct']:.2f}%")
     if ech.get("change_pct") is not None:
@@ -824,7 +826,7 @@ def salvar_dados():
     # Gera as seções
     log("Gerando análise...")
     contexto   = gerar_contexto_global(dxy, vix, sp, nq, usd, fg, gold, oil, btc)
-    analise_ibov = gerar_analise_ibov(ibov, sp, dxy)
+    analise_ibov = gerar_analise_ibov(ibov, sp, dxy, eww=eww, ech=ech)
     analise_usd  = gerar_analise_dolar(usd, dxy)
     sec_agenda   = gerar_secao_agenda(agenda)
     vies_label, vies_tipo = calcular_vies(fg, dxy, vix, ibov, sp, usd)
