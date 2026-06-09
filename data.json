@@ -1,15 +1,15 @@
 {
-  "date": "08/06/2026",
-  "lastUpdate": "08/06/2026 13:55:49",
-  "lastFetch": "08/06/2026 13:55:49",
-  "title": "Morning Call · 08/06",
+  "date": "09/06/2026",
+  "lastUpdate": "09/06/2026 08:03:55",
+  "lastFetch": "09/06/2026 08:03:55",
+  "title": "Morning Call · 09/06",
   "vies": "Levemente Baixista",
-  "vies_txt": "O conjunto de fatores aponta para viés Levemente Baixista no pregão de hoje.\n\nPrincipais drivers: Fear & Greed em 8 (Medo Extremo).\n\nGestão de risco é prioridade. Evitar posições compradas sem proteção e aguardar sinais de estabilização antes de ampliar exposição.",
+  "vies_txt": "O conjunto de fatores aponta para viés Levemente Baixista no pregão de hoje.\n\nPrincipais drivers: Fear & Greed em 10 (Medo Extremo).\n\nGestão de risco é prioridade. Evitar posições compradas sem proteção e aguardar sinais de estabilização antes de ampliar exposição.",
   "tags": [
     "Viés Levemente Baixista",
-    "IBOV ▼ -0.30%",
-    "USD/BRL R$ 5.17",
-    "VIX 18.5"
+    "IBOV ▼ -0.21%",
+    "USD/BRL R$ 5.18",
+    "VIX 18.1"
   ],
   "tags_tipados": [
     {
@@ -18,48 +18,44 @@
     }
   ],
   "insights": [
-    "**CONTEXTO GLOBAL**\nO DXY operou relativamente estável (+0.00%), sem grandes desequilíbrios no câmbio global.\n\nWall Street fechou em alta moderada — S&P 500 em +0.69% e Nasdaq em +1.37% —, mantendo o ambiente de risk-on.\n\nO VIX recuou -13.85% para 18.5 pontos, com volatilidade moderada. O ambiente está mais favorável ao risco.\n\nO índice Fear & Greed marca 8 pontos — zona de \"Medo Extremo\" — sugerindo que o mercado precifica risco excessivo e pode estar próximo de um ponto de reversão técnica.\n\nCommodities e cripto: Ouro subiu +0.00% para US$ 4.367 | WTI subiu +0.00% para US$ 91.15 | Bitcoin subiu +0.41% para US$ 63.497.",
-    "**IBOVESPA**\nO Ibovespa encerrou a sessão anterior em 168.520 pontos, praticamente estável (-0.30%). A correlação com os mercados externos foi moderada na última sessão. Tecnicamente. monitorar suporte em 163.500 e 158.400 pontos. Resistências relevantes em 171.900 e 176.900 pontos.",
-    "**DÓLAR / CÂMBIO**\nO dólar comercial avançou com força (+2.22%) para R$ 5.17, pressionando importadores e acirrando preocupações inflacionárias.",
-    "**JUROS & RENDA FIXA**\nA taxa Selic está em 14.50% a.a. Os juros americanos (Treasury 10Y) operam em 4.56% (+0.44%). A alta dos Treasuries aumenta o custo de capital global e reduz o apelo relativo de emergentes. O ETF EWZ (proxy do Brasil no exterior) operou -0.94%, sinalizando o apetite do investidor estrangeiro pelo mercado brasileiro.",
-    "**AGENDA DO DIA**\nEventos de ALTO impacto no radar:\n• 09:00 [BRL] PIB Brasil\nEventos de impacto MÉDIO:\n• 10:00 [USD] ISM Manufacturing PMI\n\nOs dados americanos costumam gerar volatilidade relevante no câmbio e, por correlação, no Ibovespa. Monitore os releases e evite exposição excessiva nos momentos de divulgação.",
-    "**MANCHETES**\n• Businesses fear for economy if Swiss vote to cap population at 10 million - Reuters [Reuters]\n• Goldman Sachs pushes Fed rate-cut call to 2027 on strong US jobs data - Reuters [Reuters]\n• Prabowo's populist policies propel a 'doom-loop' in Indonesian markets - Reuters [Reuters]\n• South Korea's KOSPI craters over 8% as Fed fears spark tech rout - Reuters [Reuters]\n• Checagem de fatos: Torcida impediu abertura de bandeirão do iFood, não do PT, em jogo do Brasil - Reuters [Reuters]\n• Checagem de fatos: Mercedes-Benz fechou fábrica de carros no Brasil em 2020; nova unidade na Argentina produz caminhões - Reuters [Reuters]\n• Brazil senator and presidential contender Flavio Bolsonaro meets Trump at White House - Reuters [Reuters]\n• Checagem de fatos: É falso que Trump assinou decreto para operação militar no Brasil - Reuters [Reuters]\n• Trump’s Economy Polling Slides as Iran War Saps His Superpower - Bloomberg.com [Bloomberg.com]\n• Why Trump’s War Hasn’t Broken Iran’s Economy - Bloomberg.com [Bloomberg.com]\n• US Stock Futures Drop After Tech Selloff, Oil Up: Markets Wrap - Bloomberg.com [Bloomberg.com]\n• Big Oil Is Changing Its Mind About Venezuela: New Economy - Bloomberg.com [Bloomberg.com]\n• Iran and Israel call halt to military operations [FT]\n• Lebanon’s intractable crisis pulls Israel and Iran back towards war [FT]\n• Trump says Netanyahu will have ‘no choice’ but to accept a deal with Iran [FT]\n• The AI spying breakthrough that spooked the Kremlin [FT]"
+    "**CONTEXTO GLOBAL**\nO DXY operou relativamente estável (-0.29%), sem grandes desequilíbrios no câmbio global.\n\nAs bolsas americanas tiveram sessão mista ou flat (S&P 500 +0.30%, Nasdaq +0.86%), sem direcionamento claro para os ativos de risco.\n\nO VIX permanece em 18.1 pontos, com volatilidade moderada.\n\nO índice Fear & Greed marca 10 pontos — zona de \"Medo Extremo\" — sugerindo que o mercado precifica risco excessivo e pode estar próximo de um ponto de reversão técnica.\n\nCommodities e cripto: Ouro subiu +0.49% para US$ 4.357 | WTI recuou -2.39% para US$ 89.12 | Bitcoin recuou -0.87% para US$ 62.541.",
+    "**IBOVESPA**\nO Ibovespa encerrou a sessão anterior em 168.669 pontos, praticamente estável (-0.21%). A correlação com os mercados externos foi moderada na última sessão. Tecnicamente. monitorar suporte em 163.600 e 158.500 pontos. Resistências relevantes em 172.000 e 177.100 pontos.",
+    "**DÓLAR / CÂMBIO**\nO câmbio operou próximo à estabilidade, com o dólar em R$ 5.18 (+0.14%).",
+    "**JUROS & RENDA FIXA**\nA taxa Selic está em 14.50% a.a. Os juros americanos (Treasury 10Y) operam em 4.55% (+0.35%). A alta dos Treasuries aumenta o custo de capital global e reduz o apelo relativo de emergentes. O ETF EWZ (proxy do Brasil no exterior) operou -0.94%, sinalizando o apetite do investidor estrangeiro pelo mercado brasileiro.",
+    "**AGENDA DO DIA**\nEventos de impacto MÉDIO:\n• 10:00 [USD] JOLTS Job Openings\n\nOs dados americanos costumam gerar volatilidade relevante no câmbio e, por correlação, no Ibovespa. Monitore os releases e evite exposição excessiva nos momentos de divulgação.",
+    "**MANCHETES**\n• Indian economy, government finances, see mounting costs from Iran war - Reuters [Reuters]\n• OpenAI files for US IPO after Anthropic as AI giants head to public markets - Reuters [Reuters]\n• Prabowo's populist policies propel a 'doom-loop' in Indonesian markets - Reuters [Reuters]\n• South Korea's KOSPI craters over 8% as Fed fears spark tech rout - Reuters [Reuters]\n• Checagem de fatos: Torcida impediu abertura de bandeirão do iFood, não do PT, em jogo do Brasil - Reuters [Reuters]\n• Checagem de fatos: Mercedes-Benz fechou fábrica de carros no Brasil em 2020; nova unidade na Argentina produz caminhões - Reuters [Reuters]\n• Brazil senator and presidential contender Flavio Bolsonaro meets Trump at White House - Reuters [Reuters]\n• Checagem de fatos: É falso que Trump assinou decreto para operação militar no Brasil - Reuters [Reuters]\n• Brexit: What Rolling Back Vote Would Mean for the UK Economy - Bloomberg.com [Bloomberg.com]\n• Trump’s Economy Polling Slides as Iran War Saps His Superpower - Bloomberg.com [Bloomberg.com]\n• Asian Stocks Set to Rebound on Iran, AI Optimism: Markets Wrap - Bloomberg.com [Bloomberg.com]\n• BofA Warns It’s Time to ‘Take Profits’ as Red Flags Multiply - Bloomberg.com [Bloomberg.com]\n• SpaceX’s $1.78tn IPO asks investors to buy Musk’s moonshots [FT]\n• We’ve died and gone to volatility heaven [FT]\n• Apollo and Blackstone raise $35bn in chip financing deal for Anthropic [FT]\n• Who calls the shots? Trump and Netanyahu clash over war goals [FT]"
   ],
   "agenda": [
     {
-      "time": "09:00",
-      "event": "[BRL] PIB Brasil"
-    },
-    {
       "time": "10:00",
-      "event": "[USD] ISM Manufacturing PMI"
+      "event": "[USD] JOLTS Job Openings"
     }
   ],
-  "strategy": "O conjunto de fatores aponta para viés Levemente Baixista no pregão de hoje.\n\nPrincipais drivers: Fear & Greed em 8 (Medo Extremo).\n\nGestão de risco é prioridade. Evitar posições compradas sem proteção e aguardar sinais de estabilização antes de ampliar exposição.",
+  "strategy": "O conjunto de fatores aponta para viés Levemente Baixista no pregão de hoje.\n\nPrincipais drivers: Fear & Greed em 10 (Medo Extremo).\n\nGestão de risco é prioridade. Evitar posições compradas sem proteção e aguardar sinais de estabilização antes de ampliar exposição.",
   "indicators": {
-    "fearGreed": 8,
+    "fearGreed": 10,
     "fearGreedLabel": "Extreme Fear",
-    "dxy": 99.95,
-    "dxyChange": 0.0,
-    "vix": 18.53,
-    "vixChange": -13.85,
-    "ibov": 168520.23,
-    "ibovChange": -0.3,
-    "usdbrl": 5.17,
-    "usdbrlChange": 2.22,
+    "dxy": 99.76,
+    "dxyChange": -0.29,
+    "vix": 18.09,
+    "vixChange": -4.39,
+    "ibov": 168669.0,
+    "ibovChange": -0.21,
+    "usdbrl": 5.18,
+    "usdbrlChange": 0.14,
     "selic": 14.5,
-    "us10y": 4.56,
-    "us10yChange": 0.44,
-    "btc": 63497.41,
-    "btcChange": 0.41,
-    "gold": 4367.0,
-    "goldChange": 0.0,
-    "oil": 91.15,
-    "oilChange": 0.0,
-    "stoxx": 6062.29,
-    "stoxxChange": 0.0
+    "us10y": 4.55,
+    "us10yChange": 0.35,
+    "btc": 62540.59,
+    "btcChange": -0.87,
+    "gold": 4357.3,
+    "goldChange": 0.49,
+    "oil": 89.12,
+    "oilChange": -2.39,
+    "stoxx": 6122.62,
+    "stoxxChange": 1.0
   },
   "scrape_ok": true,
-  "generated_at": "08/06/2026 13:55:49",
+  "generated_at": "09/06/2026 08:03:55",
   "feriado_aviso": null
 }
