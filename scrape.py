@@ -412,6 +412,59 @@ def buscar_juros_br():
         log(f"AVISO Selic: {e}")
         return None
 
+def buscar_focus():
+    """Busca expectativas do Boletim Focus via API do BCB (série SGS)."""
+    try:
+        # Selic esperada — série 4175
+        r_selic = requests.get("https://api.bcb.gov.br/dados/serie/bcdata.sgs.4175/dados/ultimos/1?formato=json", timeout=10)
+        # IPCA esperado — série 4179  
+        r_ipca = requests.get("https://api.bcb.gov.br/dados/serie/bcdata.sgs.4179/dados/ultimos/1?formato=json", timeout=10)
+        # PIB esperado — série 4380
+        r_pib = requests.get("https://api.bcb.gov.br/dados/serie/bcdata.sgs.4380/dados/ultimos/1?formato=json", timeout=10)
+
+        resultado = {}
+        if r_selic.status_code == 200:
+            d = r_selic.json()
+            resultado["selic_esperada"] = float(d[0]["valor"].replace(",", "."))
+            resultado["selic_data"] = d[0]["data"]
+        if r_ipca.status_code == 200:
+            d = r_ipca.json()
+            resultado["ipca_esperado"] = float(d[0]["valor"].replace(",", "."))
+        if r_pib.status_code == 200:
+            d = r_pib.json()
+            resultado["pib_esperado"] = float(d[0]["valor"].replace(",", "."))
+
+        if resultado:
+            log(f"Focus: Selic {resultado.get('selic_esperada','?')}% | IPCA {resultado.get('ipca_esperado','?')}% | PIB {resultado.get('pib_esperado','?')}%")
+        return resultado
+    except Exception as e:
+        log(f"AVISO Focus: {e}")
+        return {}
+
+def buscar_ptax():
+    """Busca PTax oficial do BCB."""
+    try:
+        from datetime import date, timedelta
+        hoje = date.today()
+        # Tenta hoje, se não tiver tenta ontem
+        for delta in range(5):
+            data = hoje - timedelta(days=delta)
+            data_str = data.strftime("%m-%d-%Y")
+            url = f"https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='{data_str}'&$format=json&$select=cotacaoCompra,cotacaoVenda,dataHoraCotacao"
+            r = requests.get(url, timeout=10, headers={"User-Agent": "Mozilla/5.0"})
+            if r.status_code == 200:
+                d = r.json()
+                if d.get("value"):
+                    venda = float(d["value"][-1]["cotacaoVenda"])
+                    data_cot = d["value"][-1]["dataHoraCotacao"][:10]
+                    log(f"PTax: R$ {venda:.4f} ({data_cot})")
+                    return {"venda": venda, "data": data_cot}
+        log("PTax: sem dados disponíveis")
+        return {}
+    except Exception as e:
+        log(f"AVISO PTax: {e}")
+        return {}
+
 def buscar_di_futuro():
     """DI futuro curto prazo via Yahoo Finance (proxy: juros EUA 10Y para comparação)."""
     try:
@@ -729,6 +782,8 @@ def salvar_dados():
     stoxx = buscar_yahoo("^STOXX50E", "Euro Stoxx 50")
     selic = buscar_juros_br()
     juros = buscar_di_futuro()
+    focus = buscar_focus()
+    ptax  = buscar_ptax()
     agenda   = buscar_agenda()
     noticias = buscar_noticias()
     # Se agenda vazia, extrai eventos das próprias notícias
@@ -750,6 +805,16 @@ def salvar_dados():
     selic_txt = ""
     if selic is not None:
         selic_txt = f"A taxa Selic está em {selic:.2f}% a.a."
+        # Boletim Focus
+        if focus.get("selic_esperada"):
+            selic_txt += f" O mercado projeta Selic em {focus['selic_esperada']:.2f}% ao final do ciclo (Boletim Focus)."
+        if focus.get("ipca_esperado"):
+            selic_txt += f" Expectativa de IPCA para o ano: {focus['ipca_esperado']:.2f}%."
+        if focus.get("pib_esperado"):
+            selic_txt += f" Projeção de PIB: {focus['pib_esperado']:.2f}%."
+        # PTax
+        if ptax.get("venda"):
+            selic_txt += f" A PTax oficial do BCB fechou em R$ {ptax['venda']:.4f}."
         us10y = juros.get("us10y", {})
         ewz = juros.get("ewz", {})
         if us10y.get("price") is not None:
@@ -826,6 +891,11 @@ def salvar_dados():
             "selic": selic,
             "us10y": juros.get("us10y", {}).get("price"),
             "us10yChange": juros.get("us10y", {}).get("change_pct"),
+            "selicEsperada": focus.get("selic_esperada"),
+            "ipcaEsperado": focus.get("ipca_esperado"),
+            "pibEsperado": focus.get("pib_esperado"),
+            "ptax": ptax.get("venda"),
+            "ptaxData": ptax.get("data"),
             "btc": btc.get("price"),
             "btcChange": btc.get("change_pct"),
             "gold": gold.get("price"),
