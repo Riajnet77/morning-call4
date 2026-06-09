@@ -528,7 +528,6 @@ function renderIndicadores(ind) {
       <div class="indicadores-grid" style="grid-template-columns:repeat(4,1fr);margin-top:0">
       </div>
     </div>
-    ${(ind?.selicEsperada || ind?.ipcaEsperado || ind?.ptax) ? `
     ${renderFocus(ind)}
           <div class="ind-label">Ouro (XAU/USD)${chg(ind?.goldChange)}</div>
           <div class="ind-valor" style="font-size:18px;color:#f59e0b">US$ ${ind?.gold ? Math.round(ind.gold).toLocaleString('pt-BR') : '—'}</div>
