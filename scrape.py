@@ -676,6 +676,15 @@ def gerar_analise_ibov(ibov, sp, dxy):
     niveis_txt = (f"Tecnicamente, monitorar suporte em {sup1:,} e {sup2:,} pontos. "
                  f"Resistências relevantes em {res1:,} e {res2:,} pontos.").replace(",", ".")
 
+    # Peers emergentes
+    peers = []
+    if eww.get("change_pct") is not None:
+        peers.append(f"México (EWW) {'+' if eww['change_pct']>=0 else ''}{eww['change_pct']:.2f}%")
+    if ech.get("change_pct") is not None:
+        peers.append(f"Chile (ECH) {'+' if ech['change_pct']>=0 else ''}{ech['change_pct']:.2f}%")
+    if peers:
+        niveis_txt += f" Peers emergentes: {', '.join(peers)}."
+
     return " ".join(filter(None, [nivel_txt + mov_txt, corr_txt, niveis_txt]))
 
 def gerar_analise_dolar(usd, dxy):
@@ -794,7 +803,12 @@ def salvar_dados():
     btc   = buscar_yahoo("BTC-USD", "Bitcoin")
     gold  = buscar_yahoo("GC=F", "Ouro")
     oil   = buscar_yahoo("CL=F", "Petróleo WTI")
+    brent = buscar_yahoo("BZ=F", "Brent")
+    soja  = buscar_yahoo("ZS=F", "Soja")
     stoxx = buscar_yahoo("^STOXX50E", "Euro Stoxx 50")
+    ewz   = buscar_yahoo("EWZ", "EWZ-BR")
+    eww   = buscar_yahoo("EWW", "México ETF")
+    ech   = buscar_yahoo("ECH", "Chile ETF")
     selic = buscar_juros_br()
     juros = buscar_di_futuro()
     focus = buscar_focus()
@@ -919,6 +933,14 @@ def salvar_dados():
             "oilChange": oil.get("change_pct"),
             "stoxx": stoxx.get("price"),
             "stoxxChange": stoxx.get("change_pct"),
+            "brent": brent.get("price"),
+            "brentChange": brent.get("change_pct"),
+            "soja": soja.get("price"),
+            "sojaChange": soja.get("change_pct"),
+            "eww": eww.get("price"),
+            "ewwChange": eww.get("change_pct"),
+            "ech": ech.get("price"),
+            "echChange": ech.get("change_pct"),
         },
         "scrape_ok": True,
         "generated_at": agora_str,
