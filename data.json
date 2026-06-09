@@ -1,29 +1,29 @@
 {
   "date": "09/06/2026",
-  "lastUpdate": "09/06/2026 08:43:24",
-  "lastFetch": "09/06/2026 08:43:24",
+  "lastUpdate": "09/06/2026 15:35:45",
+  "lastFetch": "09/06/2026 15:35:45",
   "title": "Morning Call · 09/06",
-  "vies": "Levemente Baixista",
-  "vies_txt": "A leitura dos drivers globais indica abertura com pressão vendedora — viés Levemente Baixista.\n\nPrincipais drivers: Fear & Greed em 10 (Medo Extremo).\n\nGestão de risco é prioridade. Evitar posições compradas sem proteção e aguardar sinais de estabilização antes de ampliar exposição.",
+  "vies": "Baixista",
+  "vies_txt": "O conjunto de fatores aponta para viés Baixista no pregão de hoje.\n\nPrincipais drivers: Fear & Greed em 10 (Medo Extremo).\n\nGestão de risco é prioridade. Evitar posições compradas sem proteção e aguardar sinais de estabilização antes de ampliar exposição.",
   "tags": [
-    "Viés Levemente Baixista",
-    "IBOV ▼ -0.21%",
-    "USD/BRL R$ 5.18",
-    "VIX 18.1"
+    "Viés Baixista",
+    "IBOV ▲ +0.56%",
+    "USD/BRL R$ 5.17",
+    "VIX 19.8"
   ],
   "tags_tipados": [
     {
       "tipo": "baixista",
-      "label": "Viés Levemente Baixista"
+      "label": "Viés Baixista"
     }
   ],
   "insights": [
-    "**CONTEXTO GLOBAL**\nO DXY operou relativamente estável (-0.34%), sem grandes desequilíbrios no câmbio global.\n\nAs bolsas americanas tiveram sessão mista ou flat (S&P 500 +0.30%, Nasdaq +0.86%), sem direcionamento claro para os ativos de risco.\n\nO VIX permanece em 18.1 pontos, com volatilidade moderada.\n\nO índice Fear & Greed marca 10 pontos — zona de \"Medo Extremo\" — sugerindo que o mercado precifica risco excessivo e pode estar próximo de um ponto de reversão técnica.\n\nCommodities e cripto: Ouro subiu +0.60% para US$ 4.362 | WTI recuou -1.97% para US$ 89.50 | Bitcoin recuou -0.79% para US$ 62.593.",
-    "**IBOVESPA**\nO Ibovespa encerrou a sessão anterior em 168.669 pontos, praticamente estável (-0.21%). A correlação com os mercados externos foi moderada na última sessão. Tecnicamente. monitorar suporte em 163.600 e 158.500 pontos. Resistências relevantes em 172.000 e 177.100 pontos.",
-    "**DÓLAR / CÂMBIO**\nO câmbio operou próximo à estabilidade, com o dólar em R$ 5.18 (+0.14%).",
-    "**JUROS & RENDA FIXA**\nA taxa Selic está em 14.50% a.a. Os juros americanos (Treasury 10Y) operam em 4.55% (+0.35%). A alta dos Treasuries aumenta o custo de capital global e reduz o apelo relativo de emergentes. O ETF EWZ (proxy do Brasil no exterior) operou -0.94%, sinalizando o apetite do investidor estrangeiro pelo mercado brasileiro.",
-    "**AGENDA DO DIA**\nEventos de impacto MÉDIO:\n• 02:00 [EUR] German Industrial Production m/m\n• 02:00 [EUR] German Trade Balance\n• 04:00 [EUR] Dados da Zona do Euro\n• 06:00 [USD] NFIB Small Business Index\n\nOs dados americanos costumam gerar volatilidade relevante no câmbio e, por correlação, no Ibovespa. Monitore os releases e evite exposição excessiva nos momentos de divulgação.",
-    "**MANCHETES**\n• Indian economy, government finances, see mounting costs from Iran war - Reuters [Reuters]\n• Stocks get a boost from tech dip-buying; bonds flag - Reuters [Reuters]\n• OpenAI files for US IPO after Anthropic as AI giants head to public markets - Reuters [Reuters]\n• South Korea's KOSPI craters over 8% as Fed fears spark tech rout - Reuters [Reuters]\n• Citi’s Chew Sees Aggressive Short-Selling Positions in US Stocks - Bloomberg [Bloomberg]\n• Korean Stocks Jump 8% as Chip Shares Rebound After AI Selloff - Bloomberg [Bloomberg]\n• Crop and Fertilizer Markets Wipe Out Iran War Risk Premium - Bloomberg [Bloomberg]\n• Brexit: What Rolling Back Vote Would Mean for the UK Economy - Bloomberg [Bloomberg]\n• SpaceX’s $1.78tn IPO asks investors to buy Musk’s moonshots [FT]\n• We’ve died and gone to volatility heaven [FT]\n• Apollo and Blackstone raise $35bn in chip financing deal for Anthropic [FT]\n• Who calls the shots? Trump and Netanyahu clash over war goals [FT]\n• This tiny mutual fund outperforms by backing the world’s best management teams [MarketWatch]\n• My golf buddy worked as a financial adviser. Here’s how I knew his friendship was fake. [MarketWatch]\n• Oracle’s stock has surged on AI hype. Now it has to deliver the earnings to match. [MarketWatch]\n• A massive 16% market swing just rocked South Korea over 24 hours. The retail ‘ants’ holding the wheel are driving dangerously. [MarketWatch]"
+    "**CONTEXTO GLOBAL**\nO DXY operou relativamente estável (-0.16%), sem grandes desequilíbrios no câmbio global.\n\nWall Street fechou no vermelho — S&P 500 em -0.48% e Nasdaq em -1.18% —, criando um ambiente de cautela para os mercados emergentes.\n\nO VIX permanece em 19.8 pontos, com volatilidade moderada.\n\nO índice Fear & Greed marca 10 pontos — zona de \"Medo Extremo\" — sugerindo que o mercado precifica risco excessivo e pode estar próximo de um ponto de reversão técnica.\n\nCommodities e cripto: Ouro recuou -0.91% para US$ 4.296 | WTI recuou -3.45% para US$ 88.15 | Bitcoin recuou -2.21% para US$ 61.699.",
+    "**IBOVESPA**\nO Ibovespa encerrou a sessão anterior em 169.611 pontos, com leve valorização de +0.56%. A correlação com os mercados externos foi moderada na última sessão. Tecnicamente. monitorar suporte em 164.500 e 159.400 pontos. Resistências relevantes em 173.000 e 178.100 pontos.",
+    "**DÓLAR / CÂMBIO**\nO câmbio operou próximo à estabilidade, com o dólar em R$ 5.17 (-0.06%).",
+    "**JUROS & RENDA FIXA**\nA taxa Selic está em 14.50% a.a. O mercado projeta Selic em 1.03% ao final do ciclo (Boletim Focus). Projeção de PIB: 1143880.50%. A PTax oficial do BCB fechou em R$ 5.1693. Os juros americanos (Treasury 10Y) operam em 4.53% (-0.40%). A queda dos Treasuries alivia a pressão sobre emergentes e favorece fluxo para ativos de risco. O ETF EWZ (proxy do Brasil no exterior) operou +0.76%, sinalizando o apetite do investidor estrangeiro pelo mercado brasileiro.",
+    "**AGENDA DO DIA**\nEventos de ALTO impacto no radar:\n• 08:30 [USD] CPI — Inflação EUA\nEventos de impacto MÉDIO:\n• 02:00 [EUR] German Industrial Production m/m\n• 02:00 [EUR] German Trade Balance\n• 04:00 [EUR] Dados da Zona do Euro\n• 06:00 [USD] NFIB Small Business Index\n\nOs dados americanos costumam gerar volatilidade relevante no câmbio e, por correlação, no Ibovespa. Monitore os releases e evite exposição excessiva nos momentos de divulgação.",
+    "**MANCHETES**\n• Fed to hold rates this year, cut calls fade as war inflation persists, economists say: Reuters poll - Reuters [Reuters]\n• Kuwait's oil stocks fall as two tankers exit Gulf, Kpler says - Reuters [Reuters]\n• Indian economy, government finances, see mounting costs from Iran war - Reuters [Reuters]\n• Most Gulf markets rebound after Iran and Israel halt attacks - Reuters [Reuters]\n• Crop and Fertilizer Markets Wipe Out Iran War Risk Premium - Bloomberg.com [Bloomberg.com]\n• JPMorgan Sees Stocks Powering Through Any Short, Sharp Pullbacks - Bloomberg.com [Bloomberg.com]\n• Citi’s Chew Sees Aggressive Short-Selling Positions in US Stocks - Bloomberg.com [Bloomberg.com]\n• Korean Stocks Jump 8% as Chip Shares Rebound After AI Selloff - Bloomberg.com [Bloomberg.com]\n• Trump vows to ‘respond’ after Iran ‘shot down’ a US helicopter [FT]\n• Who calls the shots? Trump and Netanyahu clash over war goals [FT]\n• Nasdaq slides in volatile trading as tech sell-off reignites [FT]\n• Trump is becoming Jimmy Carter [FT]\n• A powerful inflation storm is brewing — and your portfolio isn’t ready [MarketWatch]\n• Social Security faces insolvency in 2032, when it would pay only 78% of benefits [MarketWatch]\n• Oil prices are defying a worst-case energy crisis — but workarounds won’t last forever [MarketWatch]\n• Your tech portfolio could be on the wrong side of the AI boom [MarketWatch]"
   ],
   "agenda": [
     {
@@ -51,55 +51,60 @@
       "event": "[USD] Trade Balance (EUA)"
     },
     {
+      "time": "08:30",
+      "event": "[USD] CPI — Inflação EUA"
+    },
+    {
       "time": "10:00",
       "event": "[USD] Existing Home Sales"
     },
     {
-      "time": "1:30pm",
-      "event": "[USD] API Weekly Statistical Bulletin"
-    },
-    {
-      "time": "4:50pm",
-      "event": "[JPY] PPI y/y"
-    },
-    {
-      "time": "5:30am",
-      "event": "[CAD] Trade Balance"
-    },
-    {
-      "time": "6:30pm",
-      "event": "[CNY] CPI y/y"
-    },
-    {
-      "time": "7:00am",
+      "time": "10:00am",
       "event": "[USD] Final Wholesale Inventories m/m"
+    },
+    {
+      "time": "11:35pm",
+      "event": "[JPY] 30-y Bond Auction"
+    },
+    {
+      "time": "2:00am",
+      "event": "[JPY] Prelim Machine Tool Orders y/y"
+    },
+    {
+      "time": "4:30pm",
+      "event": "[USD] API Weekly Statistical Bulletin"
     }
   ],
-  "strategy": "A leitura dos drivers globais indica abertura com pressão vendedora — viés Levemente Baixista.\n\nPrincipais drivers: Fear & Greed em 10 (Medo Extremo).\n\nGestão de risco é prioridade. Evitar posições compradas sem proteção e aguardar sinais de estabilização antes de ampliar exposição.",
+  "strategy": "O conjunto de fatores aponta para viés Baixista no pregão de hoje.\n\nPrincipais drivers: Fear & Greed em 10 (Medo Extremo).\n\nGestão de risco é prioridade. Evitar posições compradas sem proteção e aguardar sinais de estabilização antes de ampliar exposição.",
   "indicators": {
     "fearGreed": 10,
     "fearGreedLabel": "Extreme Fear",
-    "dxy": 99.71,
-    "dxyChange": -0.34,
-    "vix": 18.06,
-    "vixChange": -4.55,
-    "ibov": 168669.0,
-    "ibovChange": -0.21,
-    "usdbrl": 5.18,
-    "usdbrlChange": 0.14,
+    "dxy": 99.89,
+    "dxyChange": -0.16,
+    "vix": 19.83,
+    "vixChange": 4.81,
+    "ibov": 169611.73,
+    "ibovChange": 0.56,
+    "usdbrl": 5.17,
+    "usdbrlChange": -0.06,
     "selic": 14.5,
-    "us10y": 4.55,
-    "us10yChange": 0.35,
-    "btc": 62593.13,
-    "btcChange": -0.79,
-    "gold": 4361.8,
-    "goldChange": 0.6,
-    "oil": 89.5,
-    "oilChange": -1.97,
-    "stoxx": 6125.65,
-    "stoxxChange": 1.05
+    "us10y": 4.53,
+    "us10yChange": -0.4,
+    "selicEsperada": 1.03,
+    "ipcaEsperado": 0.0,
+    "pibEsperado": 1143880.5,
+    "ptax": 5.1693,
+    "ptaxData": "2026-06-09",
+    "btc": 61699.28,
+    "btcChange": -2.21,
+    "gold": 4296.4,
+    "goldChange": -0.91,
+    "oil": 88.15,
+    "oilChange": -3.45,
+    "stoxx": 6049.74,
+    "stoxxChange": -0.21
   },
   "scrape_ok": true,
-  "generated_at": "09/06/2026 08:43:24",
+  "generated_at": "09/06/2026 15:35:45",
   "feriado_aviso": null
 }
