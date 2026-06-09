@@ -413,34 +413,42 @@ def buscar_juros_br():
         return None
 
 def buscar_focus():
-    """Busca expectativas do Boletim Focus via API OData do BCB."""
+    """Busca expectativas do Boletim Focus via SGS do BCB."""
     try:
         resultado = {}
-
-        # Selic expectativa fim do ano — endpoint OData Focus
-        url_selic = "https://olinda.bcb.gov.br/olinda/servico/Focus-EndpointFoco/versao/v1/odata/ExpectativasMercadoAnuais?$filter=Indicador%20eq%20'Selic'%20and%20Suavizado%20eq%20'S'&$top=1&$orderby=Data%20desc&$format=json&$select=Indicador,Data,Mediana,DataReferencia"
-        url_ipca = "https://olinda.bcb.gov.br/olinda/servico/Focus-EndpointFoco/versao/v1/odata/ExpectativasMercadoAnuais?$filter=Indicador%20eq%20'IPCA'%20and%20Suavizado%20eq%20'S'&$top=1&$orderby=Data%20desc&$format=json&$select=Indicador,Data,Mediana,DataReferencia"
-        url_pib  = "https://olinda.bcb.gov.br/olinda/servico/Focus-EndpointFoco/versao/v1/odata/ExpectativasMercadoAnuais?$filter=Indicador%20eq%20'PIB%20Total'%20and%20Suavizado%20eq%20'S'&$top=1&$orderby=Data%20desc&$format=json&$select=Indicador,Data,Mediana,DataReferencia"
-
         headers = {"User-Agent": "Mozilla/5.0"}
-        for nome, url, campo in [("selic_esperada", url_selic, "Mediana"),
-                                   ("ipca_esperado",  url_ipca,  "Mediana"),
-                                   ("pib_esperado",   url_pib,   "Mediana")]:
+        # Séries SGS corretas:
+        # 13521 = IPCA esperado (% a.a.) — Focus
+        # 4390  = PIB esperado (% a.a.) — Focus  
+        # 4175  = Selic esperada fim ano — Focus
+        series = [
+            ("selic_esperada", "4175"),
+            ("ipca_esperado",  "13521"),
+            ("pib_esperado",   "4390"),
+        ]
+        for campo, serie in series:
             try:
+                url = f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.{serie}/dados/ultimos/1?formato=json"
                 r = requests.get(url, headers=headers, timeout=10)
                 if r.status_code == 200:
                     d = r.json()
-                    if d.get("value"):
-                        val = float(str(d["value"][0][campo]).replace(",","."))
-                        resultado[nome] = val
-                        resultado[nome + "_ref"] = d["value"][0].get("DataReferencia","")
+                    if d:
+                        val = float(str(d[0]["valor"]).replace(",","."))
+                        # Validação básica de sanidade
+                        if campo == "selic_esperada" and 5 < val < 25:
+                            resultado[campo] = val
+                            resultado["selic_data"] = d[0].get("data","")
+                        elif campo == "ipca_esperado" and 0 < val < 30:
+                            resultado[campo] = val
+                        elif campo == "pib_esperado" and -10 < val < 20:
+                            resultado[campo] = val
             except Exception:
                 pass
 
         if resultado:
             log(f"Focus: Selic {resultado.get('selic_esperada','?')}% | IPCA {resultado.get('ipca_esperado','?')}% | PIB {resultado.get('pib_esperado','?')}%")
         else:
-            log("Focus: sem dados (API BCB indisponível)")
+            log("Focus: API BCB indisponível neste ambiente")
         return resultado
     except Exception as e:
         log(f"AVISO Focus: {e}")
