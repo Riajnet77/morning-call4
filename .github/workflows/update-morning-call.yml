@@ -2,10 +2,7 @@ name: Morning Call — Atualização Diária
 
 on:
   schedule:
-    # Roda às 9h00 BRT (12h00 UTC) — após abertura do mercado brasileiro
-    - cron: '0 12 * * 1-5'
-    # Segunda execução às 10h30 BRT (13h30 UTC) com dados mais frescos
-    - cron: '30 13 * * 1-5'
+    - cron: '0 11 * * 1-5'
   workflow_dispatch:
 
 permissions:
@@ -36,6 +33,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data.json
-          # Força commit mesmo se só o timestamp mudou
           git commit -m "auto: morning call $(date +'%d/%m/%Y %H:%M') [skip ci]" || echo "Nada a commitar"
           git push || echo "Push falhou"
