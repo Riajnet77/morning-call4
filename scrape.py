@@ -230,24 +230,78 @@ def buscar_agenda():
     except Exception as e:
         log(f"AVISO FF: {e}")
 
-    # 3. Fallback notícias para detectar eventos não previstos
+    # 3. Detecta eventos nas notícias já coletadas (Reuters, Bloomberg, CNBC, etc)
     try:
         import feedparser
-        noticias_upper = []
-        for url in ["https://br.investing.com/rss/news_25.rss", "https://br.investing.com/rss/news_14.rss"]:
+        DETECTOR = {
+            # Palavra-chave : (horário, moeda, nome completo, impacto)
+            "ADP":              ("08:15","USD","ADP Employment Change","medio"),
+            "NFIB":             ("06:00","USD","NFIB Small Business Index","medio"),
+            "TRADE BALANCE":    ("08:30","USD","Trade Balance (EUA)","medio"),
+            "EXISTING HOME":    ("10:00","USD","Existing Home Sales","medio"),
+            "NEW HOME":         ("10:00","USD","New Home Sales","medio"),
+            "JOBLESS":          ("08:30","USD","Initial Jobless Claims","medio"),
+            "CLAIMS":           ("08:30","USD","Initial Jobless Claims","medio"),
+            "PAYROLL":          ("08:30","USD","Non-Farm Payrolls","alto"),
+            "NFP":              ("08:30","USD","Non-Farm Payrolls","alto"),
+            "UNEMPLOYMENT":     ("08:30","USD","Unemployment Rate","alto"),
+            "CPI":              ("08:30","USD","CPI — Inflação EUA","alto"),
+            "INFLATION":        ("08:30","USD","CPI — Inflação EUA","alto"),
+            "PPI":              ("08:30","USD","PPI — Preços ao Produtor","medio"),
+            "PCE":              ("08:30","USD","PCE Price Index","alto"),
+            "RETAIL SALES":     ("08:30","USD","Retail Sales","alto"),
+            "GDP":              ("08:30","USD","GDP — PIB EUA","alto"),
+            "FOMC":             ("14:00","USD","Decisão FOMC / Fed","alto"),
+            "FED DECISION":     ("14:00","USD","Decisão FOMC / Fed","alto"),
+            "RATE DECISION":    ("14:00","USD","Decisão de Juros Fed","alto"),
+            "POWELL":           ("14:00","USD","Fala do Powell / Fed","alto"),
+            "ISM MANUFACTUR":   ("10:00","USD","ISM Manufacturing PMI","medio"),
+            "ISM SERVICES":     ("10:00","USD","ISM Services PMI","medio"),
+            "ISM NON-MANUF":    ("10:00","USD","ISM Services PMI","medio"),
+            "JOLTS":            ("10:00","USD","JOLTS Job Openings","medio"),
+            "DURABLE GOODS":    ("08:30","USD","Durable Goods Orders","medio"),
+            "HOUSING STARTS":   ("08:30","USD","Housing Starts","medio"),
+            "INDUSTRIAL PROD":  ("09:15","USD","Industrial Production","medio"),
+            "CONSUMER CONF":    ("10:00","USD","Consumer Confidence","medio"),
+            "MICHIGAN":         ("10:00","USD","UMich Consumer Sentiment","medio"),
+            "PMI":              ("09:45","USD","PMI Composto EUA","medio"),
+            # Brasil
+            "COPOM":            ("18:00","BRL","Decisão COPOM — Selic","alto"),
+            "SELIC":            ("18:00","BRL","Decisão COPOM — Selic","alto"),
+            "IPCA":             ("09:00","BRL","IPCA — Inflação Brasil","alto"),
+            "CAGED":            ("09:00","BRL","CAGED — Empregos Formais","medio"),
+            "PIB BRASIL":       ("09:00","BRL","PIB Brasil","alto"),
+            "FOCUS":            ("08:30","BRL","Boletim Focus — BCB","medio"),
+            # Europa
+            "GERMAN":           ("02:00","EUR","Dados Alemanha","medio"),
+            "ECB":              ("07:45","EUR","Decisão BCE","alto"),
+            "EURO":             ("04:00","EUR","Dados da Zona do Euro","medio"),
+        }
+
+        # Coleta títulos das notícias do dia
+        todos_titulos = []
+        for feed_url in [
+            "https://br.investing.com/rss/news_25.rss",
+            "https://br.investing.com/rss/news_14.rss",
+            "https://feeds.marketwatch.com/marketwatch/topstories/",
+            "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114",
+        ]:
             try:
-                feed = feedparser.parse(url)
+                feed = feedparser.parse(feed_url)
                 for e in feed.entries[:8]:
-                    noticias_upper.append(e.get("title","").upper())
+                    todos_titulos.append(e.get("title","").upper())
             except Exception:
                 pass
-        for noticia in noticias_upper:
-            for kw, (hora, moeda, nome, impacto) in KEYWORDS_AGENDA.items():
-                if kw in noticia and nome not in encontrados:
+
+        for titulo in todos_titulos:
+            for kw, (hora, moeda, nome, impacto) in DETECTOR.items():
+                if kw in titulo and nome not in encontrados:
                     encontrados.add(nome)
                     eventos.append({"time": hora, "currency": moeda, "event": nome, "impact": impacto})
-    except Exception:
-        pass
+                    log(f"  Evento detectado nas noticias: {nome}")
+
+    except Exception as e:
+        log(f"AVISO detector noticias: {e}")
 
     # 4. Sempre adiciona eventos recorrentes do dia da semana (se não conflitar)
     for ev in AGENDA_SEMANAL.get(dia, []):
