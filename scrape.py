@@ -331,23 +331,26 @@ def buscar_noticias():
     """Coleta noticias de Reuters, Bloomberg, FT, MarketWatch via RSS."""
     import feedparser
     FEEDS = [
-        # Reuters via múltiplos canais
-        ("Reuters",     "https://news.google.com/rss/search?q=site:reuters.com+markets+OR+economy+OR+fed&hl=en-US&gl=US&ceid=US:en"),
-        ("Reuters BR",  "https://news.google.com/rss/search?q=site:reuters.com+brasil+OR+brazil+OR+ibovespa&hl=pt-BR&gl=BR&ceid=BR:pt-419"),
-        # Bloomberg
-        ("Bloomberg",   "https://news.google.com/rss/search?q=site:bloomberg.com+markets+OR+economy&hl=en-US&gl=US&ceid=US:en"),
+        # Reuters mercados globais
+        ("Reuters",      "https://news.google.com/rss/search?q=site:reuters.com+markets+OR+economy+OR+fed+OR+stocks&hl=en-US&gl=US&ceid=US:en"),
+        # Reuters Brasil
+        ("Reuters BR",   "https://news.google.com/rss/search?q=site:reuters.com+ibovespa+OR+brazil+OR+petrobras+OR+vale+OR+copom&hl=pt-BR&gl=BR&ceid=BR:pt-419"),
+        # Bloomberg mercados
+        ("Bloomberg",    "https://news.google.com/rss/search?q=site:bloomberg.com+markets+OR+fed+OR+stocks+OR+economy&hl=en-US&gl=US&ceid=US:en"),
         # Financial Times
-        ("FT",          "https://www.ft.com/rss/home/international"),
+        ("FT",           "https://www.ft.com/rss/home/international"),
         # MarketWatch
-        ("MarketWatch", "https://feeds.marketwatch.com/marketwatch/topstories/"),
-        # Yahoo Finance (sindicado Reuters/Bloomberg)
-        ("Yahoo Fin",   "https://finance.yahoo.com/news/rssindex"),
-        # CNBC
-        ("CNBC",        "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114"),
-        ("CNBC Markets","https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=15839135"),
-        # Investing.com
-        ("Investing BR","https://br.investing.com/rss/news_25.rss"),
-        ("Investing GL","https://br.investing.com/rss/news_14.rss"),
+        ("MarketWatch",  "https://feeds.marketwatch.com/marketwatch/topstories/"),
+        # CNBC Markets
+        ("CNBC Markets", "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=15839135"),
+        # Brasil — InfoMoney
+        ("InfoMoney",    "https://www.infomoney.com.br/feed/"),
+        # Brasil — Valor Econômico
+        ("Valor",        "https://news.google.com/rss/search?q=site:valor.globo.com+ibovespa+OR+bolsa+OR+dolar+OR+juros&hl=pt-BR&gl=BR&ceid=BR:pt-419"),
+        # Brasil — Investing.com
+        ("Investing BR", "https://br.investing.com/rss/news_25.rss"),
+        # Brasil — B3/mercado local
+        ("Brasil Mkt",   "https://news.google.com/rss/search?q=ibovespa+OR+petrobras+OR+vale+OR+selic+OR+copom+OR+%22mercado+brasileiro%22&hl=pt-BR&gl=BR&ceid=BR:pt-419"),
     ]
 
     noticias = []
