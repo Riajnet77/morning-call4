@@ -413,29 +413,34 @@ def buscar_juros_br():
         return None
 
 def buscar_focus():
-    """Busca expectativas do Boletim Focus via API do BCB (série SGS)."""
+    """Busca expectativas do Boletim Focus via API OData do BCB."""
     try:
-        # Selic esperada — série 4175
-        r_selic = requests.get("https://api.bcb.gov.br/dados/serie/bcdata.sgs.4175/dados/ultimos/1?formato=json", timeout=10)
-        # IPCA esperado — série 4179  
-        r_ipca = requests.get("https://api.bcb.gov.br/dados/serie/bcdata.sgs.4179/dados/ultimos/1?formato=json", timeout=10)
-        # PIB esperado — série 4380
-        r_pib = requests.get("https://api.bcb.gov.br/dados/serie/bcdata.sgs.4380/dados/ultimos/1?formato=json", timeout=10)
-
         resultado = {}
-        if r_selic.status_code == 200:
-            d = r_selic.json()
-            resultado["selic_esperada"] = float(d[0]["valor"].replace(",", "."))
-            resultado["selic_data"] = d[0]["data"]
-        if r_ipca.status_code == 200:
-            d = r_ipca.json()
-            resultado["ipca_esperado"] = float(d[0]["valor"].replace(",", "."))
-        if r_pib.status_code == 200:
-            d = r_pib.json()
-            resultado["pib_esperado"] = float(d[0]["valor"].replace(",", "."))
+
+        # Selic expectativa fim do ano — endpoint OData Focus
+        url_selic = "https://olinda.bcb.gov.br/olinda/servico/Focus-EndpointFoco/versao/v1/odata/ExpectativasMercadoAnuais?$filter=Indicador%20eq%20'Selic'%20and%20Suavizado%20eq%20'S'&$top=1&$orderby=Data%20desc&$format=json&$select=Indicador,Data,Mediana,DataReferencia"
+        url_ipca = "https://olinda.bcb.gov.br/olinda/servico/Focus-EndpointFoco/versao/v1/odata/ExpectativasMercadoAnuais?$filter=Indicador%20eq%20'IPCA'%20and%20Suavizado%20eq%20'S'&$top=1&$orderby=Data%20desc&$format=json&$select=Indicador,Data,Mediana,DataReferencia"
+        url_pib  = "https://olinda.bcb.gov.br/olinda/servico/Focus-EndpointFoco/versao/v1/odata/ExpectativasMercadoAnuais?$filter=Indicador%20eq%20'PIB%20Total'%20and%20Suavizado%20eq%20'S'&$top=1&$orderby=Data%20desc&$format=json&$select=Indicador,Data,Mediana,DataReferencia"
+
+        headers = {"User-Agent": "Mozilla/5.0"}
+        for nome, url, campo in [("selic_esperada", url_selic, "Mediana"),
+                                   ("ipca_esperado",  url_ipca,  "Mediana"),
+                                   ("pib_esperado",   url_pib,   "Mediana")]:
+            try:
+                r = requests.get(url, headers=headers, timeout=10)
+                if r.status_code == 200:
+                    d = r.json()
+                    if d.get("value"):
+                        val = float(str(d["value"][0][campo]).replace(",","."))
+                        resultado[nome] = val
+                        resultado[nome + "_ref"] = d["value"][0].get("DataReferencia","")
+            except Exception:
+                pass
 
         if resultado:
             log(f"Focus: Selic {resultado.get('selic_esperada','?')}% | IPCA {resultado.get('ipca_esperado','?')}% | PIB {resultado.get('pib_esperado','?')}%")
+        else:
+            log("Focus: sem dados (API BCB indisponível)")
         return resultado
     except Exception as e:
         log(f"AVISO Focus: {e}")
