@@ -500,6 +500,26 @@ function renderIndicadores(ind) {
         <div class="ind-desc">Juro longo americano · referência global</div>
       </div>
       <div class="indicadores-grid" style="grid-template-columns:repeat(4,1fr);margin-top:0">
+      </div>
+    </div>
+    ${(ind?.selicEsperada || ind?.ipcaEsperado || ind?.ptax) ? `
+    <div class="indicadores-grid" style="grid-template-columns:repeat(3,1fr);margin-top:0">
+      ${ind?.selicEsperada ? \`<div class="ind-card" style="border-top:2px solid #a78bfa">
+        <div class="ind-label">Selic Esperada · Focus BCB</div>
+        <div class="ind-valor" style="color:#a78bfa">\${ind.selicEsperada.toFixed(2)}%</div>
+        <div class="ind-desc">Projeção mercado · Boletim Focus</div>
+      </div>\` : ''}
+      ${ind?.ipcaEsperado ? \`<div class="ind-card" style="border-top:2px solid #fb923c">
+        <div class="ind-label">IPCA Esperado · Focus BCB</div>
+        <div class="ind-valor" style="color:#fb923c">\${ind.ipcaEsperado.toFixed(2)}%</div>
+        <div class="ind-desc">Projeção inflação · Boletim Focus</div>
+      </div>\` : ''}
+      ${ind?.ptax ? \`<div class="ind-card" style="border-top:2px solid var(--gold)">
+        <div class="ind-label">PTax Oficial · BCB\${ind?.ptaxData ? ' · ' + ind.ptaxData : ''}</div>
+        <div class="ind-valor" style="color:var(--gold)">R\$ \${ind.ptax.toFixed(4)}</div>
+        <div class="ind-desc">Taxa oficial do Banco Central</div>
+      </div>\` : ''}
+    </div>` : ''}
         <div class="ind-card" style="border-top:2px solid #f59e0b">
           <div class="ind-label">Ouro (XAU/USD)${chg(ind?.goldChange)}</div>
           <div class="ind-valor" style="font-size:18px;color:#f59e0b">US$ ${ind?.gold ? Math.round(ind.gold).toLocaleString('pt-BR') : '—'}</div>
