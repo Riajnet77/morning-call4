@@ -57,45 +57,108 @@ EVENTOS_CHAVE = [
     "Taxa de Desemprego", "Confiança", "Ata do", "Decisão de juros",
 ]
 
-# Calendário fixo de eventos de alto impacto 2026 (atualizar trimestralmente)
-# Formato: "YYYY-MM-DD": [{"time":"HH:MM","currency":"USD","event":"Nome","impact":"alto"}]
+# Calendário fixo de eventos de alto impacto 2026
 CALENDARIO_FIXO = {
     # JUNHO 2026
-    "2026-06-10": [{"time":"08:30","currency":"USD","event":"CPI — Inflação EUA (Mai)","impact":"alto"}],
-    "2026-06-11": [{"time":"08:30","currency":"USD","event":"PPI — Preços ao Produtor (Mai)","impact":"medio"}],
-    "2026-06-12": [{"time":"08:30","currency":"USD","event":"Initial Jobless Claims","impact":"medio"}],
+    "2026-06-09": [
+        {"time":"02:00","currency":"EUR","event":"German Industrial Production m/m","impact":"medio"},
+        {"time":"02:00","currency":"EUR","event":"German Trade Balance","impact":"medio"},
+        {"time":"06:00","currency":"USD","event":"NFIB Small Business Index","impact":"medio"},
+        {"time":"08:15","currency":"USD","event":"ADP Weekly Employment Change","impact":"medio"},
+        {"time":"08:30","currency":"USD","event":"Trade Balance (EUA)","impact":"medio"},
+        {"time":"10:00","currency":"USD","event":"Existing Home Sales","impact":"medio"},
+    ],
+    "2026-06-10": [
+        {"time":"08:30","currency":"USD","event":"CPI — Inflação EUA (Mai)","impact":"alto"},
+        {"time":"09:00","currency":"BRL","event":"IPCA (Mai) — Inflação Brasil","impact":"alto"},
+    ],
+    "2026-06-11": [
+        {"time":"08:30","currency":"USD","event":"PPI — Preços ao Produtor (Mai)","impact":"medio"},
+        {"time":"10:00","currency":"USD","event":"Michigan Consumer Sentiment","impact":"medio"},
+    ],
+    "2026-06-12": [
+        {"time":"08:30","currency":"USD","event":"Initial Jobless Claims","impact":"medio"},
+    ],
     "2026-06-13": [
         {"time":"08:30","currency":"USD","event":"Retail Sales (Mai)","impact":"alto"},
         {"time":"09:15","currency":"USD","event":"Industrial Production (Mai)","impact":"medio"},
     ],
-    "2026-06-17": [{"time":"08:30","currency":"USD","event":"Housing Starts (Mai)","impact":"medio"}],
-    "2026-06-18": [{"time":"14:00","currency":"USD","event":"Decisão do Fed — FOMC Rate Decision","impact":"alto"}],
-    "2026-06-19": [{"time":"08:30","currency":"USD","event":"Initial Jobless Claims","impact":"medio"}],
-    "2026-06-25": [{"time":"08:30","currency":"USD","event":"GDP Final Q1 2026","impact":"alto"}],
-    "2026-06-26": [{"time":"08:30","currency":"USD","event":"PCE Price Index (Mai)","impact":"alto"}],
+    "2026-06-16": [
+        {"time":"08:30","currency":"USD","event":"Empire State Manufacturing","impact":"medio"},
+    ],
+    "2026-06-17": [
+        {"time":"08:30","currency":"USD","event":"Housing Starts & Building Permits","impact":"medio"},
+    ],
+    "2026-06-18": [
+        {"time":"14:00","currency":"USD","event":"Decisão do Fed — FOMC Rate Decision","impact":"alto"},
+        {"time":"14:30","currency":"USD","event":"Coletiva Powell — Fed","impact":"alto"},
+        {"time":"18:00","currency":"BRL","event":"Decisão COPOM — Taxa Selic","impact":"alto"},
+    ],
+    "2026-06-19": [
+        {"time":"08:30","currency":"USD","event":"Initial Jobless Claims","impact":"medio"},
+        {"time":"10:00","currency":"USD","event":"Existing Home Sales","impact":"medio"},
+    ],
+    "2026-06-23": [
+        {"time":"09:45","currency":"USD","event":"PMI Manufatura Flash (Jun)","impact":"medio"},
+        {"time":"10:00","currency":"USD","event":"New Home Sales","impact":"medio"},
+    ],
+    "2026-06-24": [
+        {"time":"08:30","currency":"USD","event":"Durable Goods Orders","impact":"medio"},
+    ],
+    "2026-06-25": [
+        {"time":"08:30","currency":"USD","event":"GDP Final Q1 2026","impact":"alto"},
+        {"time":"08:30","currency":"USD","event":"Initial Jobless Claims","impact":"medio"},
+    ],
+    "2026-06-26": [
+        {"time":"08:30","currency":"USD","event":"PCE Price Index (Mai)","impact":"alto"},
+        {"time":"10:00","currency":"USD","event":"Michigan Consumer Sentiment Final","impact":"medio"},
+    ],
+    "2026-06-30": [
+        {"time":"09:00","currency":"BRL","event":"IGP-M Junho (Inflação BR)","impact":"medio"},
+    ],
     # JULHO 2026
+    "2026-07-01": [
+        {"time":"10:00","currency":"USD","event":"ISM Manufacturing PMI (Jun)","impact":"medio"},
+    ],
     "2026-07-02": [
         {"time":"08:30","currency":"USD","event":"Non-Farm Payrolls (Jun)","impact":"alto"},
         {"time":"08:30","currency":"USD","event":"Unemployment Rate (Jun)","impact":"alto"},
+        {"time":"08:30","currency":"USD","event":"Average Hourly Earnings","impact":"alto"},
     ],
-    "2026-07-10": [{"time":"08:30","currency":"USD","event":"CPI — Inflação EUA (Jun)","impact":"alto"}],
-    "2026-07-29": [{"time":"14:00","currency":"USD","event":"Decisão do Fed — FOMC Rate Decision","impact":"alto"}],
-    # BRASIL
-    "2026-06-18": [{"time":"18:00","currency":"BRL","event":"Decisão COPOM — Taxa Selic","impact":"alto"}],
-    "2026-06-10": [{"time":"09:00","currency":"BRL","event":"IPCA (Mai) — Inflação Brasil","impact":"alto"}],
-    "2026-07-09": [{"time":"09:00","currency":"BRL","event":"IPCA (Jun) — Inflação Brasil","impact":"alto"}],
-    "2026-07-29": [{"time":"18:00","currency":"BRL","event":"Decisão COPOM — Taxa Selic","impact":"alto"}],
+    "2026-07-07": [
+        {"time":"10:00","currency":"USD","event":"ISM Services PMI (Jun)","impact":"medio"},
+    ],
+    "2026-07-09": [
+        {"time":"08:30","currency":"USD","event":"Initial Jobless Claims","impact":"medio"},
+        {"time":"09:00","currency":"BRL","event":"IPCA (Jun) — Inflação Brasil","impact":"alto"},
+    ],
+    "2026-07-10": [
+        {"time":"08:30","currency":"USD","event":"CPI — Inflação EUA (Jun)","impact":"alto"},
+    ],
+    "2026-07-14": [
+        {"time":"08:30","currency":"USD","event":"PPI — Preços ao Produtor (Jun)","impact":"medio"},
+    ],
+    "2026-07-16": [
+        {"time":"08:30","currency":"USD","event":"Retail Sales (Jun)","impact":"alto"},
+        {"time":"08:30","currency":"USD","event":"Initial Jobless Claims","impact":"medio"},
+    ],
+    "2026-07-28": [
+        {"time":"08:30","currency":"USD","event":"GDP Preliminar Q2 2026","impact":"alto"},
+        {"time":"08:30","currency":"USD","event":"Initial Jobless Claims","impact":"medio"},
+    ],
+    "2026-07-29": [
+        {"time":"14:00","currency":"USD","event":"Decisão do Fed — FOMC Rate Decision","impact":"alto"},
+        {"time":"18:00","currency":"BRL","event":"Decisão COPOM — Taxa Selic","impact":"alto"},
+    ],
+    "2026-07-31": [
+        {"time":"08:30","currency":"USD","event":"PCE Price Index (Jun)","impact":"alto"},
+        {"time":"09:00","currency":"BRL","event":"IGP-M Julho","impact":"medio"},
+    ],
 }
 
+# Fallback semanal — só usado se não houver no calendário fixo
 AGENDA_SEMANAL = {
-    0: [{"time":"10:00","currency":"USD","event":"ISM Manufacturing PMI","impact":"medio"}],
-    1: [{"time":"10:00","currency":"USD","event":"JOLTS Job Openings","impact":"medio"}],
-    2: [{"time":"14:00","currency":"USD","event":"FOMC Minutes / Beige Book","impact":"alto"}],
-    3: [{"time":"08:30","currency":"USD","event":"Initial Jobless Claims","impact":"medio"}],
-    4: [
-        {"time":"08:30","currency":"USD","event":"Non-Farm Payrolls (NFP)","impact":"alto"},
-        {"time":"08:30","currency":"USD","event":"Unemployment Rate","impact":"alto"},
-    ],
+    3: [{"time":"08:30","currency":"USD","event":"Initial Jobless Claims (semanal)","impact":"medio"}],
 }
 
 KEYWORDS_AGENDA = {
@@ -147,17 +210,19 @@ def buscar_agenda():
             h = row.select_one(".calendar__time")
             if h and h.text.strip():
                 hora_atual = h.text.strip()
-            imp = row.select_one(".calendar__impact span")
-            impacto = ""
+            imp = row.select_one(".calendar__impact span, .impact-icon, [class*='impact']")
+            impacto = "medio"  # default medio para não perder eventos
             if imp:
-                cls = " ".join(imp.get("class", []))
-                if "high" in cls: impacto = "alto"
-                elif "medium" in cls: impacto = "medio"
+                cls = " ".join(imp.get("class", [])).lower()
+                title = (imp.get("title","") or imp.get("data-original-title","")).lower()
+                if "high" in cls or "high" in title or "red" in cls: impacto = "alto"
+                elif "low" in cls or "low" in title or "gray" in cls or "grey" in cls: impacto = "baixo"
+                else: impacto = "medio"
             moeda_el = row.select_one(".calendar__currency")
             moeda = moeda_el.text.strip() if moeda_el else ""
             ev_el = row.select_one(".calendar__event-title")
             evento = ev_el.text.strip() if ev_el else ""
-            if evento and moeda in ["USD","BRL","EUR"] and impacto in ["alto","medio"] and evento not in encontrados:
+            if evento and moeda in ["USD","BRL","EUR","EUR","JPY","CNY","CAD","GBP"] and impacto in ["alto","medio"] and evento not in encontrados:
                 encontrados.add(evento)
                 eventos.append({"time": hora_atual, "currency": moeda, "event": evento, "impact": impacto})
         if len(eventos) > len(CALENDARIO_FIXO.get(hoje_str,[])):
