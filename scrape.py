@@ -359,26 +359,43 @@ def buscar_noticias():
         try:
             feed = feedparser.parse(url)
             count = 0
-            for e in feed.entries[:5]:
+            agora = datetime.now(BRT)
+            for e in feed.entries[:10]:
                 titulo = e.get("title", "").strip()
-                # Pega fonte real se vier do Google News
+
+                # Filtro de data — ignora noticias com mais de 48h
+                import calendar as cal
+                pub = e.get("published_parsed") or e.get("updated_parsed")
+                if pub:
+                    try:
+                        pub_dt = datetime.fromtimestamp(cal.timegm(pub), tz=BRT)
+                        if (agora - pub_dt).total_seconds() > 48 * 3600:
+                            continue
+                    except Exception:
+                        pass
+
+                # Fonte real
                 fonte_real = nome
                 if hasattr(e, "source") and hasattr(e.source, "title"):
                     fonte_real = e.source.title
-                # Remove prefixo "Reuters - " etc
+
+                # Remove prefixo redundante
                 for pref in ["Reuters - ", "Bloomberg - ", "Reuters:", "Bloomberg:", "FT - "]:
                     if titulo.startswith(pref):
                         titulo = titulo[len(pref):].strip()
+
                 if titulo and titulo not in vistos:
                     vistos.add(titulo)
                     noticias.append({"title": titulo, "source": fonte_real})
                     count += 1
-                    if count >= 4: break
+                    if count >= 4:
+                        break
             log(f"Noticias {nome}: {count}")
         except Exception as ex:
             log(f"AVISO {nome}: {ex}")
 
     log(f"Total noticias: {len(noticias)}")
+    return noticias[:16]
     return noticias[:16]
 
 def buscar_juros_br():
