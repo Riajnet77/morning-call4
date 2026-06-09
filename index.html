@@ -451,6 +451,42 @@ function vixFaixa(v) {
   return            {label:'Pânico',             cor:'#ef4444'};
 }
 
+function renderPeers(ind) {
+  if (!ind) return '';
+  const items = [];
+  if (ind.eww != null) {
+    const cor = ind.ewwChange >= 0 ? 'var(--green)' : 'var(--red)';
+    const sinal = ind.ewwChange >= 0 ? '▲' : '▼';
+    items.push('<div class="ind-card" style="border-top:2px solid #94a3b8">' +
+      '<div class="ind-label">México (EWW)' + chg(ind.ewwChange) + '</div>' +
+      '<div class="ind-valor" style="font-size:20px">US$ ' + (ind.eww ? ind.eww.toFixed(2) : '—') + '</div>' +
+      '<div class="ind-desc">ETF emergente — peer do IBOV</div></div>');
+  }
+  if (ind.ech != null) {
+    items.push('<div class="ind-card" style="border-top:2px solid #64748b">' +
+      '<div class="ind-label">Chile (ECH)' + chg(ind.echChange) + '</div>' +
+      '<div class="ind-valor" style="font-size:20px">US$ ' + (ind.ech ? ind.ech.toFixed(2) : '—') + '</div>' +
+      '<div class="ind-desc">ETF emergente — peer do IBOV</div></div>');
+  }
+  if (ind.brent != null) {
+    items.push('<div class="ind-card" style="border-top:2px solid #a16207">' +
+      '<div class="ind-label">Petróleo Brent' + chg(ind.brentChange) + '</div>' +
+      '<div class="ind-valor" style="font-size:20px;color:#ca8a04">US$ ' + (ind.brent ? ind.brent.toFixed(2) : '—') + '</div>' +
+      '<div class="ind-desc">Crude Brent — referência Petrobras</div></div>');
+  }
+  if (ind.soja != null) {
+    items.push('<div class="ind-card" style="border-top:2px solid #15803d">' +
+      '<div class="ind-label">Soja (ZS=F)' + chg(ind.sojaChange) + '</div>' +
+      '<div class="ind-valor" style="font-size:20px;color:#22c55e">US$ ' + (ind.soja ? ind.soja.toFixed(2) : '—') + '</div>' +
+      '<div class="ind-desc">Soja — commodities BR</div></div>');
+  }
+  if (items.length === 0) return '';
+  const cols = Math.min(items.length, 4);
+  return '<div class="sec-title" style="grid-column:1/-1;margin-top:8px">Peers emergentes & commodities BR</div>' +
+    '<div class="indicadores-grid" style="grid-template-columns:repeat(' + cols + ',1fr);margin-top:0">' +
+    items.join('') + '</div>';
+}
+
 function renderFocus(ind) {
   if (!ind || (!ind.selicEsperada && !ind.ipcaEsperado && !ind.ptax)) return '';
   let html = '<div class="indicadores-grid" style="grid-template-columns:repeat(3,1fr);margin-top:0">';
@@ -529,6 +565,7 @@ function renderIndicadores(ind) {
       </div>
     </div>
     ${renderFocus(ind)}
+    ${renderPeers(ind)}
           <div class="ind-label">Ouro (XAU/USD)${chg(ind?.goldChange)}</div>
           <div class="ind-valor" style="font-size:18px;color:#f59e0b">US$ ${ind?.gold ? Math.round(ind.gold).toLocaleString('pt-BR') : '—'}</div>
           <div class="ind-desc">Safe haven global</div>
