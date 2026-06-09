@@ -422,7 +422,7 @@ def buscar_focus():
         # 4390  = PIB esperado (% a.a.) — Focus  
         # 4175  = Selic esperada fim ano — Focus
         series = [
-            ("selic_esperada", "4175"),
+            ("selic_esperada", "4823"),  # Selic esperada Focus — série correta
             ("ipca_esperado",  "13521"),
             ("pib_esperado",   "4390"),
         ]
@@ -438,6 +438,8 @@ def buscar_focus():
                         if campo == "selic_esperada" and 5 < val < 25:
                             resultado[campo] = val
                             resultado["selic_data"] = d[0].get("data","")
+                        elif campo == "selic_esperada":
+                            log(f"Focus Selic serie 4823 valor invalido: {val}")
                         elif campo == "ipca_esperado" and 0 < val < 30:
                             resultado[campo] = val
                         elif campo == "pib_esperado" and -10 < val < 20:
