@@ -745,45 +745,154 @@ def gerar_secao_agenda(agenda):
     linhas.append("\nOs dados americanos costumam gerar volatilidade relevante no câmbio e, por correlação, no Ibovespa. Monitore os releases e evite exposição excessiva nos momentos de divulgação.")
     return "\n".join(linhas)
 
-def gerar_vies_texto(vies_label, tipo, fg, dxy, vix, ibov, sp, usd):
-    drivers = []
+def gerar_vies_texto(vies_label, tipo, fg, dxy, vix, ibov, sp, usd,
+                      nq=None, oil=None, brent=None, soja=None,
+                      eww=None, ech=None, us10y=None, selic=None, focus=None):
+    """Gera texto de direcionamento estratégico dinâmico e específico."""
+    hoje = datetime.now(BRT).strftime("%d/%m/%Y")
+    linhas = []
 
-    if vix.get("change_pct") is not None and vix["change_pct"] > 10:
-        drivers.append(f"VIX em alta acentuada ({vix['change_pct']:+.2f}%) sinalizando estresse")
-    if fg.get("value") is not None and fg["value"] <= 25:
-        drivers.append(f"Fear & Greed em {fg['value']} (Medo Extremo)")
-    if dxy.get("change_pct") is not None and dxy["change_pct"] > 0.4:
-        drivers.append(f"DXY em alta ({dxy['change_pct']:+.2f}%) pressionando emergentes")
-    if sp.get("change_pct") is not None and sp["change_pct"] < -1:
-        drivers.append(f"S&P 500 em queda expressiva ({sp['change_pct']:+.2f}%)")
-    if dxy.get("change_pct") is not None and dxy["change_pct"] < -0.4:
-        drivers.append(f"DXY em queda ({dxy['change_pct']:+.2f}%) favorecendo emergentes")
-    if sp.get("change_pct") is not None and sp["change_pct"] > 1:
-        drivers.append(f"S&P 500 em alta ({sp['change_pct']:+.2f}%)")
+    # ── ABERTURA ──────────────────────────────────────────────────────────────
+    ibov_pts = f"{int(ibov['price']):,}".replace(",",".") if ibov.get("price") else "N/A"
+    ibov_var = f"{ibov['change_pct']:+.2f}%" if ibov.get("change_pct") is not None else ""
+    usd_val  = f"R$ {usd['price']:.2f}" if usd.get("price") else "N/A"
+    usd_var  = f"{usd['change_pct']:+.2f}%" if usd.get("change_pct") is not None else ""
 
     if tipo == "baixista":
-        intro = random.choice([
-            f"O conjunto de fatores aponta para viés {vies_label} no pregão de hoje.",
-            f"A leitura dos drivers globais indica abertura com pressão vendedora — viés {vies_label}.",
-            f"Diante do cenário externo adverso, o viés para hoje é {vies_label}.",
-        ])
-        recom = "Gestão de risco é prioridade. Evitar posições compradas sem proteção e aguardar sinais de estabilização antes de ampliar exposição."
+        abertura = f"O pregão de {hoje} abre com viés **{vies_label}**. IBOV em {ibov_pts} pts ({ibov_var}), dólar em {usd_val} ({usd_var})."
     elif tipo == "altista":
-        intro = random.choice([
-            f"O ambiente externo favorável sustenta viés {vies_label} para o pregão.",
-            f"Os drivers globais apontam para uma abertura positiva — viés {vies_label}.",
-            f"Com o cenário externo contribuindo, o viés para hoje é {vies_label}.",
-        ])
-        recom = "Oportunidade para posições compradas em ativos de qualidade, com stops bem definidos."
+        abertura = f"O pregão de {hoje} abre com viés **{vies_label}**. IBOV em {ibov_pts} pts ({ibov_var}), dólar em {usd_val} ({usd_var})."
     else:
-        intro = f"Os fatores estão equilibrados, sustentando viés {vies_label} para o pregão de hoje."
-        recom = "Seletividade é a palavra-chave. Operar em ativos com catalisadores próprios e aguardar o mercado mostrar direção."
+        abertura = f"O pregão de {hoje} abre com viés **{vies_label}**. IBOV em {ibov_pts} pts ({ibov_var}), dólar em {usd_val} ({usd_var})."
+    linhas.append(abertura)
 
-    drivers_txt = ""
+    # ── DRIVERS PRINCIPAIS ────────────────────────────────────────────────────
+    drivers = []
+
+    # Fear & Greed
+    fg_val = fg.get("value") if fg else None
+    if fg_val is not None:
+        if fg_val <= 15:
+            drivers.append(f"Fear & Greed em {fg_val}/100 (Medo Extremo) — mercado em pânico, potencial reversão técnica no radar")
+        elif fg_val <= 30:
+            drivers.append(f"Fear & Greed em {fg_val}/100 (Medo) — sentimento negativo predomina")
+        elif fg_val >= 80:
+            drivers.append(f"Fear & Greed em {fg_val}/100 (Ganância Extrema) — mercado sobrecomprado, cautela")
+        elif fg_val >= 65:
+            drivers.append(f"Fear & Greed em {fg_val}/100 (Ganância) — apetite a risco elevado")
+
+    # VIX
+    if vix.get("price") is not None:
+        vix_p = vix["price"]
+        vix_c = vix.get("change_pct", 0)
+        if vix_p > 30:
+            drivers.append(f"VIX em {vix_p:.1f} pts (+{vix_c:.1f}%) — pânico no mercado americano, risco elevado")
+        elif vix_p > 20:
+            drivers.append(f"VIX em {vix_p:.1f} pts — volatilidade elevada, operar com stops apertados")
+        elif vix_c > 15:
+            drivers.append(f"VIX disparou {vix_c:+.1f}% para {vix_p:.1f} pts — aumento súbito de volatilidade")
+        elif vix_c < -10:
+            drivers.append(f"VIX recuou {vix_c:.1f}% para {vix_p:.1f} pts — compressão de volatilidade favorece risk-on")
+
+    # DXY
+    if dxy.get("change_pct") is not None:
+        dxy_c = dxy["change_pct"]
+        dxy_p = dxy.get("price", 0)
+        if dxy_c > 0.5:
+            drivers.append(f"DXY {dxy_c:+.2f}% em {dxy_p:.2f} — dólar forte pressiona emergentes e commodities")
+        elif dxy_c < -0.5:
+            drivers.append(f"DXY {dxy_c:+.2f}% em {dxy_p:.2f} — dólar fraco favorece IBOV e commodities em BRL")
+
+    # S&P e Nasdaq
+    if sp.get("change_pct") is not None:
+        sp_c = sp["change_pct"]
+        nq_c = (nq or {}).get("change_pct")
+        if sp_c < -2:
+            drivers.append(f"S&P 500 {sp_c:+.2f}% — derrocada em NY contamina abertura brasileira")
+        elif sp_c < -0.8:
+            drivers.append(f"S&P 500 {sp_c:+.2f}% — queda moderada em NY, pressão sobre bolsas emergentes")
+        elif sp_c > 1.5:
+            drivers.append(f"S&P 500 {sp_c:+.2f}% — rali em NY abre espaço para recuperação do IBOV")
+        elif sp_c > 0.5:
+            drivers.append(f"S&P 500 {sp_c:+.2f}% — leve otimismo externo apoia ativos de risco")
+
+    # Juros EUA
+    if us10y and us10y.get("price") is not None:
+        u10_p = us10y["price"]
+        u10_c = us10y.get("change_pct", 0)
+        if u10_c > 0.5:
+            drivers.append(f"Treasury 10Y {u10_p:.2f}% ({u10_c:+.2f}%) — juro longo americano subindo pressiona emergentes")
+        elif u10_c < -0.5:
+            drivers.append(f"Treasury 10Y {u10_p:.2f}% ({u10_c:+.2f}%) — alívio nos juros americanos favorece fluxo para emergentes")
+
+    # Selic e juros BR
+    if selic:
+        if focus and focus.get("selic_esperada"):
+            s_esp = focus["selic_esperada"]
+            if s_esp > selic + 1:
+                drivers.append(f"Selic em {selic:.1f}% a.a. com mercado projetando {s_esp:.1f}% — expectativa de alta pressionando prêmios de risco")
+            elif s_esp < selic - 0.5:
+                drivers.append(f"Selic em {selic:.1f}% a.a. com Focus projetando {s_esp:.1f}% — expectativa de corte no horizonte")
+
+    # Petróleo — impacto Petrobras
+    oil_data = brent if (brent or {}).get("price") else oil
+    if oil_data and oil_data.get("change_pct") is not None:
+        oil_c = oil_data["change_pct"]
+        oil_p = oil_data.get("price", 0)
+        nome_oil = "Brent" if (brent or {}).get("price") else "WTI"
+        if oil_c > 2:
+            drivers.append(f"Petróleo {nome_oil} {oil_c:+.2f}% para US$ {oil_p:.2f} — alta beneficia Petrobras (PETR3/4) e setor de energia")
+        elif oil_c < -2:
+            drivers.append(f"Petróleo {nome_oil} {oil_c:+.2f}% para US$ {oil_p:.2f} — queda pressiona Petrobras e reduz inflação de combustíveis")
+
+    # Soja — agronegócio
+    if soja and soja.get("change_pct") is not None:
+        sj_c = soja["change_pct"]
+        if abs(sj_c) > 1:
+            dirs = "alta beneficia exportadoras de grãos" if sj_c > 0 else "queda pressiona receitas do agronegócio"
+            drivers.append(f"Soja {sj_c:+.2f}% — {dirs}")
+
+    # Peers emergentes
+    peers_txt = []
+    if eww and eww.get("change_pct") is not None:
+        peers_txt.append(f"México (EWW) {eww['change_pct']:+.2f}%")
+    if ech and ech.get("change_pct") is not None:
+        peers_txt.append(f"Chile (ECH) {ech['change_pct']:+.2f}%")
+    if peers_txt:
+        divergencia = ""
+        ibov_c = ibov.get("change_pct", 0) or 0
+        peers_medio = sum([
+            (eww or {}).get("change_pct", 0) or 0,
+            (ech or {}).get("change_pct", 0) or 0
+        ]) / 2
+        if ibov_c > peers_medio + 1:
+            divergencia = " — Brasil outperformando peers"
+        elif ibov_c < peers_medio - 1:
+            divergencia = " — Brasil underperformando peers"
+        drivers.append(f"Peers emergentes: {', '.join(peers_txt)}{divergencia}")
+
     if drivers:
-        drivers_txt = "Principais drivers: " + " | ".join(drivers) + "."
+        linhas.append("Principais drivers: " + " · ".join(drivers) + ".")
 
-    return "\n\n".join(filter(None, [intro, drivers_txt, recom]))
+    # ── RECOMENDAÇÃO OPERACIONAL ──────────────────────────────────────────────
+    if tipo == "baixista":
+        if fg_val and fg_val <= 20 and vix.get("price", 0) > 25:
+            recom = "Medo extremo + VIX elevado = zona de reversão potencial. Aguardar confirmação antes de posições vendidas. Stops obrigatórios."
+        elif dxy.get("change_pct", 0) > 0.5:
+            recom = "Dólar forte + viés baixista: evitar ações com receita em BRL e importadoras. Foco em exportadoras (Vale, Petrobras, agro) como proteção cambial."
+        else:
+            recom = "Reduzir exposição a risco. Priorizar proteção com hedge cambial ou posições defensivas. Aguardar estabilização antes de novas entradas."
+    elif tipo == "altista":
+        if sp.get("change_pct", 0) > 1 and dxy.get("change_pct", 0) < 0:
+            recom = "Cenário ideal: NY em alta + dólar fraco = fluxo para emergentes. Oportunidade em ações de crescimento e small caps da B3."
+        else:
+            recom = "Viés construtivo. Posições compradas em ativos de qualidade com stops definidos. Atenção à agenda do dia para ajustes de risco."
+    else:
+        recom = "Mercado sem direção clara. Seletividade máxima — operar apenas em ativos com catalisador próprio. Evitar alavancagem e aguardar definição de tendência."
+
+    linhas.append(recom)
+
+    return "\n\n".join(linhas)
 
 # ── MAIN ──────────────────────────────────────────────────────────────────────
 
@@ -830,7 +939,7 @@ def salvar_dados():
     analise_usd  = gerar_analise_dolar(usd, dxy)
     sec_agenda   = gerar_secao_agenda(agenda)
     vies_label, vies_tipo = calcular_vies(fg, dxy, vix, ibov, sp, usd)
-    vies_txt     = gerar_vies_texto(vies_label, vies_tipo, fg, dxy, vix, ibov, sp, usd)
+    vies_txt     = gerar_vies_texto(vies_label, vies_tipo, fg, dxy, vix, ibov, sp, usd, nq=nq, oil=oil, brent=brent, soja=soja, eww=eww, ech=ech, us10y=juros.get("us10y",{}), selic=selic, focus=focus)
 
     # Seção de juros
     selic_txt = ""
