@@ -33,5 +33,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data.json
-          git commit -m "auto: morning call $(date +'%d/%m/%Y %H:%M') [skip ci]" || echo "Nada a commitar"
-          git push || echo "Push falhou"
+          # Força sempre um commit para manter o repo ativo e evitar desabilitação do cron
+          git commit --allow-empty -m "auto: morning call $(date +'%d/%m/%Y %H:%M') [skip ci]"
+          git push
