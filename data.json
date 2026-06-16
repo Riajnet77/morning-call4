@@ -1,118 +1,118 @@
 {
   "date": "16/06/2026",
-  "lastUpdate": "16/06/2026 08:05:38",
-  "lastFetch": "16/06/2026 08:05:38",
+  "lastUpdate": "16/06/2026 13:01:46",
+  "lastFetch": "16/06/2026 13:01:46",
   "title": "Morning Call · 16/06",
-  "vies": "Levemente Baixista",
-  "vies_txt": "O pregão de 16/06/2026 abre com viés **Levemente Baixista**. IBOV em 171.133 pts (+0.00%), dólar em R$ 5.07 (+0.12%).\n\nPrincipais drivers: Fear & Greed em 23/100 (Medo) — sentimento negativo predomina · Selic em 14.5% a.a. com mercado projetando 17.0% — expectativa de alta pressionando prêmios de risco · Petróleo Brent -2.44% para US$ 81.14 — queda pressiona Petrobras e reduz inflação de combustíveis · Peers emergentes: México (EWW) -0.90%, Chile (ECH) +0.00%.\n\nReduzir exposição a risco. Priorizar proteção com hedge cambial ou posições defensivas. Aguardar estabilização antes de novas entradas.",
+  "vies": "Neutro",
+  "vies_txt": "O pregão de 16/06/2026 abre com viés **Neutro**. IBOV em 169.682 pts (+0.00%), dólar em R$ 5.08 (+0.33%).\n\nPrincipais drivers: Selic em 14.5% a.a. com mercado projetando 17.0% — expectativa de alta pressionando prêmios de risco · Petróleo Brent -4.79% para US$ 79.19 — queda pressiona Petrobras e reduz inflação de combustíveis · Soja +2.35% — alta beneficia exportadoras de grãos · Peers emergentes: México (EWW) +0.55%, Chile (ECH) +0.00%.\n\nMercado sem direção clara. Seletividade máxima — operar apenas em ativos com catalisador próprio. Evitar alavancagem e aguardar definição de tendência.",
   "tags": [
-    "Viés Levemente Baixista",
+    "Viés Neutro",
     "IBOV ▲ +0.00%",
-    "USD/BRL R$ 5.07",
-    "VIX 16.2"
+    "USD/BRL R$ 5.08",
+    "VIX 16.1"
   ],
   "tags_tipados": [
     {
-      "tipo": "baixista",
-      "label": "Viés Levemente Baixista"
+      "tipo": "neutro",
+      "label": "Viés Neutro"
     }
   ],
   "insights": [
-    "**CONTEXTO GLOBAL**\nO DXY operou relativamente estável (+0.00%), sem grandes desequilíbrios no câmbio global.\n\nAs bolsas americanas tiveram sessão mista ou flat (S&P 500 +0.00%, Nasdaq +0.00%), sem direcionamento claro para os ativos de risco.\n\nO VIX permanece em 16.2 pontos, com volatilidade moderada.\n\nO índice Fear & Greed marca 23 pontos — zona de \"Medo\" — sugerindo que o mercado precifica risco excessivo e pode estar próximo de um ponto de reversão técnica.\n\nCommodities e cripto: Ouro subiu +0.95% para US$ 4.369 | WTI recuou -4.17% para US$ 77.38 | Bitcoin subiu +0.36% para US$ 66.525.",
-    "**IBOVESPA**\nO Ibovespa encerrou a sessão anterior em 171.133 pontos, praticamente estável (+0.00%). A correlação com os mercados externos foi moderada na última sessão. Tecnicamente. monitorar suporte em 166.000 e 160.900 pontos. Resistências relevantes em 174.600 e 179.700 pontos. Peers emergentes: México (EWW) -0.90%, Chile (ECH) +0.00%.",
-    "**DÓLAR / CÂMBIO**\nO câmbio operou próximo à estabilidade, com o dólar em R$ 5.07 (+0.12%).",
-    "**JUROS & RENDA FIXA**\nA taxa Selic está em 14.50% a.a. O mercado projeta Selic em 17.02% ao final do ciclo (Boletim Focus). Expectativa de IPCA para o ano: 3.00%. Projeção de PIB: 0.54%. A PTax oficial do BCB fechou em R$ 5.0430. Os juros americanos (Treasury 10Y) operam em 4.49% (+0.00%). O ETF EWZ (proxy do Brasil no exterior) operou -1.31%, sinalizando o apetite do investidor estrangeiro pelo mercado brasileiro.",
-    "**AGENDA DO DIA**\nEventos de impacto MÉDIO:\n• 04:00 [EUR] Dados da Zona do Euro\n• 08:30 [USD] Empire State Manufacturing\n• 2:30am [JPY] BOJ Press Conference\n• 4:30pm [USD] API Weekly Statistical Bulletin\n\nOs dados americanos costumam gerar volatilidade relevante no câmbio e, por correlação, no Ibovespa. Monitore os releases e evite exposição excessiva nos momentos de divulgação.",
-    "**MANCHETES**\n• Stocks rise as SpaceX fever lifts tech; yen flat after BOJ hikes rates - Reuters [Reuters]\n• Oil drops to fresh three-month low as markets weigh US-Iran peace deal - Reuters [Reuters]\n• Stocks of oil in US Strategic Petroleum Reserve falls to lowest since 1983 - Reuters [Reuters]\n• Warsh's debut Fed press conference may reveal his strategy for inflation, rates - Reuters [Reuters]\n• China’s Property Stocks Tumble Back to Pre-2024 Stimulus Levels - Bloomberg.com [Bloomberg.com]\n• Chinese Economy Stalls as Spending, Investment Drop to Covid-Era Levels - Bloomberg.com [Bloomberg.com]\n• Oil Holds Losses After Iran Deal Spurs Stock Rally: Markets Wrap - Bloomberg.com [Bloomberg.com]\n• SpaceX Said to Allocate $600 Million to European Retail in Blockbuster IPO - Bloomberg.com [Bloomberg.com]\n• US-Iran deal must be ‘material’ for Strait of Hormuz to reopen, tanker giant warns [FT]\n• Trump administration considers $300bn fund for Iran if deal is upheld [FT]\n• How the US-Iran deal came together [FT]\n• The reclusive heirs in line for billions when Europe’s top tankmaker lists [FT]\n• ‘I’m a realist’: I’m 50 with $6.5 million saved. Should I quit my $200,000 job and retire early? [MarketWatch]\n• Overnight price spike sees SpaceX overtake Amazon as America’s fifth-largest company [MarketWatch]\n• I’m spending $170,000 to upgrade my home for my aging parents. Can I get tax breaks? [MarketWatch]\n• I’m 60, retired with $3 million. My fiancée, 55, only has $1 million and plans to keep working. Are we compatible? [MarketWatch]"
+    "**CONTEXTO GLOBAL**\nO DXY operou relativamente estável (+0.00%), sem grandes desequilíbrios no câmbio global.\n\nAs bolsas americanas tiveram sessão mista ou flat (S&P 500 +0.00%, Nasdaq +0.00%), sem direcionamento claro para os ativos de risco.\n\nO VIX permanece em 16.1 pontos, com volatilidade moderada.\n\nCommodities e cripto: Ouro subiu +0.45% para US$ 4.347 | WTI recuou -6.55% para US$ 75.46 | Bitcoin recuou -0.63% para US$ 65.875.",
+    "**IBOVESPA**\nO Ibovespa encerrou a sessão anterior em 169.682 pontos, praticamente estável (+0.00%). A correlação com os mercados externos foi moderada na última sessão. Tecnicamente. monitorar suporte em 164.600 e 159.500 pontos. Resistências relevantes em 173.100 e 178.200 pontos. Peers emergentes: México (EWW) +0.55%, Chile (ECH) +0.00%.",
+    "**DÓLAR / CÂMBIO**\nO dólar subiu +0.33% para R$ 5.08, mantendo pressão sobre o real.",
+    "**JUROS & RENDA FIXA**\nA taxa Selic está em 14.50% a.a. O mercado projeta Selic em 17.02% ao final do ciclo (Boletim Focus). Expectativa de IPCA para o ano: 3.00%. Projeção de PIB: 0.54%. A PTax oficial do BCB fechou em R$ 5.0430. Os juros americanos (Treasury 10Y) operam em 4.44% (+0.00%). O ETF EWZ (proxy do Brasil no exterior) operou -0.35%, sinalizando o apetite do investidor estrangeiro pelo mercado brasileiro.",
+    "**AGENDA DO DIA**\nEventos de impacto MÉDIO:\n• 08:30 [USD] Empire State Manufacturing\n• 12:30am [JPY] BOJ Press Conference\n• 2:30pm [USD] API Weekly Statistical Bulletin\n• 3:00am [EUR] German ZEW Economic Sentiment\n\nOs dados americanos costumam gerar volatilidade relevante no câmbio e, por correlação, no Ibovespa. Monitore os releases e evite exposição excessiva nos momentos de divulgação.",
+    "**MANCHETES**\n• Stocks rise as SpaceX fever boosts tech; yen flat after BOJ hikes rates - Reuters [Reuters]\n• Oil drops about 4% to three-month low as markets weigh US-Iran deal - Reuters [Reuters]\n• Some at Fed may pencil in a hike. Most won't. Warsh is a question mark - Reuters [Reuters]\n• Stocks of oil in US Strategic Petroleum Reserve falls to lowest since 1983 - Reuters [Reuters]\n• Kevin Warsh Wants Less Fed Talk, Risking More Market Surprises - Bloomberg [Bloomberg]\n• Chinese Economy Stalls as Spending, Investment Drop to Covid-Era Levels - Bloomberg [Bloomberg]\n• World Cup Exposes Growing Global Rift Over Prediction Markets - Bloomberg [Bloomberg]\n• China’s Property Stocks Tumble Back to Pre-2024 Stimulus Levels - Bloomberg [Bloomberg]\n• SpaceX leapfrogs Amazon to become world’s fifth-most valuable company [FT]\n• OpenAI spending hit $34bn last year ahead of planned IPO [FT]\n• The reclusive heirs in line for billions when Europe’s top tankmaker lists [FT]\n• This time, Trump and Netanyahu have really fallen out [FT]\n• ‘I’m a realist’: I’m 50 with $6.5 million saved. Should I quit my $200,000 job and retire early? [MarketWatch]\n• Want to improve your credit score? Here’s how to ask for a credit-limit increase. [MarketWatch]\n• Here’s when gas prices will come down if the U.S. deal to end the Iran war pans out [MarketWatch]\n• Oil may move through the Strait of Hormuz first, leaving fertilizer supplies stranded [MarketWatch]"
   ],
   "agenda": [
-    {
-      "time": "04:00",
-      "event": "[EUR] Dados da Zona do Euro"
-    },
     {
       "time": "08:30",
       "event": "[USD] Empire State Manufacturing"
     },
     {
-      "time": "2:30am",
+      "time": "12:30am",
       "event": "[JPY] BOJ Press Conference"
     },
     {
-      "time": "4:30pm",
+      "time": "2:30pm",
       "event": "[USD] API Weekly Statistical Bulletin"
     },
     {
-      "time": "5:00am",
+      "time": "3:00am",
       "event": "[EUR] German ZEW Economic Sentiment"
     },
     {
-      "time": "5:00am",
+      "time": "3:00am",
       "event": "[EUR] ZEW Economic Sentiment"
     },
     {
-      "time": "5:02am",
+      "time": "3:02am",
       "event": "[GBP] 10-y Bond Auction"
     },
     {
-      "time": "7:50pm",
+      "time": "5:50pm",
       "event": "[JPY] Core Machinery Orders m/m"
     },
     {
-      "time": "7:50pm",
+      "time": "5:50pm",
       "event": "[JPY] Trade Balance"
     },
     {
-      "time": "8:15am",
+      "time": "6:15am",
       "event": "[USD] ADP Weekly Employment Change"
     },
     {
-      "time": "8:30am",
+      "time": "6:30am",
       "event": "[CAD] Foreign Securities Purchases"
     },
     {
-      "time": "8:30am",
+      "time": "6:30am",
       "event": "[USD] Building Permits"
+    },
+    {
+      "time": "6:30am",
+      "event": "[USD] Housing Starts"
     }
   ],
-  "strategy": "O pregão de 16/06/2026 abre com viés **Levemente Baixista**. IBOV em 171.133 pts (+0.00%), dólar em R$ 5.07 (+0.12%).\n\nPrincipais drivers: Fear & Greed em 23/100 (Medo) — sentimento negativo predomina · Selic em 14.5% a.a. com mercado projetando 17.0% — expectativa de alta pressionando prêmios de risco · Petróleo Brent -2.44% para US$ 81.14 — queda pressiona Petrobras e reduz inflação de combustíveis · Peers emergentes: México (EWW) -0.90%, Chile (ECH) +0.00%.\n\nReduzir exposição a risco. Priorizar proteção com hedge cambial ou posições defensivas. Aguardar estabilização antes de novas entradas.",
+  "strategy": "O pregão de 16/06/2026 abre com viés **Neutro**. IBOV em 169.682 pts (+0.00%), dólar em R$ 5.08 (+0.33%).\n\nPrincipais drivers: Selic em 14.5% a.a. com mercado projetando 17.0% — expectativa de alta pressionando prêmios de risco · Petróleo Brent -4.79% para US$ 79.19 — queda pressiona Petrobras e reduz inflação de combustíveis · Soja +2.35% — alta beneficia exportadoras de grãos · Peers emergentes: México (EWW) +0.55%, Chile (ECH) +0.00%.\n\nMercado sem direção clara. Seletividade máxima — operar apenas em ativos com catalisador próprio. Evitar alavancagem e aguardar definição de tendência.",
   "indicators": {
-    "fearGreed": 23,
-    "fearGreedLabel": "Extreme Fear",
+    "fearGreed": null,
+    "fearGreedLabel": "N/A",
     "dxy": 99.55,
     "dxyChange": 0.0,
-    "vix": 16.18,
+    "vix": 16.07,
     "vixChange": 0.0,
-    "ibov": 171133.0,
+    "ibov": 169682.47,
     "ibovChange": 0.0,
-    "usdbrl": 5.07,
-    "usdbrlChange": 0.12,
+    "usdbrl": 5.08,
+    "usdbrlChange": 0.33,
     "selic": 14.5,
-    "us10y": 4.49,
+    "us10y": 4.44,
     "us10yChange": 0.0,
     "selicEsperada": 17.02,
     "ipcaEsperado": 3.0,
     "pibEsperado": 0.54,
     "ptax": 5.043,
     "ptaxData": "2026-06-15",
-    "btc": 66525.08,
-    "btcChange": 0.36,
-    "gold": 4369.1,
-    "goldChange": 0.95,
-    "oil": 77.38,
-    "oilChange": -4.17,
-    "stoxx": 6281.55,
+    "btc": 65874.68,
+    "btcChange": -0.63,
+    "gold": 4347.3,
+    "goldChange": 0.45,
+    "oil": 75.46,
+    "oilChange": -6.55,
+    "stoxx": 6257.42,
     "stoxxChange": 0.0,
-    "brent": 81.14,
-    "brentChange": -2.44,
-    "soja": 1126.5,
-    "sojaChange": 0.65,
-    "eww": 77.76,
-    "ewwChange": -0.9,
-    "ech": 41.5,
+    "brent": 79.19,
+    "brentChange": -4.79,
+    "soja": 1145.5,
+    "sojaChange": 2.35,
+    "eww": 78.19,
+    "ewwChange": 0.55,
+    "ech": 41.72,
     "echChange": 0.0
   },
   "scrape_ok": true,
-  "generated_at": "16/06/2026 08:05:38",
+  "generated_at": "16/06/2026 13:01:46",
   "feriado_aviso": null
 }
