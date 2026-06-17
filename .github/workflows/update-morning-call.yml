@@ -24,7 +24,15 @@ jobs:
 
       - name: Instalar dependências
         run: pip install requests feedparser beautifulsoup4
+       
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
+      - name: Instalar TradingView API
+        run: npm install @mathieuc/tradingview
+      
       - name: Executar scraper
         run: python scrape.py
 
