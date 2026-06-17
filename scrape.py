@@ -1061,6 +1061,13 @@ def salvar_dados():
     with open("data.json", "w", encoding="utf-8") as f:
         json.dump(json_final, f, ensure_ascii=False, indent=2)
 
+    # --- INDICADORES TECNICOS TRADINGVIEW ---
+    try:
+        from tv_indicators import integrar_no_morning_call
+        integrar_no_morning_call("data.json")
+    except Exception as e:
+        log(f"AVISO TradingView indicators: {e}")
+
     log(f"data.json salvo! Viés: {vies_label} | Seções: {len(paragrafos)}")
     log("=" * 50)
 
