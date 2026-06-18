@@ -4,737 +4,182 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Morning Call</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --bg: #09090b;
-    --surface: #111113;
-    --surface2: #18181b;
-    --border: rgba(255,255,255,0.07);
-    --border2: rgba(255,255,255,0.12);
-    --txt: #e4e4e7;
-    --txt2: #71717a;
-    --txt3: #52525b;
-    --gold: #d4a853;
-    --gold2: #f5c96a;
-    --green: #22c55e;
-    --red: #ef4444;
-    --blue: #60a5fa;
-    --mono: 'IBM Plex Mono', monospace;
-    --display: 'Syne', sans-serif;
-    --body: 'Inter', sans-serif;
-  }
-
-  body {
-    font-family: var(--body);
-    background: var(--bg);
-    color: var(--txt);
-    min-height: 100vh;
-    padding: 0;
-    line-height: 1.6;
-  }
-
-  /* ── TOPO ── */
-  .topo {
-    border-bottom: 1px solid var(--border);
-    padding: 20px 32px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    background: rgba(9,9,11,0.92);
-    backdrop-filter: blur(12px);
-    z-index: 10;
-  }
-  .topo-esq { display: flex; align-items: center; gap: 16px; }
-  .logo-badge {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    color: var(--gold);
-    background: rgba(212,168,83,0.1);
-    border: 1px solid rgba(212,168,83,0.25);
-    padding: 4px 10px;
-    border-radius: 4px;
-    text-transform: uppercase;
-  }
-  .topo-titulo {
-    font-family: var(--display);
-    font-size: 18px;
-    font-weight: 800;
-    color: #fff;
-    letter-spacing: -0.02em;
-  }
-  .topo-dir { display: flex; align-items: center; gap: 20px; }
-  .clock {
-    font-family: var(--mono);
-    font-size: 13px;
-    color: var(--txt2);
-  }
-  .status-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--green);
-    box-shadow: 0 0 6px var(--green);
-    animation: pulse 2s infinite;
-  }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-
-  /* ── LAYOUT ── */
-  .wrapper {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 40px 32px 80px;
-    display: grid;
-    grid-template-columns: 1fr 320px;
-    gap: 32px;
-  }
-  @media(max-width: 860px){
-    .wrapper { grid-template-columns: 1fr; padding: 24px 20px 60px; }
-  }
-
-  /* ── HERO ── */
-  .hero {
-    grid-column: 1 / -1;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 32px;
-    margin-bottom: 8px;
-  }
-  .hero-data {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--txt3);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-  .hero-h1 {
-    font-family: var(--display);
-    font-size: clamp(36px, 5vw, 58px);
-    font-weight: 800;
-    line-height: 1.0;
-    letter-spacing: -0.03em;
-    color: #fff;
-    margin-bottom: 16px;
-  }
-  .hero-h1 span { color: var(--gold); }
-  .hero-sub {
-    font-size: 14px;
-    color: var(--txt2);
-    font-family: var(--mono);
-  }
-
-  .vies-badge {
-    display: inline-block;
-    margin-top: 14px;
-    font-family: var(--mono);
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    padding: 8px 16px;
-    border-radius: 6px;
-    border: 1px solid;
-  }
-  .vies-altista  { color: #86efac; background: rgba(34,197,94,0.1);  border-color: rgba(34,197,94,0.3); }
-  .vies-baixista { color: #fca5a5; background: rgba(239,68,68,0.1);  border-color: rgba(239,68,68,0.3); }
-  .vies-neutro   { color: #fcd34d; background: rgba(252,211,77,0.1); border-color: rgba(252,211,77,0.3); }
-
-  .feriado-aviso {
-    margin-top: 14px;
-    display: inline-block;
-    font-size: 13px;
-    color: #fcd34d;
-    background: rgba(252,211,77,0.08);
-    border: 1px solid rgba(252,211,77,0.2);
-    border-radius: 6px;
-    padding: 8px 14px;
-    font-family: var(--mono);
-  }
-
-  /* ── SECTION TITLE ── */
-  .sec-title {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--txt3);
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .sec-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-
-  /* ── CARD BASE ── */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 20px 22px;
-  }
-
-  /* ── INDICADORES ── */
-  .indicadores-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 32px;
-    grid-column: 1 / -1;
-  }
-  .ind-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 18px 20px;
-    position: relative;
-    overflow: hidden;
-  }
-  .ind-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-  }
-  .ind-card.fg::before { background: linear-gradient(90deg, var(--red), var(--gold), var(--green)); }
-  .ind-card.dxy::before { background: var(--blue); }
-  .ind-card.vix::before { background: var(--red); }
-  .ind-label {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    color: var(--txt3);
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-  .ind-valor {
-    font-family: var(--mono);
-    font-size: 28px;
-    font-weight: 600;
-    color: #fff;
-    line-height: 1;
-  }
-  .ind-desc {
-    font-size: 11px;
-    color: var(--txt3);
-    margin-top: 4px;
-  }
-  @media(max-width: 600px){
-    .indicadores-grid { grid-template-columns: 1fr; }
-  }
-
-  /* ── TAGS (SUPORTES / RESISTÊNCIAS) ── */
-  .tags-wrap {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 32px;
-    grid-column: 1 / -1;
-  }
-  .tag {
-    font-family: var(--mono);
-    font-size: 12px;
-    font-weight: 600;
-    padding: 6px 12px;
-    border-radius: 6px;
-    border: 1px solid;
-  }
-  .tag.resistencia {
-    color: #fca5a5;
-    background: rgba(239,68,68,0.08);
-    border-color: rgba(239,68,68,0.2);
-  }
-  .tag.suporte {
-    color: #86efac;
-    background: rgba(34,197,94,0.08);
-    border-color: rgba(34,197,94,0.2);
-  }
-  .tag.neutro {
-    color: var(--txt2);
-    background: var(--surface2);
-    border-color: var(--border);
-  }
-
-  /* ── COLUNA PRINCIPAL: INSIGHTS ── */
-  .col-main {}
-  .insights-texto {
-    font-size: 15px;
-    line-height: 1.8;
-    color: #d4d4d8;
-  }
-  .insights-texto p {
-    margin-bottom: 18px;
-  }
-  .insights-texto p:last-child { margin-bottom: 0; }
-
-  /* ── COLUNA LATERAL ── */
-  .col-side { display: flex; flex-direction: column; gap: 20px; }
-
-  /* ── ESTRATÉGIA ── */
-  .estrategia-card {
-    background: rgba(212,168,83,0.05);
-    border: 1px solid rgba(212,168,83,0.15);
-    border-radius: 10px;
-    padding: 20px 22px;
-  }
-  .estrategia-txt {
-    font-size: 14px;
-    line-height: 1.7;
-    color: #d4c9a8;
-  }
-
-  /* ── AGENDA ── */
-  .agenda-lista { display: flex; flex-direction: column; gap: 0; }
-  .agenda-item {
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .agenda-item:last-child { border-bottom: none; padding-bottom: 0; }
-  .agenda-hora {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--gold);
-    min-width: 48px;
-    padding-top: 1px;
-  }
-  .agenda-evento {
-    font-size: 13px;
-    color: var(--txt);
-    line-height: 1.5;
-  }
-
-  /* ── ATUALIZAÇÃO ── */
-  .insight-secao {
-    margin-bottom: 28px;
-    padding-bottom: 24px;
-    border-bottom: 1px solid var(--border);
-  }
-  .insight-secao:last-child { border-bottom: none; margin-bottom: 0; }
-  .insight-titulo {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 12px;
-  }
-  .insight-corpo {
-    font-size: 15px;
-    line-height: 1.8;
-    color: #d4d4d8;
-  }
-  .insight-corpo p { margin-bottom: 10px; }
-  .insight-corpo p:last-child { margin-bottom: 0; }
-  .insight-corpo ul { color: #d4d4d8; }
-  .insight-corpo li { margin-bottom: 6px; }
-
-  .update-bar {
-    grid-column: 1 / -1;
-    margin-top: 24px;
-    padding-top: 20px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--txt3);
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .scrape-badge {
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-  }
-  .scrape-ok { background: rgba(34,197,94,0.1); color: #86efac; border: 1px solid rgba(34,197,94,0.2); }
-  .scrape-fail { background: rgba(239,68,68,0.1); color: #fca5a5; border: 1px solid rgba(239,68,68,0.2); }
-
-  /* ── ERRO ── */
-  .erro-box {
-    grid-column: 1 / -1;
-    background: rgba(239,68,68,0.06);
-    border: 1px solid rgba(239,68,68,0.2);
-    border-radius: 10px;
-    padding: 20px 24px;
-    color: #fca5a5;
-    font-size: 14px;
-  }
-
-  /* ── LOADING ── */
-  .loading {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 80px 0;
-    color: var(--txt3);
-    font-family: var(--mono);
-    font-size: 13px;
-  }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;line-height:1.6;padding:20px}
+.container{max-width:1200px;margin:0 auto}
+.header{text-align:center;margin-bottom:30px;padding:20px;background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%);border-radius:12px;border:1px solid #334155}
+.header h1{font-size:2.5rem;background:linear-gradient(90deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.header .date{color:#94a3b8;font-size:1.1rem}
+.tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:15px}
+.tag{padding:6px 14px;border-radius:20px;font-size:.85rem;font-weight:500}
+.tag-altista{background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.3)}
+.tag-baixista{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3)}
+.tag-neutro{background:rgba(148,163,184,.15);color:#cbd5e1;border:1px solid rgba(148,163,184,.3)}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin-bottom:30px}
+.card{background:#1e293b;border-radius:12px;padding:20px;border:1px solid #334155;transition:transform .2s}
+.card:hover{transform:translateY(-2px)}
+.card-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;color:#94a3b8;margin-bottom:8px}
+.card-value{font-size:1.8rem;font-weight:700;margin-bottom:4px}
+.card-change{font-size:.9rem;font-weight:500}
+.positive{color:#4ade80}
+.negative{color:#f87171}
+.neutral{color:#cbd5e1}
+.section{background:#1e293b;border-radius:12px;padding:25px;margin-bottom:20px;border:1px solid #334155}
+.section h2{font-size:1.3rem;margin-bottom:15px;color:#f8fafc;border-bottom:2px solid #334155;padding-bottom:10px}
+.section p{white-space:pre-line;color:#cbd5e1;line-height:1.8}
+.section ul{list-style:none;padding:0}
+.section li{padding:8px 0;border-bottom:1px solid #334155;color:#cbd5e1}
+.section li:last-child{border-bottom:none}
+.tv-section{background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%);border:1px solid #475569}
+.tv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:15px;margin-top:15px}
+.tv-card{background:#0f172a;border-radius:10px;padding:18px;border:1px solid #334155}
+.tv-card h3{font-size:1rem;color:#f8fafc;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.tv-mercado{font-size:.75rem;padding:4px 10px;border-radius:12px;font-weight:600}
+.tv-mercado-b3{background:rgba(34,197,94,.15);color:#4ade80}
+.tv-mercado-eua{background:rgba(96,165,250,.15);color:#60a5fa}
+.tv-mercado-crypto{background:rgba(168,85,247,.15);color:#a78bfa}
+.tv-ativo{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #1e293b}
+.tv-ativo:last-child{border-bottom:none}
+.tv-ticker{font-weight:600;color:#f8fafc}
+.tv-score{font-size:.85rem;padding:4px 10px;border-radius:8px;font-weight:600}
+.score-compra{background:rgba(34,197,94,.2);color:#4ade80}
+.score-venda{background:rgba(239,68,68,.2);color:#f87171}
+.score-neutro{background:rgba(148,163,184,.2);color:#cbd5e1}
+.tv-indicadores{font-size:.8rem;color:#94a3b8;margin-top:4px}
+.tv-sentimento{text-align:center;padding:15px;background:#0f172a;border-radius:10px;margin-top:15px;border:1px solid #334155}
+.tv-sentimento-label{font-size:.85rem;color:#94a3b8;margin-bottom:8px}
+.tv-sentimento-valor{font-size:1.5rem;font-weight:700}
+.tv-aviso{background:rgba(234,179,8,.1);border:1px solid rgba(234,179,8,.3);color:#fbbf24;padding:15px;border-radius:10px;text-align:center;margin-top:15px}
+@media(max-width:768px){.header h1{font-size:1.8rem}.cards-grid{grid-template-columns:repeat(2,1fr)}.tv-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-
-<header class="topo">
-  <div class="topo-esq">
-    <span class="topo-titulo" id="topo-titulo">Morning Call</span>
-  </div>
-  <div class="topo-dir">
-    <div class="status-dot" id="status-dot" style="display:none"></div>
-    <span class="clock" id="clock">--:--:--</span>
-  </div>
-</header>
-
-<div class="wrapper" id="wrapper">
-  <div class="loading" id="loading">Carregando morning call...</div>
+<div class="container">
+  <div id="app">Carregando Morning Call...</div>
 </div>
-
 <script>
-// ── RELÓGIO ──────────────────────────────────────────────────────────────────
-function tick() {
-  const agora = new Date();
-  const opts = { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-  document.getElementById('clock').textContent = agora.toLocaleTimeString('pt-BR', opts) + ' BRT';
-}
-setInterval(tick, 1000);
-tick();
-
-// ── LIMPEZA DE TEXTO ──────────────────────────────────────────────────────────
-function limparRodape(texto) {
-  const cortes = [/Copyright\s*©/i, /Todos os direitos reservados/i, /TradingView/i, /FactSet/i, /Política de Privacidade/i, /© 20\d\d/i];
-  for (const re of cortes) {
-    const idx = texto.search(re);
-    if (idx > -1) texto = texto.substring(0, idx).trim();
+async function loadData(){
+  try{
+    const res=await fetch('data.json?t='+Date.now());
+    const data=await res.json();
+    render(data);
+  }catch(e){
+    document.getElementById('app').innerHTML='<div class="section"><h2>Erro</h2><p>Não foi possível carregar o Morning Call. Tente novamente mais tarde.</p></div>';
   }
-  return texto;
 }
 
-// ── RENDER ────────────────────────────────────────────────────────────────────
-function chg(v) {
-  if (v === null || v === undefined) return '';
-  const n = parseFloat(v);
-  const cor = n >= 0 ? 'var(--green)' : 'var(--red)';
-  const sinal = n >= 0 ? '▲' : '▼';
-  return `<span style="font-size:12px;color:${cor};margin-left:6px">${sinal} ${Math.abs(n).toFixed(2)}%</span>`;
+function render(data){
+  const app=document.getElementById('app');
+
+  // Header
+  let html=`<div class="header">
+    <h1>${data.title||'Morning Call'}</h1>
+    <div class="date">${data.lastUpdate||''}</div>
+    <div class="tags">`;
+
+  (data.tags||[]).forEach(tag=>{
+    let cls='tag-neutro';
+    if(tag.includes('Baixista'))cls='tag-baixista';
+    else if(tag.includes('Altista'))cls='tag-altista';
+    html+=`<span class="tag ${cls}">${tag}</span>`;
+  });
+  html+=`</div></div>`;
+
+  // Cards de indicadores
+  const ind=data.indicators||{};
+  html+=`<div class="cards-grid">
+    <div class="card"><div class="card-label">Fear & Greed</div><div class="card-value" style="color:${getFGColor(ind.fearGreed)}">${ind.fearGreed??'-'}</div><div class="card-change">${ind.fearGreedLabel||''}</div></div>
+    <div class="card"><div class="card-label">DXY</div><div class="card-value">${fmt(ind.dxy)}</div><div class="card-change ${ind.dxyChange>=0?'positive':'negative'}">${fmtChange(ind.dxyChange)}</div></div>
+    <div class="card"><div class="card-label">VIX</div><div class="card-value">${fmt(ind.vix)}</div><div class="card-change ${ind.vixChange>=0?'negative':'positive'}">${fmtChange(ind.vixChange)}</div></div>
+    <div class="card"><div class="card-label">IBOV</div><div class="card-value">${fmt(ind.ibov,0)}</div><div class="card-change ${ind.ibovChange>=0?'positive':'negative'}">${fmtChange(ind.ibovChange)}</div></div>
+    <div class="card"><div class="card-label">USD/BRL</div><div class="card-value">R$ ${fmt(ind.usdbrl)}</div><div class="card-change ${ind.usdbrlChange>=0?'negative':'positive'}">${fmtChange(ind.usdbrlChange)}</div></div>
+    <div class="card"><div class="card-label">BTC</div><div class="card-value">$${fmt(ind.btc,0)}</div><div class="card-change ${ind.btcChange>=0?'positive':'negative'}">${fmtChange(ind.btcChange)}</div></div>
+  </div>`;
+
+  // Seção TradingView
+  html+=renderTradingView(data);
+
+  // Insights
+  (data.insights||[]).forEach(insight=>{
+    const parts=insight.split('\n');
+    const title=parts[0].replace(/\*\*/g,'');
+    const content=parts.slice(1).join('\n');
+    html+=`<div class="section"><h2>${title}</h2><p>${content}</p></div>`;
+  });
+
+  // Agenda
+  if(data.agenda&&data.agenda.length){
+    html+=`<div class="section"><h2>Agenda do Dia</h2><ul>`;
+    data.agenda.forEach(ev=>{
+      html+=`<li><strong>${ev.time}</strong> — ${ev.event}</li>`;
+    });
+    html+=`</ul></div>`;
+  }
+
+  app.innerHTML=html;
 }
 
-function fgFaixa(v) {
-  if (v === null || v === undefined) return {label:'—', cor:'var(--txt3)', bar:0};
-  if (v <= 20)  return {label:'Medo Extremo',    cor:'#ef4444', bar: v};
-  if (v <= 40)  return {label:'Medo',            cor:'#f97316', bar: v};
-  if (v <= 60)  return {label:'Neutro',          cor:'#eab308', bar: v};
-  if (v <= 80)  return {label:'Ganância',        cor:'#84cc16', bar: v};
-  return             {label:'Ganância Extrema',  cor:'#22c55e', bar: v};
-}
+function renderTradingView(data){
+  const tv=data.tradingview_indicators;
+  if(!tv||!tv.mercados){
+    return `<div class="section tv-section">
+      <h2>Análise Técnica — TradingView</h2>
+      <div class="tv-aviso">Indicadores técnicos não disponíveis nesta execução. Verifique se o workflow rodou corretamente.</div>
+    </div>`;
+  }
 
-function vixFaixa(v) {
-  if (v === null || v === undefined) return {label:'—', cor:'var(--txt3)'};
-  if (v < 15)  return {label:'Calmo',            cor:'#22c55e'};
-  if (v < 20)  return {label:'Normal',           cor:'#84cc16'};
-  if (v < 25)  return {label:'Atenção',          cor:'#eab308'};
-  if (v < 35)  return {label:'Estresse',         cor:'#f97316'};
-  return            {label:'Pânico',             cor:'#ef4444'};
-}
+  let html=`<div class="section tv-section">
+    <h2>Análise Técnica — TradingView</h2>
+    <div class="tv-grid">`;
 
-function renderPeers(ind) {
-  if (!ind) return '';
-  const items = [];
-  if (ind.eww != null) {
-    const cor = ind.ewwChange >= 0 ? 'var(--green)' : 'var(--red)';
-    const sinal = ind.ewwChange >= 0 ? '▲' : '▼';
-    items.push('<div class="ind-card" style="border-top:2px solid #94a3b8">' +
-      '<div class="ind-label">México (EWW)' + chg(ind.ewwChange) + '</div>' +
-      '<div class="ind-valor" style="font-size:20px">US$ ' + (ind.eww ? ind.eww.toFixed(2) : '—') + '</div>' +
-      '<div class="ind-desc">ETF emergente — peer do IBOV</div></div>');
-  }
-  if (ind.ech != null) {
-    items.push('<div class="ind-card" style="border-top:2px solid #64748b">' +
-      '<div class="ind-label">Chile (ECH)' + chg(ind.echChange) + '</div>' +
-      '<div class="ind-valor" style="font-size:20px">US$ ' + (ind.ech ? ind.ech.toFixed(2) : '—') + '</div>' +
-      '<div class="ind-desc">ETF emergente — peer do IBOV</div></div>');
-  }
-  if (ind.brent != null) {
-    items.push('<div class="ind-card" style="border-top:2px solid #a16207">' +
-      '<div class="ind-label">Petróleo Brent' + chg(ind.brentChange) + '</div>' +
-      '<div class="ind-valor" style="font-size:20px;color:#ca8a04">US$ ' + (ind.brent ? ind.brent.toFixed(2) : '—') + '</div>' +
-      '<div class="ind-desc">Crude Brent — referência Petrobras</div></div>');
-  }
-  if (ind.soja != null) {
-    items.push('<div class="ind-card" style="border-top:2px solid #15803d">' +
-      '<div class="ind-label">Soja (ZS=F)' + chg(ind.sojaChange) + '</div>' +
-      '<div class="ind-valor" style="font-size:20px;color:#22c55e">US$ ' + (ind.soja ? ind.soja.toFixed(2) : '—') + '</div>' +
-      '<div class="ind-desc">Soja — commodities BR</div></div>');
-  }
-  if (items.length === 0) return '';
-  const cols = Math.min(items.length, 4);
-  return '<div class="sec-title" style="grid-column:1/-1;margin-top:8px">Peers emergentes & commodities BR</div>' +
-    '<div class="indicadores-grid" style="grid-template-columns:repeat(' + cols + ',1fr);margin-top:0">' +
-    items.join('') + '</div>';
-}
+  const mercados={b3:'B3',eua:'EUA',crypto:'Cripto'};
+  const mercadoClasses={b3:'tv-mercado-b3',eua:'tv-mercado-eua',crypto:'tv-mercado-crypto'};
 
-function renderFocus(ind) {
-  if (!ind || (!ind.selicEsperada && !ind.ipcaEsperado && !ind.ptax)) return '';
-  let html = '<div class="indicadores-grid" style="grid-template-columns:repeat(3,1fr);margin-top:0">';
-  if (ind.selicEsperada) {
-    html += '<div class="ind-card" style="border-top:2px solid #a78bfa">';
-    html += '<div class="ind-label">Selic Esperada · Focus BCB</div>';
-    html += '<div class="ind-valor" style="color:#a78bfa">' + ind.selicEsperada.toFixed(2) + '%</div>';
-    html += '<div class="ind-desc">Expectativa Selic fim do ciclo · Focus BCB</div></div>';
-  }
-  if (ind.ipcaEsperado) {
-    html += '<div class="ind-card" style="border-top:2px solid #fb923c">';
-    html += '<div class="ind-label">IPCA Esperado · Focus BCB</div>';
-    html += '<div class="ind-valor" style="color:#fb923c">' + ind.ipcaEsperado.toFixed(2) + '%</div>';
-    html += '<div class="ind-desc">Projeção IPCA · ano corrente · Focus BCB</div></div>';
-  }
-  if (ind.ptax) {
-    const dataLabel = ind.ptaxData ? ' · ' + ind.ptaxData : '';
-    html += '<div class="ind-card" style="border-top:2px solid var(--gold)">';
-    html += '<div class="ind-label">PTax Oficial · BCB' + dataLabel + '</div>';
-    html += '<div class="ind-valor" style="color:var(--gold)">R$ ' + ind.ptax.toFixed(4) + '</div>';
-    html += '<div class="ind-desc">Taxa oficial do Banco Central</div></div>';
-  }
-  html += '</div>';
+  Object.entries(tv.mercados||{}).forEach(([key,m])=>{
+    if(!m||!m.ativos)return;
+    const ativosOk=m.ativos.filter(a=>a.status==='ok');
+    if(!ativosOk.length)return;
+
+    html+=`<div class="tv-card">
+      <h3><span class="tv-mercado ${mercadoClasses[key]||'tv-mercado-b3'}">${mercados[key]||key.toUpperCase()}</span> ${m.nome||''}</h3>`;
+
+    ativosOk.slice(0,5).forEach(a=>{
+      const score=a.score_tecnico||0;
+      let scoreCls='score-neutro';
+      let scoreTxt=a.recomendacao||'NEUTRO';
+      if(a.classe==='altista'){scoreCls='score-compra';}
+      else if(a.classe==='baixista'){scoreCls='score-venda';}
+
+      html+=`<div class="tv-ativo">
+        <div>
+          <div class="tv-ticker">${a.ticker}</div>
+          <div class="tv-indicadores">RSI:${a.indicadores?.rsi?.valor??'-'} | Stoch:${a.indicadores?.stochastic?.k??'-'} | MACD:${a.indicadores?.macd?.macd?.toFixed(3)??'-'}</div>
+        </div>
+        <span class="tv-score ${scoreCls}">${scoreTxt}</span>
+      </div>`;
+    });
+
+    // Sentimento
+    const sent=m.resumo?.sentimento_geral||'NEUTRO';
+    const sentColor=sent.includes('ALTA')?'#4ade80':sent.includes('BAIXA')?'#f87171':'#cbd5e1';
+    html+=`<div class="tv-sentimento">
+      <div class="tv-sentimento-label">Sentimento</div>
+      <div class="tv-sentimento-valor" style="color:${sentColor}">${sent}</div>
+    </div>`;
+
+    html+=`</div>`;
+  });
+
+  html+=`</div></div>`;
   return html;
 }
 
-function renderIndicadores(ind) {
-  const fg = ind?.fearGreed;
-  const dxy = ind?.dxy;
-  const vix = ind?.vix;
-  const ibov = ind?.ibov;
-  const usd = ind?.usdbrl;
-  return `
-    <div class="indicadores-grid" style="grid-template-columns:repeat(5,1fr)">
-      <div class="ind-card fg">
-        <div class="ind-label">Fear &amp; Greed Index</div>
-        <div class="ind-valor" style="color:${fgFaixa(fg).cor}">${fg ?? '—'}<span style="font-size:13px;color:var(--txt3);margin-left:4px">/100</span></div>
-        <div class="ind-desc" style="color:${fgFaixa(fg).cor};font-weight:600">${fgFaixa(fg).label}</div>
-        ${fg !== null && fg !== undefined ? `<div style="margin-top:8px;background:rgba(255,255,255,0.06);border-radius:4px;height:4px;overflow:hidden"><div style="height:4px;width:${fg}%;background:${fgFaixa(fg).cor};border-radius:4px"></div></div>` : ''}
-        <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--txt3);margin-top:4px;font-family:var(--mono)"><span>Medo</span><span>Neutro</span><span>Ganância</span></div>
-      </div>
-      <div class="ind-card dxy">
-        <div class="ind-label">DXY${chg(ind?.dxyChange)}</div>
-        <div class="ind-valor">${dxy ?? '—'}</div>
-        <div class="ind-desc">Índice do dólar</div>
-      </div>
-      <div class="ind-card vix">
-        <div class="ind-label">VIX — Volatilidade${chg(ind?.vixChange)}</div>
-        <div class="ind-valor" style="color:${vixFaixa(vix).cor}">${vix ?? '—'}</div>
-        <div class="ind-desc" style="color:${vixFaixa(vix).cor};font-weight:600">${vixFaixa(vix).label}</div>
-        <div style="margin-top:6px;font-size:10px;color:var(--txt3);font-family:var(--mono)">&lt;15 calmo · 15-25 normal · &gt;25 estresse</div>
-      </div>
-      <div class="ind-card" style="--bar:var(--green)">
-        <div class="ind-label">IBOV${chg(ind?.ibovChange)}</div>
-        <div class="ind-valor" style="font-size:20px">${ibov ? Math.round(ibov).toLocaleString('pt-BR') : '—'}</div>
-        <div class="ind-desc">Ibovespa</div>
-      </div>
-      <div class="ind-card" style="--bar:var(--gold)">
-        <div class="ind-label">USD/BRL${chg(ind?.usdbrlChange)}</div>
-        <div class="ind-valor">R$ ${usd ? parseFloat(usd).toFixed(2) : '—'}</div>
-        <div class="ind-desc">Dólar comercial</div>
-      </div>
-    </div>
-    <div class="indicadores-grid" style="grid-template-columns:repeat(2,1fr);margin-top:0">
-      <div class="ind-card" style="border-top:2px solid #a78bfa">
-        <div class="ind-label">SELIC — Juros BR</div>
-        <div class="ind-valor" style="color:#a78bfa">${ind?.selic ? ind.selic.toFixed(2) + '%' : '—'}</div>
-        <div class="ind-desc">Taxa básica a.a. · Banco Central</div>
-      </div>
-      <div class="ind-card" style="border-top:2px solid #38bdf8">
-        <div class="ind-label">Treasury 10Y (EUA)${chg(ind?.us10yChange)}</div>
-        <div class="ind-valor" style="color:#38bdf8">${ind?.us10y ? ind.us10y.toFixed(2) + '%' : '—'}</div>
-        <div class="ind-desc">Juro longo americano · referência global</div>
-      </div>
-      <div class="indicadores-grid" style="grid-template-columns:repeat(4,1fr);margin-top:0">
-      </div>
-    </div>
-    ${renderFocus(ind)}
-    ${renderPeers(ind)}
-          <div class="ind-label">Ouro (XAU/USD)${chg(ind?.goldChange)}</div>
-          <div class="ind-valor" style="font-size:18px;color:#f59e0b">US$ ${ind?.gold ? Math.round(ind.gold).toLocaleString('pt-BR') : '—'}</div>
-          <div class="ind-desc">Safe haven global</div>
-        </div>
-        <div class="ind-card" style="border-top:2px solid #78716c">
-          <div class="ind-label">Petróleo WTI${chg(ind?.oilChange)}</div>
-          <div class="ind-valor" style="font-size:18px;color:#a8a29e">US$ ${ind?.oil ? ind.oil.toFixed(2) : '—'}</div>
-          <div class="ind-desc">Crude oil — contrato futuro</div>
-        </div>
-        <div class="ind-card" style="border-top:2px solid #f97316">
-          <div class="ind-label">Bitcoin (BTC)${chg(ind?.btcChange)}</div>
-          <div class="ind-valor" style="font-size:18px;color:#f97316">US$ ${ind?.btc ? Math.round(ind.btc).toLocaleString('pt-BR') : '—'}</div>
-          <div class="ind-desc">Proxy de apetite a risco</div>
-        </div>
-        <div class="ind-card" style="border-top:2px solid #818cf8">
-          <div class="ind-label">Euro Stoxx 50${chg(ind?.stoxxChange)}</div>
-          <div class="ind-valor" style="font-size:18px;color:#818cf8">${ind?.stoxx ? ind.stoxx.toLocaleString('pt-BR') : '—'}</div>
-          <div class="ind-desc">Índice europeu de referência</div>
-        </div>
-      </div>
-    </div>`;
-}
+function fmt(v,d=2){if(v==null)return'-';return v.toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d})}
+function fmtChange(v){if(v==null)return'-';return(v>=0?'+':'')+v.toFixed(2)+'%'}
+function getFGColor(v){if(v==null)return'#cbd5e1';if(v<=20)return'#f87171';if(v<=40)return'#fb923c';if(v<=60)return'#cbd5e1';if(v<=80)return'#4ade80';return'#22c55e'}
 
-function renderTags(tags, tagsTipados) {
-  if (!tags || tags.length === 0) return '';
-  const tipados = tagsTipados || [];
-  const html = tags.map((tag, i) => {
-    const tipo = tipados[i]?.tipo || (tag.toLowerCase().includes('resist') ? 'resistencia' : tag.toLowerCase().includes('suport') ? 'suporte' : 'neutro');
-    return `<span class="tag ${tipo}">${tag}</span>`;
-  }).join('');
-  return `<div class="tags-wrap">${html}</div>`;
-}
-
-function renderAgenda(agenda) {
-  if (!agenda || agenda.length === 0) {
-    return '<p style="color:var(--txt3);font-size:13px;">Nenhum evento registrado para hoje.</p>';
-  }
-  return `<div class="agenda-lista">` + agenda.map(a =>
-    `<div class="agenda-item">
-      <span class="agenda-hora">${a.time}</span>
-      <span class="agenda-evento">${a.event}</span>
-    </div>`
-  ).join('') + '</div>';
-}
-
-function renderInsights(insights) {
-  if (!insights || insights.length === 0) return '<p style="color:var(--txt3)">Sem conteúdo disponível.</p>';
-  return insights.map(p => {
-    const limpo = limparRodape(p);
-    if (!limpo) return '';
-    // Detecta seção com título **TITULO**
-    const match = limpo.match(/^\*\*([^*]+)\*\*\n([\s\S]+)/);
-    if (match) {
-      const titulo = match[1];
-      const corpo = match[2].trim()
-        .split('\n')
-        .map(linha => {
-          if (!linha.startsWith('•')) return `<span>${linha}</span>`;
-          const txt = linha.slice(1).trim();
-          // Destaca [Fonte] no final
-          const m = txt.match(/^(.*?)\s*\[([^\]]+)\]$/);
-          if (m) {
-            return `<li>${m[1]} <span style="font-family:var(--mono);font-size:10px;color:var(--gold);opacity:0.8;margin-left:4px">[${m[2]}]</span></li>`;
-          }
-          return `<li>${txt}</li>`;
-        })
-        .join('\n');
-      const temLi = corpo.includes('<li>');
-      const corpofmt = temLi
-        ? `<ul style="padding-left:18px;margin:8px 0">${corpo}</ul>`
-        : corpo.split('<span>').filter(Boolean).map(s => `<p>${s.replace('</span>','')}</p>`).join('');
-      return `<div class="insight-secao">
-        <div class="insight-titulo">${titulo}</div>
-        <div class="insight-corpo">${corpofmt}</div>
-      </div>`;
-    }
-    return `<p>${limpo}</p>`;
-  }).filter(Boolean).join('');
-}
-
-// ── MAIN ──────────────────────────────────────────────────────────────────────
-async function carregar() {
-  try {
-    const url = './data.json?t=' + Date.now();
-    document.getElementById('loading').textContent = 'Buscando ' + url + '...';
-    const resp = await fetch(url);
-    if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    const d = await resp.json();
-
-    document.getElementById('topo-titulo').textContent = d.title || 'Morning Call';
-    document.getElementById('status-dot').style.display = 'block';
-
-    const wrapper = document.getElementById('wrapper');
-
-    if (!d.scrape_ok && d.insights?.[0]?.startsWith('⚠️')) {
-      wrapper.innerHTML = `
-        <div class="hero" style="grid-column:1/-1">
-          <div class="hero-data">${d.date || ''}</div>
-          <h1 class="hero-h1">Morning <span>Call</span></h1>
-        </div>
-        <div class="erro-box">
-          ⚠️ Falha na coleta automática de hoje.<br>
-          <small style="opacity:0.7">Verifique os logs do GitHub Actions. Última atualização: ${d.lastUpdate}</small>
-        </div>`;
-      return;
-    }
-
-    wrapper.innerHTML = `
-      <!-- HERO -->
-      <div class="hero">
-        <div class="hero-data">📅 ${d.date} &nbsp;·&nbsp; Mapeamento de Fluxo Operacional</div>
-        <h1 class="hero-h1">Morning <span>Call</span></h1>
-        <div class="hero-sub">Atualizado às ${d.lastUpdate?.split(' ')[1] || '--'} &nbsp;·&nbsp; Análise gerada por IA</div>
-        ${d.vies ? `<div class="vies-badge vies-${d.vies.toLowerCase()}">${d.vies === 'Altista' ? '▲' : d.vies === 'Baixista' ? '▼' : '●'} VIÉS ${d.vies.toUpperCase()}</div>` : ''}
-        ${d.feriado_aviso ? `<div class="feriado-aviso">🗓️ ${d.feriado_aviso}</div>` : ''}
-      </div>
-
-      <!-- INDICADORES -->
-      ${renderIndicadores(d.indicators)}
-
-      <!-- TAGS -->
-      ${d.tags?.length > 0 ? `
-        <div style="grid-column:1/-1">
-          <div class="sec-title">Zonas de liquidez mapeadas</div>
-          ${renderTags(d.tags, d.tags_tipados)}
-        </div>` : ''}
-
-      <!-- COLUNA PRINCIPAL: INSIGHTS -->
-      <div class="col-main">
-        <div class="sec-title">Análise do pregão</div>
-        <div class="insights-texto" id="insights-box"></div>
-      </div>
-
-      <!-- COLUNA LATERAL -->
-      <div class="col-side">
-
-        ${d.strategy ? `
-        <div>
-          <div class="sec-title">Direcionamento estratégico</div>
-          <div class="estrategia-card">
-            <div class="estrategia-txt">${d.strategy}</div>
-          </div>
-        </div>` : ''}
-
-        <div>
-          <div class="sec-title">Agenda econômica</div>
-          <div class="card">
-            ${renderAgenda(d.agenda)}
-          </div>
-        </div>
-      </div>
-
-      <!-- RODAPÉ -->
-      <div class="update-bar">
-        <span>Última coleta: ${d.lastFetch}</span>
-        <span>Fontes: Yahoo Finance · ForexFactory · Investing.com</span>
-        <span class="scrape-badge ${d.scrape_ok ? 'scrape-ok' : 'scrape-fail'}">${d.scrape_ok ? 'COLETA OK' : 'COLETA PARCIAL'}</span>
-      </div>`;
-
-    // Insere insights depois do render para evitar XSS acidental via innerText
-    document.getElementById('insights-box').innerHTML = renderInsights(d.insights);
-
-  } catch (err) {
-    document.getElementById('wrapper').innerHTML =
-      `<div class="erro-box" style="grid-column:1/-1">Erro ao carregar data.json: ${err.message}</div>`;
-  }
-}
-
-carregar();
+loadData();
 </script>
 </body>
 </html>
