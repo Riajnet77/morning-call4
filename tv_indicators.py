@@ -444,6 +444,10 @@ def gerar_narrativa_tecnica(tv_data):
 def integrar_no_morning_call(data_json_path="data.json"):
     tv_data = coletar_indicadores_tv()
     narrativa = gerar_narrativa_tecnica(tv_data)
+    emoji_map = {
+        "ALTA": "+", "LEVE ALTA": "~+", "NEUTRO": "=",
+        "LEVE BAIXA": "~-", "BAIXA": "-"
+    }
 
     try:
         with open(data_json_path, "r", encoding="utf-8") as f:
