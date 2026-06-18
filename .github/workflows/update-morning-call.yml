@@ -2,7 +2,7 @@ name: Morning Call — Atualização Diária
 
 on:
   schedule:
-    - cron: '0 11 * * 1-5'
+    - cron: '0 14 * * 1-5'
   workflow_dispatch:
 
 permissions:
@@ -11,7 +11,7 @@ permissions:
 jobs:
   scrape-and-deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
 
     steps:
       - name: Checkout do repositório
@@ -22,17 +22,19 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Instalar dependências
-        run: pip install requests feedparser beautifulsoup4
-       
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
+      - name: Instalar dependências Python
+        run: pip install requests feedparser beautifulsoup4
+
       - name: Instalar TradingView API
-        run: npm install @mathieuc/tradingview
-      
+        run: |
+          npm init -y
+          npm install @mathieuc/tradingview
+
       - name: Executar scraper
         run: python scrape.py
 
@@ -41,6 +43,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data.json
-          # Força sempre um commit para manter o repo ativo e evitar desabilitação do cron
           git commit --allow-empty -m "auto: morning call $(date +'%d/%m/%Y %H:%M') [skip ci]"
           git push
