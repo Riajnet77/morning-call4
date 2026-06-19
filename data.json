@@ -1,15 +1,15 @@
 {
   "date": "19/06/2026",
-  "lastUpdate": "19/06/2026 08:56:46",
-  "lastFetch": "19/06/2026 08:56:46",
+  "lastUpdate": "19/06/2026 13:33:38",
+  "lastFetch": "19/06/2026 13:33:38",
   "title": "Morning Call · 19/06",
   "vies": "Levemente Baixista",
-  "vies_txt": "O pregão de 19/06/2026 abre com viés **Levemente Baixista**. IBOV em 168.278 pts (-0.10%), dólar em R$ 5.17 (+0.91%).\n\nPrincipais drivers: Fear & Greed em 14/100 (Medo Extremo) — mercado em pânico, potencial reversão técnica no radar · S&P 500 +1.08% — leve otimismo externo apoia ativos de risco · Selic em 14.2% a.a. com mercado projetando 17.0% — expectativa de alta pressionando prêmios de risco · Peers emergentes: México (EWW) +0.03%, Chile (ECH) -0.85%.\n\nReduzir exposição a risco. Priorizar proteção com hedge cambial ou posições defensivas. Aguardar estabilização antes de novas entradas.",
+  "vies_txt": "O pregão de 19/06/2026 abre com viés **Levemente Baixista**. IBOV em 168.049 pts (-0.14%), dólar em R$ 5.14 (+0.35%).\n\nPrincipais drivers: Fear & Greed em 14/100 (Medo Extremo) — mercado em pânico, potencial reversão técnica no radar · S&P 500 +1.08% — leve otimismo externo apoia ativos de risco · Selic em 14.2% a.a. com mercado projetando 17.0% — expectativa de alta pressionando prêmios de risco · Peers emergentes: México (EWW) +0.03%, Chile (ECH) -0.85%.\n\nReduzir exposição a risco. Priorizar proteção com hedge cambial ou posições defensivas. Aguardar estabilização antes de novas entradas.",
   "tags": [
     "Viés Levemente Baixista",
-    "IBOV ▼ -0.10%",
-    "USD/BRL R$ 5.17",
-    "VIX 17.1",
+    "IBOV ▼ -0.14%",
+    "USD/BRL R$ 5.14",
+    "VIX 16.8",
     "TV B3 = NEUTRO",
     "TV EUA = NEUTRO",
     "TV CRYPTO = NEUTRO"
@@ -21,22 +21,22 @@
     }
   ],
   "insights": [
-    "**CONTEXTO GLOBAL**\nO DXY operou relativamente estável (-0.08%), sem grandes desequilíbrios no câmbio global.\n\nWall Street fechou em alta moderada — S&P 500 em +1.08% e Nasdaq em +1.91% —, mantendo o ambiente de risk-on.\n\nO VIX permanece em 17.1 pontos, com volatilidade moderada.\n\nO índice Fear & Greed marca 14 pontos — zona de \"Medo Extremo\" — sugerindo que o mercado precifica risco excessivo e pode estar próximo de um ponto de reversão técnica.\n\nCommodities e cripto: Ouro recuou -1.32% para US$ 4.168 | WTI recuou -0.90% para US$ 75.91 | Bitcoin recuou -0.54% para US$ 62.555.",
+    "**CONTEXTO GLOBAL**\nO DXY operou relativamente estável (-0.05%), sem grandes desequilíbrios no câmbio global.\n\nWall Street fechou em alta moderada — S&P 500 em +1.08% e Nasdaq em +1.91% —, mantendo o ambiente de risk-on.\n\nO VIX permanece em 16.8 pontos, com volatilidade moderada.\n\nO índice Fear & Greed marca 14 pontos — zona de \"Medo Extremo\" — sugerindo que o mercado precifica risco excessivo e pode estar próximo de um ponto de reversão técnica.\n\nCommodities e cripto: Ouro recuou -1.42% para US$ 4.164 | WTI recuou -0.12% para US$ 76.51 | Bitcoin subiu +0.49% para US$ 63.204.",
     "**ANALISE TECNICA - INDICADORES**\n\n**B3 - Brasil** = *Sentimento: NEUTRO*\n! Sem dados: PETR4, VALE3, ITUB4, BBDC4, ABEV3, WEGE3, RENT3, BBAS3\n\n**NYSE/NASDAQ - EUA** = *Sentimento: NEUTRO*\n! Sem dados: AAPL, MSFT, GOOGL, AMZN, TSLA, NVDA, META, AMD\n\n**Criptomoedas** = *Sentimento: NEUTRO*\n! Sem dados: BTCUSDT, ETHUSDT, SOLUSDT, XRPUSDT, ADAUSDT, DOGEUSDT, AVAXUSDT, LINKUSDT",
-    "**IBOVESPA**\nO Ibovespa encerrou a sessão anterior em 168.278 pontos, praticamente estável (-0.10%). A correlação com os mercados externos foi moderada na última sessão. Tecnicamente. monitorar suporte em 163.200 e 158.200 pontos. Resistências relevantes em 171.600 e 176.700 pontos. Peers emergentes: México (EWW) +0.03%, Chile (ECH) -0.85%.",
-    "**DÓLAR / CÂMBIO**\nO dólar subiu +0.91% para R$ 5.17, mantendo pressão sobre o real.",
-    "**JUROS & RENDA FIXA**\nA taxa Selic está em 14.25% a.a. O mercado projeta Selic em 17.02% ao final do ciclo (Boletim Focus). Expectativa de IPCA para o ano: 3.00%. Projeção de PIB: 0.70%. A PTax oficial do BCB fechou em R$ 5.1613. Os juros americanos (Treasury 10Y) operam em 4.45% (+0.00%). O ETF EWZ (proxy do Brasil no exterior) operou -1.11%, sinalizando o apetite do investidor estrangeiro pelo mercado brasileiro.",
-    "**AGENDA DO DIA**\nEventos de ALTO impacto no radar:\n• 08:30 [USD] CPI — Inflação EUA\nEventos de impacto MÉDIO:\n• 08:30 [USD] Initial Jobless Claims\n• 10:00 [USD] Existing Home Sales\n• 12:00am [EUR] German PPI m/m\n• 12:00am [GBP] Retail Sales m/m\n\nOs dados americanos costumam gerar volatilidade relevante no câmbio e, por correlação, no Ibovespa. Monitore os releases e evite exposição excessiva nos momentos de divulgação.",
-    "**MANCHETES**\n• Hawkish Fed signals send gold to third straight weekly loss - Reuters [Reuters]\n• Stocks dip after US-Iran peace talks delay; yen nears 40-year lows - Reuters [Reuters]\n• MSCI raises new Indonesia transparency concerns ahead of emerging markets verdict - Reuters [Reuters]\n• Dollar hits one-year high on Fed hike bets; Japan warns on yen - Reuters [Reuters]\n• Brazil cuts interest rates again, leaves door open for more - Reuters [Reuters]\n• Goldman Sachs Lops $500 Off Gold Target on No Fed Cuts This Year - Bloomberg [Bloomberg]\n• Currency Traders Pile Into Dollar Call Options After Hawkish Fed - Bloomberg [Bloomberg]\n• US Bond Futures Surge to Drive Wagers on a July Fed Rate Hike - Bloomberg [Bloomberg]\n• Asia Stocks Set to Rise as US-Iran Deal Lifts Mood: Markets Wrap - Bloomberg [Bloomberg]\n• Iran postponed US talks due to Israeli strikes on Lebanon, diplomats say [FT]\n• Iran to seek ‘insurance fees’ for passage through Strait of Hormuz [FT]\n• Reaching a nuclear deal with Iran will be much harder than in 2015 [FT]\n• How China’s economic comeback hit a wall [FT]\n• Trump picked Kevin Warsh to cut rates. The new Fed chief just told us he has other plans. [MarketWatch]\n• Social media declared Cursor dead. Then SpaceX handed the AI startup a $60 billion lifeline. [MarketWatch]\n• Why the Fed’s hawkish stance signals a step-change in U.S. dollar sentiment — and a new direction [MarketWatch]"
+    "**IBOVESPA**\nO Ibovespa encerrou a sessão anterior em 168.049 pontos, praticamente estável (-0.14%). A correlação com os mercados externos foi moderada na última sessão. Tecnicamente. monitorar suporte em 163.000 e 158.000 pontos. Resistências relevantes em 171.400 e 176.500 pontos. Peers emergentes: México (EWW) +0.03%, Chile (ECH) -0.85%.",
+    "**DÓLAR / CÂMBIO**\nO dólar subiu +0.35% para R$ 5.14, mantendo pressão sobre o real.",
+    "**JUROS & RENDA FIXA**\nA taxa Selic está em 14.25% a.a. O mercado projeta Selic em 17.02% ao final do ciclo (Boletim Focus). Projeção de PIB: 0.70%. A PTax oficial do BCB fechou em R$ 5.1442. Os juros americanos (Treasury 10Y) operam em 4.45% (+0.00%). O ETF EWZ (proxy do Brasil no exterior) operou -1.11%, sinalizando o apetite do investidor estrangeiro pelo mercado brasileiro.",
+    "**AGENDA DO DIA**\nEventos de impacto MÉDIO:\n• 04:00 [EUR] Dados da Zona do Euro\n• 08:30 [USD] Initial Jobless Claims\n• 10:00 [USD] Existing Home Sales\n• 12:00am [EUR] German PPI m/m\n\nOs dados americanos costumam gerar volatilidade relevante no câmbio e, por correlação, no Ibovespa. Monitore os releases e evite exposição excessiva nos momentos de divulgação.",
+    "**MANCHETES**\n• Hawkish Fed signals send gold to third straight weekly loss - Reuters [Reuters]\n• Shares ease as investors ponder US-Iran peace talks; yen nears 40-year lows - Reuters [Reuters]\n• MSCI raises new Indonesia transparency concerns ahead of emerging markets verdict - Reuters [Reuters]\n• Warsh brings a skinny Fed approach to a complex, information-hungry world - Reuters [Reuters]\n• Norwegian parliament gets behind World Cup team with Viking \"rowing\" display - Reuters [Reuters]\n• Brazil cuts interest rates again, leaves door open for more - Reuters [Reuters]\n• US Stocks Draw Record Weekly Inflows as Investors Pile Into Tech - Bloomberg [Bloomberg]\n• Goldman Sachs Lops $500 Off Gold Target on No Fed Cuts This Year - Bloomberg [Bloomberg]\n• US Bond Futures Surge to Drive Wagers on a July Fed Rate Hike - Bloomberg [Bloomberg]\n• Asia Stocks Set to Rise as US-Iran Deal Lifts Mood: Markets Wrap - Bloomberg [Bloomberg]\n• Israel and Hizbollah agree ceasefire [FT]\n• How to lose a war in three easy steps [FT]\n• Iran to seek ‘insurance fees’ for passage through Strait of Hormuz [FT]\n• How China’s economic comeback hit a wall [FT]\n• Oil prices under new wave of pressure amid lingering questions over a Strait of Hormuz reopening [MarketWatch]\n• ‘We are habitually frugal’: My wife and I have money. How do we help our children without ruining their independence? [MarketWatch]"
   ],
   "agenda": [
     {
-      "time": "08:30",
-      "event": "[USD] Initial Jobless Claims"
+      "time": "04:00",
+      "event": "[EUR] Dados da Zona do Euro"
     },
     {
       "time": "08:30",
-      "event": "[USD] CPI — Inflação EUA"
+      "event": "[USD] Initial Jobless Claims"
     },
     {
       "time": "10:00",
@@ -63,36 +63,36 @@
       "event": "[USD] Bank Holiday"
     }
   ],
-  "strategy": "O pregão de 19/06/2026 abre com viés **Levemente Baixista**. IBOV em 168.278 pts (-0.10%), dólar em R$ 5.17 (+0.91%).\n\nPrincipais drivers: Fear & Greed em 14/100 (Medo Extremo) — mercado em pânico, potencial reversão técnica no radar · S&P 500 +1.08% — leve otimismo externo apoia ativos de risco · Selic em 14.2% a.a. com mercado projetando 17.0% — expectativa de alta pressionando prêmios de risco · Peers emergentes: México (EWW) +0.03%, Chile (ECH) -0.85%.\n\nReduzir exposição a risco. Priorizar proteção com hedge cambial ou posições defensivas. Aguardar estabilização antes de novas entradas.",
+  "strategy": "O pregão de 19/06/2026 abre com viés **Levemente Baixista**. IBOV em 168.049 pts (-0.14%), dólar em R$ 5.14 (+0.35%).\n\nPrincipais drivers: Fear & Greed em 14/100 (Medo Extremo) — mercado em pânico, potencial reversão técnica no radar · S&P 500 +1.08% — leve otimismo externo apoia ativos de risco · Selic em 14.2% a.a. com mercado projetando 17.0% — expectativa de alta pressionando prêmios de risco · Peers emergentes: México (EWW) +0.03%, Chile (ECH) -0.85%.\n\nReduzir exposição a risco. Priorizar proteção com hedge cambial ou posições defensivas. Aguardar estabilização antes de novas entradas.",
   "indicators": {
     "fearGreed": 14,
     "fearGreedLabel": "Extreme Fear",
-    "dxy": 100.77,
-    "dxyChange": -0.08,
-    "vix": 17.1,
-    "vixChange": 4.27,
-    "ibov": 168278.0,
-    "ibovChange": -0.1,
-    "usdbrl": 5.17,
-    "usdbrlChange": 0.91,
+    "dxy": 100.8,
+    "dxyChange": -0.05,
+    "vix": 16.78,
+    "vixChange": 2.32,
+    "ibov": 168049.69,
+    "ibovChange": -0.14,
+    "usdbrl": 5.14,
+    "usdbrlChange": 0.35,
     "selic": 14.25,
     "us10y": 4.45,
     "us10yChange": 0.0,
     "selicEsperada": 17.02,
-    "ipcaEsperado": 3.0,
+    "ipcaEsperado": null,
     "pibEsperado": 0.7,
-    "ptax": 5.1613,
-    "ptaxData": "2026-06-18",
-    "btc": 62554.91,
-    "btcChange": -0.54,
-    "gold": 4168.5,
-    "goldChange": -1.32,
-    "oil": 75.91,
-    "oilChange": -0.9,
-    "stoxx": 6318.01,
-    "stoxxChange": 0.0,
-    "brent": 79.68,
-    "brentChange": -0.21,
+    "ptax": 5.1442,
+    "ptaxData": "2026-06-19",
+    "btc": 63204.34,
+    "btcChange": 0.49,
+    "gold": 4164.3,
+    "goldChange": -1.42,
+    "oil": 76.51,
+    "oilChange": -0.12,
+    "stoxx": 6293.13,
+    "stoxxChange": -0.48,
+    "brent": 80.54,
+    "brentChange": 0.86,
     "soja": 1122.75,
     "sojaChange": -0.82,
     "eww": 77.33,
@@ -101,10 +101,10 @@
     "echChange": -0.85
   },
   "scrape_ok": true,
-  "generated_at": "19/06/2026 08:56:46",
+  "generated_at": "19/06/2026 13:33:38",
   "feriado_aviso": null,
   "tradingview_indicators": {
-    "gerado_em": "2026-06-19T08:57:01.481898-03:00",
+    "gerado_em": "2026-06-19T13:34:02.747679-03:00",
     "fonte": "TradingView API (@mathieuc/tradingview)",
     "mercados": {
       "b3": {
