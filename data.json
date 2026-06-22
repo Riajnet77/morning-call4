@@ -1,15 +1,15 @@
 {
   "date": "22/06/2026",
-  "lastUpdate": "22/06/2026 08:58:39",
-  "lastFetch": "22/06/2026 08:58:39",
+  "lastUpdate": "22/06/2026 15:14:48",
+  "lastFetch": "22/06/2026 15:14:48",
   "title": "Morning Call · 22/06",
-  "vies": "Levemente Baixista",
-  "vies_txt": "O pregão de 22/06/2026 abre com viés **Levemente Baixista**. IBOV em 168.576 pts (+0.18%), dólar em R$ 5.15 (-0.60%).\n\nPrincipais drivers: Fear & Greed em 20/100 (Medo) — sentimento negativo predomina · S&P 500 +1.08% — leve otimismo externo apoia ativos de risco · Selic em 14.2% a.a. com mercado projetando 17.0% — expectativa de alta pressionando prêmios de risco · Peers emergentes: México (EWW) +0.03%, Chile (ECH) -0.85%.\n\nReduzir exposição a risco. Priorizar proteção com hedge cambial ou posições defensivas. Aguardar estabilização antes de novas entradas.",
+  "vies": "Baixista",
+  "vies_txt": "O pregão de 22/06/2026 abre com viés **Baixista**. IBOV em 170.252 pts (+0.99%), dólar em R$ 5.14 (-0.78%).\n\nPrincipais drivers: Fear & Greed em 20/100 (Medo) — sentimento negativo predomina · Selic em 14.2% a.a. com mercado projetando 17.0% — expectativa de alta pressionando prêmios de risco · Peers emergentes: México (EWW) -1.46%, Chile (ECH) +0.79% — Brasil outperformando peers.\n\nReduzir exposição a risco. Priorizar proteção com hedge cambial ou posições defensivas. Aguardar estabilização antes de novas entradas.",
   "tags": [
-    "Viés Levemente Baixista",
-    "IBOV ▲ +0.18%",
-    "USD/BRL R$ 5.15",
-    "VIX 17.3",
+    "Viés Baixista",
+    "IBOV ▲ +0.99%",
+    "USD/BRL R$ 5.14",
+    "VIX 17.2",
     "TV B3 = NEUTRO",
     "TV EUA = NEUTRO",
     "TV CRYPTO = NEUTRO"
@@ -17,102 +17,110 @@
   "tags_tipados": [
     {
       "tipo": "baixista",
-      "label": "Viés Levemente Baixista"
+      "label": "Viés Baixista"
     }
   ],
   "insights": [
-    "**CONTEXTO GLOBAL**\nO DXY operou relativamente estável (+0.00%), sem grandes desequilíbrios no câmbio global.\n\nWall Street fechou em alta moderada — S&P 500 em +1.08% e Nasdaq em +1.91% —, mantendo o ambiente de risk-on.\n\nO VIX permanece em 17.3 pontos, com volatilidade moderada.\n\nO índice Fear & Greed marca 20 pontos — zona de \"Medo Extremo\" — sugerindo que o mercado precifica risco excessivo e pode estar próximo de um ponto de reversão técnica.\n\nCommodities e cripto: Ouro subiu +0.00% para US$ 4.223 | WTI subiu +0.00% para US$ 75.09 | Bitcoin subiu +2.15% para US$ 64.598.",
+    "**CONTEXTO GLOBAL**\nO DXY operou relativamente estável (+0.00%), sem grandes desequilíbrios no câmbio global.\n\nAs bolsas americanas tiveram sessão mista ou flat (S&P 500 -0.29%, Nasdaq -1.06%), sem direcionamento claro para os ativos de risco.\n\nO VIX permanece em 17.2 pontos, com volatilidade moderada.\n\nO índice Fear & Greed marca 20 pontos — zona de \"Medo Extremo\" — sugerindo que o mercado precifica risco excessivo e pode estar próximo de um ponto de reversão técnica.\n\nCommodities e cripto: Ouro subiu +0.00% para US$ 4.202 | WTI subiu +0.00% para US$ 73.47 | Bitcoin subiu +2.15% para US$ 64.599.",
     "**ANALISE TECNICA - INDICADORES**\n\n**B3 - Brasil** = *Sentimento: NEUTRO*\n! Sem dados: PETR4, VALE3, ITUB4, BBDC4, ABEV3, WEGE3, RENT3, BBAS3\n\n**NYSE/NASDAQ - EUA** = *Sentimento: NEUTRO*\n! Sem dados: AAPL, MSFT, GOOGL, AMZN, TSLA, NVDA, META, AMD\n\n**Criptomoedas** = *Sentimento: NEUTRO*\n! Sem dados: BTCUSDT, ETHUSDT, SOLUSDT, XRPUSDT, ADAUSDT, DOGEUSDT, AVAXUSDT, LINKUSDT",
-    "**IBOVESPA**\nO Ibovespa encerrou a sessão anterior em 168.576 pontos, praticamente estável (+0.18%). A correlação com os mercados externos foi moderada na última sessão. Tecnicamente. monitorar suporte em 163.500 e 158.500 pontos. Resistências relevantes em 171.900 e 177.000 pontos. Peers emergentes: México (EWW) +0.03%, Chile (ECH) -0.85%.",
-    "**DÓLAR / CÂMBIO**\nO dólar recuou -0.60% para R$ 5.15, aliviando a pressão cambial.",
-    "**JUROS & RENDA FIXA**\nA taxa Selic está em 14.25% a.a. O mercado projeta Selic em 17.02% ao final do ciclo (Boletim Focus). Expectativa de IPCA para o ano: 3.00%. Projeção de PIB: 0.75%. A PTax oficial do BCB fechou em R$ 5.1442. Os juros americanos (Treasury 10Y) operam em 4.45% (+0.00%). O ETF EWZ (proxy do Brasil no exterior) operou -1.11%, sinalizando o apetite do investidor estrangeiro pelo mercado brasileiro.",
-    "**AGENDA DO DIA**\nEventos de impacto MÉDIO:\n• 10:00am [EUR] Consumer Confidence\n• 7:00am [EUR] German Buba President Nagel Speaks\n• 8:30am [CAD] CPI m/m\n• 8:30am [CAD] Median CPI y/y\n\nOs dados americanos costumam gerar volatilidade relevante no câmbio e, por correlação, no Ibovespa. Monitore os releases e evite exposição excessiva nos momentos de divulgação.",
-    "**MANCHETES**\n• Stocks waver, oil falls as traders weigh fragile Iran peace talks - Reuters [Reuters]\n• Japan's FX messaging keeps markets on edge over yen intervention risk - Reuters [Reuters]\n• Asian stocks rise on AI-driven gains, currencies slip on peace deal concerns - Reuters [Reuters]\n• Chinese AI Stocks Rally on Demand Optimism and Policy Support - Bloomberg [Bloomberg]\n• Chinese Stocks in Hong Kong Near Bear Market After Holiday - Bloomberg [Bloomberg]\n• Soaring Profits in Emerging Markets Build Case for a Raging Bull Market - Bloomberg [Bloomberg]\n• Trump’s Fears About Economy Undercut US Leverage in Iran Talks - Bloomberg [Bloomberg]\n• Keir Starmer steps down as UK prime minister [FT]\n• Streeting backs Burnham to be next prime minister [FT]\n• Burnham will have to be brave if he wants to get Britain growing again [FT]\n• How Starmer was undone by caution and no clear plan [FT]\n• A 40% market crash is lurking in the IPO pipeline. SpaceX and OpenAI could trigger it. [MarketWatch]\n• Former Federal Reserve chairman Alan Greenspan dies at 100 [MarketWatch]\n• Big Tech is splitting into two artificial-intelligence camps. Here is the better bet. [MarketWatch]\n• AbbVie is buying a biotech working on an experimental eczema drug for $10.9 billion [MarketWatch]\n• PF prende operadores financeiros do CV no Brasil e no Suriname e bloqueia meio bilhão [InfoMoney]"
+    "**IBOVESPA**\nO Ibovespa encerrou a sessão anterior em 170.252 pontos, com leve valorização de +0.99%. A correlação com os mercados externos foi moderada na última sessão. Tecnicamente. monitorar suporte em 165.100 e 160.000 pontos. Resistências relevantes em 173.700 e 178.800 pontos. Peers emergentes: México (EWW) -1.46%, Chile (ECH) +0.79%.",
+    "**DÓLAR / CÂMBIO**\nO dólar recuou -0.78% para R$ 5.14, aliviando a pressão cambial.",
+    "**JUROS & RENDA FIXA**\nA taxa Selic está em 14.25% a.a. O mercado projeta Selic em 17.02% ao final do ciclo (Boletim Focus). Expectativa de IPCA para o ano: 3.00%. Projeção de PIB: 0.75%. A PTax oficial do BCB fechou em R$ 5.1395. Os juros americanos (Treasury 10Y) operam em 4.51% (+0.00%). O ETF EWZ (proxy do Brasil no exterior) operou +1.73%, sinalizando o apetite do investidor estrangeiro pelo mercado brasileiro.",
+    "**AGENDA DO DIA**\nEventos de impacto MÉDIO:\n• 04:00 [EUR] Dados da Zona do Euro\n• 10:00pm [JPY] BOJ Core CPI y/y\n• 2:30pm [USD] FOMC Member Goolsbee Speaks\n• 4:00am [EUR] German Buba President Nagel Speaks\n\nOs dados americanos costumam gerar volatilidade relevante no câmbio e, por correlação, no Ibovespa. Monitore os releases e evite exposição excessiva nos momentos de divulgação.",
+    "**MANCHETES**\n• BofA, Deutsche Bank expect Fed to raise rates in September - Reuters [Reuters]\n• Alan Greenspan, US Fed 'maestro' through years of boom and bust, dies at 100 - Reuters [Reuters]\n• Stocks steady, oil falls as rate worries offset Iran talks optimism - Reuters [Reuters]\n• Japan's FX messaging keeps markets on edge over yen intervention risk - Reuters [Reuters]\n• Alan Greenspan, Who Led Fed During Boom Before 2008 Bust, Dies at 100 - Bloomberg.com [Bloomberg.com]\n• Citadel Says Fed’s New Regime Could Stabilize Treasury Long End - Bloomberg.com [Bloomberg.com]\n• Chinese AI Stocks Rally on Demand Optimism and Policy Support - Bloomberg.com [Bloomberg.com]\n• Chinese Stocks in Hong Kong Near Bear Market After Holiday - Bloomberg.com [Bloomberg.com]\n• Burnham poised to succeed Starmer as UK prime minister [FT]\n• EU-UK summit postponed as Burnham sworn in as MP [FT]\n• The revolving door of Downing Street [FT]\n• Alan Greenspan dies aged 100 [FT]\n• The loneliness crisis has gotten so bad that lawmakers are ready to spend millions of dollars to fight it [MarketWatch]\n• China’s weird new economic spark: toy elves and robocops [MarketWatch]\n• Alphabet sees $269 billion market-cap wipeout as investors fear it’s losing the war for AI talent [MarketWatch]\n• Caterpillar’s stock hits a milestone as roaring industrials rally sweeps up Wall Street [MarketWatch]"
   ],
   "agenda": [
     {
-      "time": "10:00am",
-      "event": "[EUR] Consumer Confidence"
+      "time": "04:00",
+      "event": "[EUR] Dados da Zona do Euro"
     },
     {
-      "time": "7:00am",
+      "time": "10:00pm",
+      "event": "[JPY] BOJ Core CPI y/y"
+    },
+    {
+      "time": "2:30pm",
+      "event": "[USD] FOMC Member Goolsbee Speaks"
+    },
+    {
+      "time": "4:00am",
       "event": "[EUR] German Buba President Nagel Speaks"
     },
     {
-      "time": "8:30am",
+      "time": "5:30am",
       "event": "[CAD] CPI m/m"
     },
     {
-      "time": "8:30am",
+      "time": "5:30am",
       "event": "[CAD] Median CPI y/y"
     },
     {
-      "time": "8:30am",
+      "time": "5:30am",
       "event": "[CAD] Trimmed CPI y/y"
     },
     {
-      "time": "8:30am",
+      "time": "5:30am",
       "event": "[CAD] Common CPI y/y"
     },
     {
-      "time": "8:30am",
+      "time": "5:30am",
       "event": "[CAD] Core CPI m/m"
     },
     {
-      "time": "8:30pm",
+      "time": "5:30pm",
       "event": "[JPY] Flash Manufacturing PMI"
     },
     {
-      "time": "9:00am",
+      "time": "6:00am",
       "event": "[EUR] ECB President Lagarde Speaks"
     },
     {
-      "time": "9:00am",
+      "time": "6:00am",
       "event": "[USD] FOMC Member Waller Speaks"
     }
   ],
-  "strategy": "O pregão de 22/06/2026 abre com viés **Levemente Baixista**. IBOV em 168.576 pts (+0.18%), dólar em R$ 5.15 (-0.60%).\n\nPrincipais drivers: Fear & Greed em 20/100 (Medo) — sentimento negativo predomina · S&P 500 +1.08% — leve otimismo externo apoia ativos de risco · Selic em 14.2% a.a. com mercado projetando 17.0% — expectativa de alta pressionando prêmios de risco · Peers emergentes: México (EWW) +0.03%, Chile (ECH) -0.85%.\n\nReduzir exposição a risco. Priorizar proteção com hedge cambial ou posições defensivas. Aguardar estabilização antes de novas entradas.",
+  "strategy": "O pregão de 22/06/2026 abre com viés **Baixista**. IBOV em 170.252 pts (+0.99%), dólar em R$ 5.14 (-0.78%).\n\nPrincipais drivers: Fear & Greed em 20/100 (Medo) — sentimento negativo predomina · Selic em 14.2% a.a. com mercado projetando 17.0% — expectativa de alta pressionando prêmios de risco · Peers emergentes: México (EWW) -1.46%, Chile (ECH) +0.79% — Brasil outperformando peers.\n\nReduzir exposição a risco. Priorizar proteção com hedge cambial ou posições defensivas. Aguardar estabilização antes de novas entradas.",
   "indicators": {
     "fearGreed": 20,
     "fearGreedLabel": "Extreme Fear",
-    "dxy": 100.89,
+    "dxy": 101.0,
     "dxyChange": 0.0,
-    "vix": 17.32,
+    "vix": 17.22,
     "vixChange": 0.0,
-    "ibov": 168576.0,
-    "ibovChange": 0.18,
-    "usdbrl": 5.15,
-    "usdbrlChange": -0.6,
+    "ibov": 170252.55,
+    "ibovChange": 0.99,
+    "usdbrl": 5.14,
+    "usdbrlChange": -0.78,
     "selic": 14.25,
-    "us10y": 4.45,
+    "us10y": 4.51,
     "us10yChange": 0.0,
     "selicEsperada": 17.02,
     "ipcaEsperado": 3.0,
     "pibEsperado": 0.75,
-    "ptax": 5.1442,
-    "ptaxData": "2026-06-19",
-    "btc": 64598.01,
+    "ptax": 5.1395,
+    "ptaxData": "2026-06-22",
+    "btc": 64599.18,
     "btcChange": 2.15,
-    "gold": 4223.0,
+    "gold": 4201.5,
     "goldChange": 0.0,
-    "oil": 75.09,
+    "oil": 73.47,
     "oilChange": 0.0,
-    "stoxx": 6305.0,
-    "stoxxChange": 0.19,
-    "brent": 78.96,
+    "stoxx": 6311.32,
+    "stoxxChange": 0.29,
+    "brent": 77.57,
     "brentChange": 0.0,
-    "soja": 1146.25,
+    "soja": 1141.5,
     "sojaChange": 0.0,
-    "eww": 77.33,
-    "ewwChange": 0.03,
-    "ech": 40.66,
-    "echChange": -0.85
+    "eww": 76.2,
+    "ewwChange": -1.46,
+    "ech": 40.98,
+    "echChange": 0.79
   },
   "scrape_ok": true,
-  "generated_at": "22/06/2026 08:58:39",
+  "generated_at": "22/06/2026 15:14:48",
   "feriado_aviso": null,
   "tradingview_indicators": {
-    "gerado_em": "2026-06-22T08:58:49.481497-03:00",
+    "gerado_em": "2026-06-22T15:15:00.775744-03:00",
     "fonte": "TradingView API (@mathieuc/tradingview)",
     "mercados": {
       "b3": {
