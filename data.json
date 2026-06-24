@@ -1,15 +1,15 @@
 {
-  "date": "23/06/2026",
-  "lastUpdate": "23/06/2026 13:28:58",
-  "lastFetch": "23/06/2026 13:28:58",
-  "title": "Morning Call · 23/06",
-  "vies": "Baixista",
-  "vies_txt": "O pregão de 23/06/2026 abre com viés **Baixista**. IBOV em 171.327 pts (+0.56%), dólar em R$ 5.18 (+0.60%).\n\nPrincipais drivers: Fear & Greed em 23/100 (Medo) — sentimento negativo predomina · S&P 500 -0.94% — queda moderada em NY, pressão sobre bolsas emergentes · Selic em 14.2% a.a. com mercado projetando 17.0% — expectativa de alta pressionando prêmios de risco · Soja +2.53% — alta beneficia exportadoras de grãos · Peers emergentes: México (EWW) -0.83%, Chile (ECH) -1.63% — Brasil outperformando peers.\n\nReduzir exposição a risco. Priorizar proteção com hedge cambial ou posições defensivas. Aguardar estabilização antes de novas entradas.",
+  "date": "24/06/2026",
+  "lastUpdate": "24/06/2026 13:25:34",
+  "lastFetch": "24/06/2026 13:25:34",
+  "title": "Morning Call · 24/06",
+  "vies": "Levemente Baixista",
+  "vies_txt": "O pregão de 24/06/2026 abre com viés **Levemente Baixista**. IBOV em 170.124 pts (-0.66%), dólar em R$ 5.20 (+0.81%).\n\nPrincipais drivers: Fear & Greed em 17/100 (Medo) — sentimento negativo predomina · S&P 500 +0.63% — leve otimismo externo apoia ativos de risco · Selic em 14.2% a.a. com mercado projetando 17.0% — expectativa de alta pressionando prêmios de risco · Petróleo Brent -4.03% para US$ 73.97 — queda pressiona Petrobras e reduz inflação de combustíveis · Soja +1.68% — alta beneficia exportadoras de grãos · Peers emergentes: México (EWW) -0.70%, Chile (ECH) -0.58%.\n\nReduzir exposição a risco. Priorizar proteção com hedge cambial ou posições defensivas. Aguardar estabilização antes de novas entradas.",
   "tags": [
-    "Viés Baixista",
-    "IBOV ▲ +0.56%",
-    "USD/BRL R$ 5.18",
-    "VIX 19.0",
+    "Viés Levemente Baixista",
+    "IBOV ▼ -0.66%",
+    "USD/BRL R$ 5.20",
+    "VIX 18.4",
     "TV B3 = NEUTRO",
     "TV EUA = NEUTRO",
     "TV CRYPTO = NEUTRO"
@@ -17,17 +17,17 @@
   "tags_tipados": [
     {
       "tipo": "baixista",
-      "label": "Viés Baixista"
+      "label": "Viés Levemente Baixista"
     }
   ],
   "insights": [
-    "**CONTEXTO GLOBAL**\nO DXY operou relativamente estável (+0.34%), sem grandes desequilíbrios no câmbio global.\n\nWall Street fechou no vermelho — S&P 500 em -0.94% e Nasdaq em -1.40% —, criando um ambiente de cautela para os mercados emergentes.\n\nO VIX subiu +9.90% para 19.0 pontos, com volatilidade moderada. O mercado demonstra nervosismo crescente.\n\nO índice Fear & Greed marca 23 pontos — zona de \"Medo\" — sugerindo que o mercado precifica risco excessivo e pode estar próximo de um ponto de reversão técnica.\n\nCommodities e cripto: Ouro recuou -0.61% para US$ 4.156 | WTI recuou -2.22% para US$ 73.16 | Bitcoin recuou -2.24% para US$ 62.518.",
+    "**CONTEXTO GLOBAL**\nO DXY operou relativamente estável (+0.20%), sem grandes desequilíbrios no câmbio global.\n\nWall Street fechou em alta moderada — S&P 500 em +0.63% e Nasdaq em +0.68% —, mantendo o ambiente de risk-on.\n\nO VIX recuou -5.59% para 18.4 pontos, com volatilidade moderada. O ambiente está mais favorável ao risco.\n\nO índice Fear & Greed marca 17 pontos — zona de \"Medo Extremo\" — sugerindo que o mercado precifica risco excessivo e pode estar próximo de um ponto de reversão técnica.\n\nCommodities e cripto: Ouro recuou -2.66% para US$ 4.020 | WTI recuou -3.80% para US$ 70.43 | Bitcoin recuou -3.48% para US$ 60.486.",
     "**ANALISE TECNICA - INDICADORES**\n\n**B3 - Brasil** = *Sentimento: NEUTRO*\n! Sem dados: PETR4, VALE3, ITUB4, BBDC4, ABEV3, WEGE3, RENT3, BBAS3\n\n**NYSE/NASDAQ - EUA** = *Sentimento: NEUTRO*\n! Sem dados: AAPL, MSFT, GOOGL, AMZN, TSLA, NVDA, META, AMD\n\n**Criptomoedas** = *Sentimento: NEUTRO*\n! Sem dados: BTCUSDT, ETHUSDT, SOLUSDT, XRPUSDT, ADAUSDT, DOGEUSDT, AVAXUSDT, LINKUSDT",
-    "**IBOVESPA**\nO Ibovespa encerrou a sessão anterior em 171.327 pontos, com leve valorização de +0.56%. A correlação com os mercados externos foi moderada na última sessão. Tecnicamente. monitorar suporte em 166.200 e 161.000 pontos. Resistências relevantes em 174.800 e 179.900 pontos. Peers emergentes: México (EWW) -0.83%, Chile (ECH) -1.63%.",
-    "**DÓLAR / CÂMBIO**\nO dólar subiu +0.60% para R$ 5.18, mantendo pressão sobre o real. O movimento é consistente com o fortalecimento global do dólar (DXY +0.34%), reduzindo o componente idiossincrático do real.",
-    "**JUROS & RENDA FIXA**\nA taxa Selic está em 14.25% a.a. O mercado projeta Selic em 17.02% ao final do ciclo (Boletim Focus). Expectativa de IPCA para o ano: 3.00%. Projeção de PIB: 0.80%. A PTax oficial do BCB fechou em R$ 5.1743. Os juros americanos (Treasury 10Y) operam em 4.48% (+0.00%). O ETF EWZ (proxy do Brasil no exterior) operou -0.25%, sinalizando o apetite do investidor estrangeiro pelo mercado brasileiro.",
-    "**AGENDA DO DIA**\nEventos de impacto MÉDIO:\n• 04:00 [EUR] Dados da Zona do Euro\n• 09:45 [USD] PMI Manufatura Flash (Jun)\n• 10:00 [USD] New Home Sales\n• 12:00am [JPY] BOJ Core CPI y/y\n\nOs dados americanos costumam gerar volatilidade relevante no câmbio e, por correlação, no Ibovespa. Monitore os releases e evite exposição excessiva nos momentos de divulgação.",
-    "**MANCHETES**\n• Chip stocks plunge, but bargain-hunters stem losses in other tech names - Reuters [Reuters]\n• Wall St tumbles on tech selloff as concerns about hawkish Fed, AI spending mount - Reuters [Reuters]\n• Fed hike could push yen to 165 per dollar, ex-BOJ policymaker says - Reuters [Reuters]\n• Stocks drop as Fed rate bets hit tech royalty; dollar gains - Reuters [Reuters]\n• US Stock Futures Tumble as Megacap Tech Rout Hits Asian Peers - Bloomberg [Bloomberg]\n• China Stocks in Hong Kong Eye Bear Market on Spending Woes - Bloomberg [Bloomberg]\n• Korean Stocks Tumble 10% as Extreme Volatility Rattles Investors - Bloomberg [Bloomberg]\n• Alan Greenspan, Who Led Fed During Boom Before 2008 Bust, Dies at 100 - Bloomberg [Bloomberg]\n• US chipmakers lead Wall Street slide on rising rate rise worries [FT]\n• Warsh has a chance to enact lasting reform at the Fed [FT]\n• How Citadel built an energy empire from Enron’s ashes [FT]\n• Zelenskyy may have the last laugh over Trump [FT]\n• Are falling tech stocks the start of an overdue selloff — or a well-deserved pause? [MarketWatch]\n• ‘Trump accounts’ for newborns are nothing but a diversion [MarketWatch]\n• SpaceX succumbs to gravity as the stock briefly dips below its debut price on Nasdaq [MarketWatch]\n• I’m 70. A relative offered me a $25,000 home loan secured by a lien that must be repaid within a year. Is that fair? [MarketWatch]"
+    "**IBOVESPA**\nO Ibovespa encerrou a sessão anterior em 170.124 pontos, recuando -0.66% na última sessão. A correlação com os mercados externos foi moderada na última sessão. Tecnicamente. monitorar suporte em 165.000 e 159.900 pontos. Resistências relevantes em 173.500 e 178.600 pontos. Peers emergentes: México (EWW) -0.70%, Chile (ECH) -0.58%.",
+    "**DÓLAR / CÂMBIO**\nO dólar subiu +0.81% para R$ 5.20, mantendo pressão sobre o real.",
+    "**JUROS & RENDA FIXA**\nA taxa Selic está em 14.25% a.a. O mercado projeta Selic em 17.02% ao final do ciclo (Boletim Focus). Expectativa de IPCA para o ano: 3.00%. Projeção de PIB: 0.85%. A PTax oficial do BCB fechou em R$ 5.2098. Os juros americanos (Treasury 10Y) operam em 4.40% (+0.00%). O ETF EWZ (proxy do Brasil no exterior) operou -0.89%, sinalizando o apetite do investidor estrangeiro pelo mercado brasileiro.",
+    "**AGENDA DO DIA**\nEventos de impacto MÉDIO:\n• 04:00 [EUR] Dados da Zona do Euro\n• 08:30 [USD] Durable Goods Orders\n• 10:30am [CAD] BOC Summary of Deliberations\n• 11:00pm [EUR] German GfK Consumer Climate\n\nOs dados americanos costumam gerar volatilidade relevante no câmbio e, por correlação, no Ibovespa. Monitore os releases e evite exposição excessiva nos momentos de divulgação.",
+    "**MANCHETES**\n• Gold falls below $4,000/oz on strong dollar, hawkish Fed signals - Reuters [Reuters]\n• Global physical crude markets dive as Middle East ramps up supply - Reuters [Reuters]\n• Stocks stabilise as tech recovers; dollar gets a boost - Reuters [Reuters]\n• Gold drops below key $4,000 level as dollar firms, rate hike bets rise - Reuters [Reuters]\n• Korean Stocks Rebound After 10% Rout as Focus Back on Earnings - Bloomberg [Bloomberg]\n• Tech Stocks Set to Bounce After $1.3 Trillion Rout on AI Jitters - Bloomberg [Bloomberg]\n• Stocks Rise Before Micron’s Earnings as Oil Slides: Markets Wrap - Bloomberg [Bloomberg]\n• Dollar Jumps to Highest Since November on Fed Rate Hike Bets - Bloomberg [Bloomberg]\n• Venezuela to reveal $240bn debt pile in world’s largest restructuring [FT]\n• Is this teenage girl North Korea’s next dictator? [FT]\n• Putin’s system is in a state of slow implosion [FT]\n• The rise and fall of US hegemony [FT]\n• U.S. oil prices fall back to preconflict levels as physical flow through the Strait of Hormuz improves [MarketWatch]\n• Trump looked set to tout new housing legislation. Instead he says it’s ‘of minor importance’ and canceled a signing ceremony. [MarketWatch]\n• The ‘most affordable truck’ in America is an EV — but you’ll have to roll down the windows yourself [MarketWatch]\n• I had gallbladder surgery. After I got home, the hospital asked me for a financial donation. Is this ethical? [MarketWatch]"
   ],
   "agenda": [
     {
@@ -35,92 +35,92 @@
       "event": "[EUR] Dados da Zona do Euro"
     },
     {
-      "time": "09:45",
-      "event": "[USD] PMI Manufatura Flash (Jun)"
+      "time": "08:30",
+      "event": "[USD] Durable Goods Orders"
     },
     {
-      "time": "10:00",
-      "event": "[USD] New Home Sales"
+      "time": "10:30am",
+      "event": "[CAD] BOC Summary of Deliberations"
     },
     {
-      "time": "12:00am",
-      "event": "[JPY] BOJ Core CPI y/y"
+      "time": "11:00pm",
+      "event": "[EUR] German GfK Consumer Climate"
     },
     {
-      "time": "12:30pm",
-      "event": "[GBP] MPC Member Dhingra Speaks"
+      "time": "1:00am",
+      "event": "[EUR] German ifo Business Climate"
     },
     {
-      "time": "1:05pm",
+      "time": "1:00pm",
+      "event": "[USD] Bank Stress Test Results"
+    },
+    {
+      "time": "2:00am",
+      "event": "[EUR] German Buba President Nagel Speaks"
+    },
+    {
+      "time": "2:40am",
+      "event": "[EUR] German 10-y Bond Auction"
+    },
+    {
+      "time": "4:15am",
+      "event": "[CAD] Gov Council Member Rogers Speaks"
+    },
+    {
+      "time": "4:15am",
+      "event": "[GBP] MPC Member Breeden Speaks"
+    },
+    {
+      "time": "5:30am",
+      "event": "[USD] Current Account"
+    },
+    {
+      "time": "5:30pm",
       "event": "[USD] President Trump Speaks"
-    },
-    {
-      "time": "2:15am",
-      "event": "[EUR] French Flash Manufacturing PMI"
-    },
-    {
-      "time": "2:15am",
-      "event": "[EUR] French Flash Services PMI"
-    },
-    {
-      "time": "2:30am",
-      "event": "[EUR] German Flash Manufacturing PMI"
-    },
-    {
-      "time": "2:30am",
-      "event": "[EUR] German Flash Services PMI"
-    },
-    {
-      "time": "3:00am",
-      "event": "[EUR] Flash Manufacturing PMI"
-    },
-    {
-      "time": "3:00am",
-      "event": "[EUR] Flash Services PMI"
     }
   ],
-  "strategy": "O pregão de 23/06/2026 abre com viés **Baixista**. IBOV em 171.327 pts (+0.56%), dólar em R$ 5.18 (+0.60%).\n\nPrincipais drivers: Fear & Greed em 23/100 (Medo) — sentimento negativo predomina · S&P 500 -0.94% — queda moderada em NY, pressão sobre bolsas emergentes · Selic em 14.2% a.a. com mercado projetando 17.0% — expectativa de alta pressionando prêmios de risco · Soja +2.53% — alta beneficia exportadoras de grãos · Peers emergentes: México (EWW) -0.83%, Chile (ECH) -1.63% — Brasil outperformando peers.\n\nReduzir exposição a risco. Priorizar proteção com hedge cambial ou posições defensivas. Aguardar estabilização antes de novas entradas.",
+  "strategy": "O pregão de 24/06/2026 abre com viés **Levemente Baixista**. IBOV em 170.124 pts (-0.66%), dólar em R$ 5.20 (+0.81%).\n\nPrincipais drivers: Fear & Greed em 17/100 (Medo) — sentimento negativo predomina · S&P 500 +0.63% — leve otimismo externo apoia ativos de risco · Selic em 14.2% a.a. com mercado projetando 17.0% — expectativa de alta pressionando prêmios de risco · Petróleo Brent -4.03% para US$ 73.97 — queda pressiona Petrobras e reduz inflação de combustíveis · Soja +1.68% — alta beneficia exportadoras de grãos · Peers emergentes: México (EWW) -0.70%, Chile (ECH) -0.58%.\n\nReduzir exposição a risco. Priorizar proteção com hedge cambial ou posições defensivas. Aguardar estabilização antes de novas entradas.",
   "indicators": {
-    "fearGreed": 23,
+    "fearGreed": 17,
     "fearGreedLabel": "Extreme Fear",
-    "dxy": 101.36,
-    "dxyChange": 0.34,
-    "vix": 18.99,
-    "vixChange": 9.9,
-    "ibov": 171327.72,
-    "ibovChange": 0.56,
-    "usdbrl": 5.18,
-    "usdbrlChange": 0.6,
+    "dxy": 101.62,
+    "dxyChange": 0.2,
+    "vix": 18.4,
+    "vixChange": -5.59,
+    "ibov": 170124.02,
+    "ibovChange": -0.66,
+    "usdbrl": 5.2,
+    "usdbrlChange": 0.81,
     "selic": 14.25,
-    "us10y": 4.48,
+    "us10y": 4.4,
     "us10yChange": 0.0,
     "selicEsperada": 17.02,
     "ipcaEsperado": 3.0,
-    "pibEsperado": 0.8,
-    "ptax": 5.1743,
-    "ptaxData": "2026-06-23",
-    "btc": 62518.24,
-    "btcChange": -2.24,
-    "gold": 4156.2,
-    "goldChange": -0.61,
-    "oil": 73.16,
-    "oilChange": -2.22,
-    "stoxx": 6230.55,
-    "stoxxChange": -1.28,
-    "brent": 77.07,
-    "brentChange": -1.07,
-    "soja": 1144.0,
-    "sojaChange": 2.53,
-    "eww": 75.33,
-    "ewwChange": -0.83,
-    "ech": 40.15,
-    "echChange": -1.63
+    "pibEsperado": 0.85,
+    "ptax": 5.2098,
+    "ptaxData": "2026-06-24",
+    "btc": 60485.78,
+    "btcChange": -3.48,
+    "gold": 4020.0,
+    "goldChange": -2.66,
+    "oil": 70.43,
+    "oilChange": -3.8,
+    "stoxx": 6214.7,
+    "stoxxChange": -0.25,
+    "brent": 73.97,
+    "brentChange": -4.03,
+    "soja": 1135.75,
+    "sojaChange": 1.68,
+    "eww": 74.21,
+    "ewwChange": -0.7,
+    "ech": 39.62,
+    "echChange": -0.58
   },
   "scrape_ok": true,
-  "generated_at": "23/06/2026 13:28:58",
+  "generated_at": "24/06/2026 13:25:34",
   "feriado_aviso": null,
   "tradingview_indicators": {
-    "gerado_em": "2026-06-23T13:29:08.992814-03:00",
+    "gerado_em": "2026-06-24T13:25:47.958117-03:00",
     "fonte": "TradingView API (@mathieuc/tradingview)",
     "mercados": {
       "b3": {
